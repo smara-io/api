@@ -90,12 +90,16 @@ app.get('/health', async () => {
   return { status: 'ok', db: rows[0].ok === 1 ? 'ok' : 'error' };
 });
 
-// Serve API docs at /docs
-await app.register(fastifyStatic, {
-  root: join(__dirname, '..', 'docs'),
-  prefix: '/docs/',
-  decorateReply: false,
-});
+// Serve API docs at /docs (skip if docs dir missing)
+import { existsSync } from 'fs';
+const docsDir = join(__dirname, '..', 'docs');
+if (existsSync(docsDir)) {
+  await app.register(fastifyStatic, {
+    root: docsDir,
+    prefix: '/docs/',
+    decorateReply: false,
+  });
+}
 
 await app.register(memoriesRoutes);
 await app.register(setupRoutes);
