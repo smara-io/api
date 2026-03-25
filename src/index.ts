@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { memoriesRoutes } from './routes/memories.js';
+import { setupRoutes } from './routes/setup.js';
 import { pool } from './db/pool.js';
 
 async function migrate(): Promise<void> {
@@ -79,6 +80,7 @@ app.get('/health', async () => {
 });
 
 await app.register(memoriesRoutes);
+await app.register(setupRoutes);
 
 const PORT = parseInt(process.env.PORT ?? '3010', 10);
 
