@@ -18,29 +18,19 @@ function hashKey(raw: string): string {
 }
 
 export async function setupRoutes(app: FastifyInstance): Promise<void> {
-  app.post<{ Body: { secret: string; tenant_name?: string } }>(
+  app.post<{ Body: { tenant_name?: string } }>(
     '/setup',
     {
       schema: {
         body: {
           type: 'object',
-          required: ['secret'],
           properties: {
-            secret: { type: 'string' },
             tenant_name: { type: 'string' },
           },
         },
       },
     },
     async (request, reply) => {
-      const setupSecret = process.env.SETUP_SECRET;
-      if (!setupSecret) {
-        return reply.code(503).send({ error: 'SETUP_SECRET not configured' });
-      }
-      if (request.body.secret !== setupSecret) {
-        return reply.code(403).send({ error: 'Invalid secret' });
-      }
-
       // Only allow if no tenants exist yet
       const { rows } = await pool.query('SELECT id FROM tenants LIMIT 1');
       if (rows.length > 0) {
