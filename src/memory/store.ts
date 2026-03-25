@@ -1,5 +1,5 @@
 import { pool } from '../db/pool.js';
-import { embed } from '../embed/openai.js';
+import { embed } from '../embed/voyage.js';
 
 // ── Similarity band semantics (cosine similarity) ────────────────────────────
 //  ≥ 0.985  → TRUE DUPLICATE — same fact, skip storage

@@ -1,5 +1,5 @@
 import { pool } from '../db/pool.js';
-import { embed } from '../embed/openai.js';
+import { embed } from '../embed/voyage.js';
 import { ebbinghaus, blendScore } from './decay.js';
 
 export interface MemoryResult {

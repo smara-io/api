@@ -34,7 +34,7 @@ async function migrate(): Promise<void> {
       tenant_id        UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
       user_id          TEXT NOT NULL,
       fact             TEXT NOT NULL,
-      embedding        VECTOR(1536),
+      embedding        VECTOR(1024),
       importance       FLOAT NOT NULL DEFAULT 0.5,
       decay_score      FLOAT NOT NULL DEFAULT 1.0,
       access_count     INTEGER NOT NULL DEFAULT 0,
@@ -42,6 +42,12 @@ async function migrate(): Promise<void> {
       valid_until      TIMESTAMPTZ,
       created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
+  `);
+  // Fix dimension if table was previously created with VECTOR(1536)
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE memories ALTER COLUMN embedding TYPE vector(1024);
+    EXCEPTION WHEN others THEN NULL; END $$
   `);
   await pool.query(`
     CREATE INDEX IF NOT EXISTS memories_embedding_idx
