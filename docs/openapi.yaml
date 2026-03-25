@@ -1,0 +1,347 @@
+openapi: 3.1.0
+info:
+  title: Smara Memory API
+  version: 1.0.0
+  description: |
+    Persistent memory for AI agents. Store, search, and recall facts with
+    Ebbinghaus decay scoring, contradiction detection, and semantic search —
+    in 3 API calls.
+  contact:
+    name: Smara
+    url: https://smara.io
+    email: hello@smara.io
+
+servers:
+  - url: https://api.smara.io
+    description: Production
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: |
+        API key from your Smara dashboard. Pass as `Authorization: Bearer smara_...`
+
+  schemas:
+    Memory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        fact:
+          type: string
+        importance:
+          type: number
+          minimum: 0
+          maximum: 1
+        decay_score:
+          type: number
+          description: Ebbinghaus decay score (0-1). Higher = more recently relevant.
+        similarity:
+          type: number
+          description: Cosine similarity to the search query (0-1).
+        score:
+          type: number
+          description: "Blended score: similarity x 0.7 + decay x 0.3"
+        created_at:
+          type: string
+          format: date-time
+
+    StoreRequest:
+      type: object
+      required: [user_id, fact]
+      properties:
+        user_id:
+          type: string
+          minLength: 1
+          description: Unique identifier for the end user.
+        fact:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: The fact or memory to store.
+        importance:
+          type: number
+          minimum: 0
+          maximum: 1
+          default: 0.5
+          description: How important this memory is (affects decay rate).
+
+    StoreResponse:
+      type: object
+      properties:
+        action:
+          type: string
+          enum: [stored, replaced, duplicate]
+          description: |
+            - `stored`: New memory created.
+            - `replaced`: Contradicting memory found and superseded.
+            - `duplicate`: Identical memory already exists.
+        id:
+          type: string
+          format: uuid
+          description: The memory ID (new or existing).
+        replaced_id:
+          type: string
+          format: uuid
+          description: ID of the superseded memory (only when action is `replaced`).
+
+    SearchResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Memory"
+
+    ContextResponse:
+      type: object
+      properties:
+        context:
+          type: string
+          description: Formatted text block ready to inject into an LLM system prompt.
+        memories:
+          type: array
+          items:
+            $ref: "#/components/schemas/Memory"
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+paths:
+  /v1/memories:
+    post:
+      operationId: storeMemory
+      summary: Store a memory
+      description: |
+        Store a fact for a user. Smara automatically handles:
+        - **Duplicates** (>= 0.985 similarity): returns existing memory, no storage.
+        - **Contradictions** (0.94-0.985 similarity): supersedes the old memory.
+        - **New facts** (< 0.94 similarity): stored alongside existing memories.
+      tags: [Memories]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreRequest"
+            examples:
+              basic:
+                summary: Store a simple fact
+                value:
+                  user_id: "user_123"
+                  fact: "Prefers dark mode in all applications"
+                  importance: 0.7
+      responses:
+        "201":
+          description: Memory stored or replaced.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreResponse"
+              examples:
+                stored:
+                  value:
+                    action: stored
+                    id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                replaced:
+                  value:
+                    action: replaced
+                    id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                    replaced_id: "f9e8d7c6-b5a4-3210-fedc-ba0987654321"
+        "200":
+          description: Duplicate detected. No new memory stored.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreResponse"
+              example:
+                action: duplicate
+                id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /v1/memories/search:
+    get:
+      operationId: searchMemories
+      summary: Search memories
+      description: |
+        Semantic search across a user's memories. Results are ranked by a
+        blended score combining cosine similarity (70%) and Ebbinghaus
+        decay (30%) — recent, relevant memories rank highest.
+      tags: [Memories]
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The user whose memories to search.
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+          description: Natural language search query.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+            maximum: 50
+          description: Maximum results to return.
+      responses:
+        "200":
+          description: Search results ranked by blended score.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResponse"
+              example:
+                results:
+                  - id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                    fact: "Prefers dark mode in all applications"
+                    importance: 0.7
+                    decay_score: 0.95
+                    similarity: 0.8921
+                    score: 0.9095
+                    created_at: "2026-03-25T10:30:00Z"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /v1/users/{userId}/context:
+    get:
+      operationId: getContext
+      summary: Get LLM-ready context
+      description: |
+        Returns a pre-formatted text block of the user's most relevant memories,
+        ready to inject into an LLM system prompt. Also returns the raw memory
+        objects for programmatic use.
+      tags: [Context]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The user whose context to retrieve.
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+          description: Query to find relevant context for.
+        - name: top_n
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 5
+            maximum: 20
+          description: Number of memories to include.
+      responses:
+        "200":
+          description: Formatted context and raw memories.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContextResponse"
+              example:
+                context: "[1] (importance: 0.7, decay: 0.95) Prefers dark mode in all applications\n[2] (importance: 0.6, decay: 0.87) Uses VS Code as primary editor"
+                memories:
+                  - id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                    fact: "Prefers dark mode in all applications"
+                    importance: 0.7
+                    decay_score: 0.95
+                    similarity: 0.8921
+                    score: 0.9095
+                    created_at: "2026-03-25T10:30:00Z"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /v1/memories/{id}:
+    delete:
+      operationId: deleteMemory
+      summary: Delete a memory
+      description: |
+        Soft-deletes a memory by setting its expiry timestamp. The memory
+        will no longer appear in search results.
+      tags: [Memories]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The memory ID to delete.
+        - name: user_id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The user who owns the memory.
+      responses:
+        "204":
+          description: Memory deleted.
+        "404":
+          description: Memory not found or already deleted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                error: "Memory not found or already deleted"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /health:
+    get:
+      operationId: healthCheck
+      summary: Health check
+      description: Returns API and database health status. No authentication required.
+      tags: [System]
+      security: []
+      responses:
+        "200":
+          description: Service is healthy.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  db:
+                    type: string
+                    enum: [ok, error]
+              example:
+                status: "ok"
+                db: "ok"

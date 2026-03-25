@@ -1,8 +1,13 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import fastifyStatic from '@fastify/static';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import { memoriesRoutes } from './routes/memories.js';
 import { setupRoutes } from './routes/setup.js';
 import { pool } from './db/pool.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function migrate(): Promise<void> {
   await pool.query(`CREATE EXTENSION IF NOT EXISTS vector`);
@@ -83,6 +88,13 @@ await app.register(cors, {
 app.get('/health', async () => {
   const { rows } = await pool.query('SELECT 1 AS ok');
   return { status: 'ok', db: rows[0].ok === 1 ? 'ok' : 'error' };
+});
+
+// Serve API docs at /docs
+await app.register(fastifyStatic, {
+  root: join(__dirname, '..', 'docs'),
+  prefix: '/docs/',
+  decorateReply: false,
 });
 
 await app.register(memoriesRoutes);

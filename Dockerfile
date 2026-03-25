@@ -23,6 +23,7 @@ COPY package.json ./
 RUN npm install --omit=dev
 
 COPY --from=build /app/dist ./dist
+COPY docs ./docs
 
 ENV NODE_ENV=production
 EXPOSE 3010
