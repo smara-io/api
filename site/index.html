@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smara — Memory API for AI Agents</title>
+<meta name="description" content="Persistent memory for AI agents in 3 API calls. Ebbinghaus decay scoring, contradiction detection, and vector search.">
+<meta name="theme-color" content="#0a0a0b">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Smara — Memory API for AI Agents">
+<meta property="og:description" content="Persistent memory for AI agents in 3 API calls. Ebbinghaus decay scoring, contradiction detection, and vector search.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://smara.io">
+<meta property="og:site_name" content="Smara">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@SmaraMemo">
+<meta name="twitter:title" content="Smara — Memory API for AI Agents">
+<meta name="twitter:description" content="Persistent memory for AI agents in 3 API calls. Ebbinghaus decay scoring, contradiction detection, and vector search.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:       #0a0a0b;
+  --bg-raised:#111113;
+  --bg-code:  #0d0d0f;
+  --border:   #1e1e22;
+  --border-subtle: #161619;
+  --text:     #c4c3c8;
+  --text-dim: #6e6d73;
+  --text-faint:#3a3a3f;
+  --heading:  #eae9ed;
+  --amber:    #c8963e;
+  --amber-dim:#8a6828;
+  --amber-glow: rgba(200,150,62,0.08);
+  --mono:     'DM Mono', 'SF Mono', 'Fira Code', monospace;
+  --serif:    'Newsreader', 'Georgia', serif;
+}
+
+html{
+  font-size:16px;
+  scroll-behavior:smooth;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--mono);
+  font-weight:400;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+::selection{
+  background:var(--amber);
+  color:var(--bg);
+}
+
+a{color:var(--amber);text-decoration:none;transition:color .2s}
+a:hover{color:var(--heading)}
+
+/* --- Layout --- */
+.container{
+  max-width:960px;
+  margin:0 auto;
+  padding:0 24px;
+}
+
+section{
+  padding:120px 0;
+  position:relative;
+}
+
+/* --- Noise overlay --- */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9999;
+}
+
+/* --- Nav --- */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:100;
+  padding:20px 0;
+  background:rgba(10,10,11,0.8);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s;
+}
+nav.scrolled{border-bottom-color:var(--border)}
+
+nav .container{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.nav-logo{
+  font-size:15px;
+  font-weight:500;
+  color:var(--heading);
+  letter-spacing:0.02em;
+}
+.nav-logo span{color:var(--amber)}
+
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{
+  font-size:13px;
+  color:var(--text-dim);
+  letter-spacing:0.03em;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--heading)}
+.nav-links .btn-nav{
+  color:var(--amber);
+  border:1px solid var(--amber-dim);
+  padding:6px 16px;
+  border-radius:4px;
+  transition:all .2s;
+}
+.nav-links .btn-nav:hover{
+  background:var(--amber);
+  color:var(--bg);
+  border-color:var(--amber);
+}
+
+/* --- Hero --- */
+.hero{
+  padding:200px 0 140px;
+  position:relative;
+}
+
+.hero-label{
+  font-size:11px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--amber);
+  margin-bottom:32px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.hero-label::before{
+  content:'';
+  width:24px;height:1px;
+  background:var(--amber-dim);
+}
+
+.hero h1{
+  font-family:var(--serif);
+  font-size:clamp(40px, 6vw, 64px);
+  font-weight:300;
+  line-height:1.15;
+  color:var(--heading);
+  max-width:700px;
+  margin-bottom:28px;
+  letter-spacing:-0.02em;
+}
+.hero h1 em{
+  font-style:italic;
+  color:var(--amber);
+}
+
+.hero-sub{
+  font-size:15px;
+  line-height:1.8;
+  color:var(--text-dim);
+  max-width:480px;
+  margin-bottom:48px;
+}
+
+.hero-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+
+.btn-primary{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:12px 28px;
+  background:var(--amber);
+  color:var(--bg);
+  font-family:var(--mono);
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:0.03em;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+  transition:all .2s;
+}
+.btn-primary:hover{
+  background:var(--heading);
+  color:var(--bg);
+  transform:translateY(-1px);
+}
+
+.btn-ghost{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:12px 28px;
+  background:transparent;
+  color:var(--text);
+  font-family:var(--mono);
+  font-size:13px;
+  font-weight:400;
+  letter-spacing:0.03em;
+  border:1px solid var(--border);
+  border-radius:4px;
+  cursor:pointer;
+  transition:all .2s;
+  text-decoration:none;
+}
+.btn-ghost:hover{
+  border-color:var(--text-dim);
+  color:var(--heading);
+}
+
+/* --- Decay Canvas --- */
+.hero-visual{
+  position:absolute;
+  top:140px;right:-60px;
+  width:440px;height:340px;
+  opacity:0.5;
+  pointer-events:none;
+}
+
+/* --- Divider --- */
+.divider{
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+/* --- Code Section --- */
+.code-section .section-label{
+  font-size:11px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--amber);
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:12px;
+}
+.code-section .section-label::before{
+  content:'';width:24px;height:1px;background:var(--amber-dim);
+}
+
+.code-section h2{
+  font-family:var(--serif);
+  font-size:clamp(28px,4vw,40px);
+  font-weight:300;
+  color:var(--heading);
+  margin-bottom:16px;
+  letter-spacing:-0.01em;
+}
+
+.code-section > .container > p{
+  color:var(--text-dim);
+  font-size:14px;
+  max-width:500px;
+  margin-bottom:64px;
+}
+
+.code-tabs{
+  display:flex;
+  gap:0;
+  margin-bottom:0;
+  border-bottom:1px solid var(--border);
+}
+.code-tab{
+  padding:10px 20px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--text-dim);
+  background:transparent;
+  border:none;
+  border-bottom:2px solid transparent;
+  cursor:pointer;
+  transition:all .2s;
+  letter-spacing:0.03em;
+}
+.code-tab:hover{color:var(--text)}
+.code-tab.active{
+  color:var(--amber);
+  border-bottom-color:var(--amber);
+}
+
+.code-panels{position:relative}
+.code-panel{
+  display:none;
+  background:var(--bg-code);
+  border:1px solid var(--border);
+  border-top:none;
+  border-radius:0 0 6px 6px;
+  overflow:hidden;
+}
+.code-panel.active{display:block}
+
+.code-panel-header{
+  padding:12px 20px;
+  border-bottom:1px solid var(--border-subtle);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.code-panel-header span{
+  font-size:11px;
+  color:var(--text-faint);
+  letter-spacing:0.05em;
+}
+.code-panel-header .method{
+  font-size:10px;
+  font-weight:500;
+  padding:2px 8px;
+  border-radius:3px;
+  letter-spacing:0.06em;
+}
+.method-post{background:rgba(72,187,120,0.12);color:#48bb78}
+.method-get{background:rgba(99,179,237,0.12);color:#63b3ed}
+
+pre{
+  padding:20px;
+  overflow-x:auto;
+  font-family:var(--mono);
+  font-size:13px;
+  line-height:1.7;
+  color:var(--text);
+  tab-size:2;
+}
+
+.tok-key{color:#7c8da6}
+.tok-str{color:#c8963e}
+.tok-num{color:#d4879c}
+.tok-comment{color:var(--text-faint);font-style:italic}
+.tok-method{color:#81a7d6}
+.tok-url{color:var(--text-dim)}
+
+.code-response{
+  border-top:1px solid var(--border-subtle);
+  padding:16px 20px;
+  background:rgba(200,150,62,0.02);
+}
+.code-response-label{
+  font-size:10px;
+  color:var(--text-faint);
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.code-response pre{
+  padding:0;
+  font-size:12px;
+  color:var(--text-dim);
+}
+
+/* --- Features --- */
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+  margin-top:64px;
+}
+
+.feature{
+  background:var(--bg);
+  padding:40px 36px;
+  transition:background .3s;
+}
+.feature:hover{background:var(--bg-raised)}
+
+.feature-icon{
+  width:32px;height:32px;
+  margin-bottom:20px;
+  color:var(--amber);
+  opacity:0.8;
+}
+
+.feature h3{
+  font-family:var(--mono);
+  font-size:14px;
+  font-weight:500;
+  color:var(--heading);
+  margin-bottom:10px;
+  letter-spacing:0.01em;
+}
+
+.feature p{
+  font-size:13px;
+  line-height:1.7;
+  color:var(--text-dim);
+}
+
+/* --- Pricing --- */
+.pricing{background:var(--bg)}
+
+.pricing-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+  margin-top:64px;
+}
+
+.price-card{
+  background:var(--bg);
+  padding:44px 36px;
+  display:flex;
+  flex-direction:column;
+  transition:background .3s;
+}
+.price-card:hover{background:var(--bg-raised)}
+.price-card.featured{
+  background:var(--amber-glow);
+  border:none;
+}
+.price-card.featured:hover{
+  background:rgba(200,150,62,0.12);
+}
+
+.price-tier{
+  font-size:11px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  margin-bottom:16px;
+}
+.price-card.featured .price-tier{color:var(--amber)}
+
+.price-amount{
+  font-family:var(--serif);
+  font-size:40px;
+  font-weight:300;
+  color:var(--heading);
+  margin-bottom:4px;
+  letter-spacing:-0.02em;
+}
+.price-amount span{
+  font-size:15px;
+  color:var(--text-dim);
+  font-family:var(--mono);
+}
+
+.price-desc{
+  font-size:13px;
+  color:var(--text-dim);
+  margin-bottom:28px;
+  padding-bottom:28px;
+  border-bottom:1px solid var(--border-subtle);
+}
+
+.price-features{
+  list-style:none;
+  flex:1;
+  margin-bottom:32px;
+}
+.price-features li{
+  font-size:13px;
+  color:var(--text-dim);
+  padding:6px 0;
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+}
+.price-features li::before{
+  content:'\2013';
+  color:var(--text-faint);
+  flex-shrink:0;
+}
+
+.price-btn{
+  display:block;
+  text-align:center;
+  padding:10px 0;
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:0.04em;
+  border-radius:4px;
+  border:1px solid var(--border);
+  color:var(--text-dim);
+  transition:all .2s;
+  cursor:pointer;
+  background:none;
+  text-decoration:none;
+}
+.price-btn:hover{
+  border-color:var(--text-dim);
+  color:var(--heading);
+}
+.price-card.featured .price-btn{
+  background:var(--amber);
+  color:var(--bg);
+  border-color:var(--amber);
+  font-weight:500;
+}
+.price-card.featured .price-btn:hover{
+  background:var(--heading);
+  border-color:var(--heading);
+}
+
+/* --- Waitlist --- */
+.waitlist{
+  text-align:center;
+  padding:140px 0;
+}
+
+.waitlist h2{
+  font-family:var(--serif);
+  font-size:clamp(28px,4vw,40px);
+  font-weight:300;
+  color:var(--heading);
+  margin-bottom:16px;
+  letter-spacing:-0.01em;
+}
+
+.waitlist > .container > p{
+  color:var(--text-dim);
+  font-size:14px;
+  max-width:420px;
+  margin:0 auto 40px;
+}
+
+.waitlist-form{
+  display:flex;
+  gap:8px;
+  max-width:440px;
+  margin:0 auto;
+}
+
+.waitlist-form input[type="email"]{
+  flex:1;
+  padding:12px 16px;
+  background:var(--bg-raised);
+  border:1px solid var(--border);
+  border-radius:4px;
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--heading);
+  outline:none;
+  transition:border-color .2s;
+}
+.waitlist-form input[type="email"]::placeholder{color:var(--text-faint)}
+.waitlist-form input[type="email"]:focus{border-color:var(--amber-dim)}
+
+.waitlist-form button{
+  padding:12px 24px;
+  background:var(--amber);
+  color:var(--bg);
+  font-family:var(--mono);
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:0.03em;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+  transition:all .2s;
+  white-space:nowrap;
+}
+.waitlist-form button:hover{background:var(--heading)}
+
+.waitlist-note{
+  font-size:11px;
+  color:var(--text-faint);
+  margin-top:16px;
+}
+
+/* --- Footer --- */
+footer{
+  padding:48px 0;
+  border-top:1px solid var(--border);
+}
+
+footer .container{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.footer-left{
+  font-size:12px;
+  color:var(--text-faint);
+}
+.footer-left span{color:var(--text-dim)}
+
+.footer-links{display:flex;gap:24px}
+.footer-links a{
+  font-size:12px;
+  color:var(--text-dim);
+  letter-spacing:0.03em;
+  transition:color .2s;
+}
+.footer-links a:hover{color:var(--amber)}
+
+/* --- Animations --- */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.animate{
+  opacity:0;
+  animation:fadeUp 0.6s ease-out forwards;
+}
+.animate-d1{animation-delay:0.1s}
+.animate-d2{animation-delay:0.2s}
+.animate-d3{animation-delay:0.3s}
+.animate-d4{animation-delay:0.4s}
+
+/* --- Responsive --- */
+@media(max-width:768px){
+  section{padding:80px 0}
+  .hero{padding:140px 0 80px}
+  .hero-visual{display:none}
+  .features-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .nav-links a:not(.btn-nav){display:none}
+  .waitlist-form{flex-direction:column}
+  footer .container{flex-direction:column;gap:20px;text-align:center}
+  .footer-links{gap:16px}
+}
+
+@media(max-width:480px){
+  .container{padding:0 16px}
+  .hero h1{font-size:32px}
+  .code-tab{padding:8px 12px;font-size:11px}
+  pre{font-size:11px;padding:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav id="nav">
+  <div class="container">
+    <div class="nav-logo">smara<span>.</span></div>
+    <div class="nav-links">
+      <a href="#code">API</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="https://api.smara.io/docs/" target="_blank" class="btn-nav">Docs</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-label animate">Memory API for AI Agents</div>
+    <h1 class="animate animate-d1">Your agents forget<br>everything. <em>Fix that.</em></h1>
+    <p class="hero-sub animate animate-d2">Persistent memory in 3 API calls. Store, search, and recall&mdash;with Ebbinghaus decay scoring that lets memories fade naturally, just like the real thing.</p>
+    <div class="hero-actions animate animate-d3">
+      <a href="#waitlist" class="btn-primary">Join the waitlist</a>
+      <a href="#code" class="btn-ghost">See the API</a>
+    </div>
+  </div>
+  <canvas class="hero-visual" id="decay-canvas"></canvas>
+</section>
+
+<div class="divider"></div>
+
+<!-- Code Examples -->
+<section class="code-section" id="code">
+  <div class="container">
+    <div class="section-label animate">Three calls. That's it.</div>
+    <h2 class="animate animate-d1">Simple by design</h2>
+    <p class="animate animate-d2">No SDKs to install. No schemas to define. Just REST.</p>
+
+    <div class="animate animate-d3">
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="store">store</button>
+        <button class="code-tab" data-tab="search">search</button>
+        <button class="code-tab" data-tab="context">context</button>
+      </div>
+
+      <div class="code-panels">
+        <!-- Store -->
+        <div class="code-panel active" id="panel-store">
+          <div class="code-panel-header">
+            <span>POST /v1/memories</span>
+            <span class="method method-post">POST</span>
+          </div>
+<pre>curl -X POST https://api.smara.io/v1/memories \
+  -H <span class="tok-str">"Authorization: Bearer smara_your_key"</span> \
+  -H <span class="tok-str">"Content-Type: application/json"</span> \
+  -d '{
+    <span class="tok-key">"user_id"</span>:    <span class="tok-str">"user_42"</span>,
+    <span class="tok-key">"fact"</span>:       <span class="tok-str">"Prefers dark mode. Uses vim keybindings."</span>,
+    <span class="tok-key">"importance"</span>: <span class="tok-num">0.7</span>
+  }'</pre>
+          <div class="code-response">
+            <div class="code-response-label">Response</div>
+<pre>{ <span class="tok-key">"id"</span>: <span class="tok-str">"mem_8f3a..."</span>, <span class="tok-key">"decay_score"</span>: <span class="tok-num">1.0</span>, <span class="tok-key">"status"</span>: <span class="tok-str">"stored"</span> }</pre>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="code-panel" id="panel-search">
+          <div class="code-panel-header">
+            <span>GET /v1/memories/search</span>
+            <span class="method method-get">GET</span>
+          </div>
+<pre>curl https://api.smara.io/v1/memories/search \
+  -H <span class="tok-str">"Authorization: Bearer smara_your_key"</span> \
+  -G \
+  -d <span class="tok-key">user_id</span>=<span class="tok-str">user_42</span> \
+  -d <span class="tok-key">q</span>=<span class="tok-str">"editor preferences"</span> \
+  -d <span class="tok-key">limit</span>=<span class="tok-num">5</span></pre>
+          <div class="code-response">
+            <div class="code-response-label">Response</div>
+<pre>{ <span class="tok-key">"memories"</span>: [
+    { <span class="tok-key">"fact"</span>: <span class="tok-str">"Prefers dark mode. Uses vim keybindings."</span>,
+      <span class="tok-key">"similarity"</span>: <span class="tok-num">0.94</span>, <span class="tok-key">"decay_score"</span>: <span class="tok-num">0.97</span> }
+  ] }</pre>
+          </div>
+        </div>
+
+        <!-- Context -->
+        <div class="code-panel" id="panel-context">
+          <div class="code-panel-header">
+            <span>GET /v1/users/:user_id/context</span>
+            <span class="method method-get">GET</span>
+          </div>
+<pre>curl https://api.smara.io/v1/users/user_42/context \
+  -H <span class="tok-str">"Authorization: Bearer smara_your_key"</span></pre>
+          <div class="code-response">
+            <div class="code-response-label">Response &mdash; full user context, ranked by relevance &times; decay</div>
+<pre>{ <span class="tok-key">"user_id"</span>: <span class="tok-str">"user_42"</span>,
+  <span class="tok-key">"memory_count"</span>: <span class="tok-num">23</span>,
+  <span class="tok-key">"context"</span>: [
+    { <span class="tok-key">"fact"</span>: <span class="tok-str">"Prefers dark mode. Uses vim keybindings."</span>, <span class="tok-key">"score"</span>: <span class="tok-num">0.96</span> },
+    { <span class="tok-key">"fact"</span>: <span class="tok-str">"Working on a Rust CLI tool for log parsing"</span>, <span class="tok-key">"score"</span>: <span class="tok-num">0.89</span> }
+  ] }</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Features -->
+<section id="features">
+  <div class="container">
+    <div class="section-label animate">How it works</div>
+    <h2 class="animate animate-d1" style="font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--heading);letter-spacing:-0.01em">Memory that behaves<br>like memory</h2>
+
+    <div class="features-grid">
+      <div class="feature">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 24 C8 8, 16 6, 28 4" stroke-linecap="round"/>
+          <path d="M4 24 C8 14, 16 12, 28 10" stroke-linecap="round" opacity="0.4"/>
+          <circle cx="4" cy="24" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+        <h3>Ebbinghaus decay</h3>
+        <p>Memories lose weight over time using a decay curve modeled on human forgetting. Recent memories surface first. Old, unreinforced memories fade&mdash;but never disappear.</p>
+      </div>
+      <div class="feature">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 16h8M18 16h8" stroke-linecap="round"/>
+          <path d="M14 10l4 6-4 6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 10l-4 6 4 6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3>Contradiction detection</h3>
+        <p>When a new memory contradicts an existing one (0.94&ndash;0.985 cosine similarity), the old memory is soft-deleted automatically. Your agent's knowledge stays consistent.</p>
+      </div>
+      <div class="feature">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="16" cy="16" r="10"/>
+          <circle cx="16" cy="16" r="4"/>
+          <path d="M16 6v-2M16 28v-2M6 16H4M28 16h-2" stroke-linecap="round"/>
+        </svg>
+        <h3>Vector search</h3>
+        <p>1024-dimensional embeddings via Voyage AI. Semantic search that understands meaning, not just keywords. Powered by pgvector for production-grade performance.</p>
+      </div>
+      <div class="feature">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="4" y="8" width="24" height="4" rx="1"/>
+          <rect x="4" y="14" width="24" height="4" rx="1" opacity="0.6"/>
+          <rect x="4" y="20" width="24" height="4" rx="1" opacity="0.3"/>
+        </svg>
+        <h3>Plain REST</h3>
+        <p>No SDKs, no GraphQL, no WebSockets. Just HTTP with JSON. If you can write a curl command, you can integrate Smara in under five minutes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Pricing -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-label animate">Pricing</div>
+    <h2 class="animate animate-d1" style="font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--heading);letter-spacing:-0.01em">Start free.<br>Scale when you need to.</h2>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Free</div>
+        <div class="price-amount">$0</div>
+        <div class="price-desc">For prototyping and side projects</div>
+        <ul class="price-features">
+          <li>10,000 memories</li>
+          <li>Full API access</li>
+          <li>Decay scoring</li>
+          <li>Community support</li>
+        </ul>
+        <a href="#waitlist" class="price-btn">Join waitlist</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-tier">Developer</div>
+        <div class="price-amount">$19<span>/mo</span></div>
+        <div class="price-desc">For production agents</div>
+        <ul class="price-features">
+          <li>200,000 memories</li>
+          <li>Priority embedding pipeline</li>
+          <li>Webhook notifications</li>
+          <li>Email support</li>
+        </ul>
+        <a href="https://buy.stripe.com/test_aFa9AM6Ks1Fy6OteGp6wE00" target="_blank" class="price-btn">Subscribe</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-tier">Pro</div>
+        <div class="price-amount">$99<span>/mo</span></div>
+        <div class="price-desc">For teams shipping at scale</div>
+        <ul class="price-features">
+          <li>2,000,000 memories</li>
+          <li>$0.50 per 10K after</li>
+          <li>Dedicated embedding queue</li>
+          <li>Slack support + SLA</li>
+        </ul>
+        <a href="https://buy.stripe.com/test_bJe14g1q8dog2yd0Pz6wE01" target="_blank" class="price-btn">Subscribe</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Waitlist -->
+<section class="waitlist" id="waitlist">
+  <div class="container">
+    <h2 class="animate">Get early access</h2>
+    <p class="animate animate-d1">We're onboarding developers now. Drop your email and we'll send you an API key.</p>
+    <form class="waitlist-form animate animate-d2" id="waitlist-form">
+      <input type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+      <button type="submit">Request access</button>
+    </form>
+    <p class="waitlist-note animate animate-d3">No spam. Just your API key when it's ready.</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-left">
+      <span>smara</span> &mdash; स्मर &mdash; the act of remembrance
+    </div>
+    <div class="footer-links">
+      <a href="https://api.smara.io/docs/" target="_blank">Docs</a>
+      <a href="https://github.com/smara-io" target="_blank">GitHub</a>
+      <a href="https://twitter.com/parallelromb" target="_blank">@parallelromb</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Nav scroll effect
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// Code tabs
+document.querySelectorAll('.code-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.animationPlayState = 'running';
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.animate').forEach(el => {
+  el.style.animationPlayState = 'paused';
+  observer.observe(el);
+});
+
+// Decay curve canvas
+(function() {
+  const c = document.getElementById('decay-canvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  c.width = 440 * dpr;
+  c.height = 340 * dpr;
+  ctx.scale(dpr, dpr);
+
+  function decay(t, s) { return Math.exp(-t / s); }
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, 440, 340);
+    frame += 0.003;
+
+    const curves = [
+      { s: 60, color: 'rgba(200,150,62,0.35)', w: 1.5 },
+      { s: 30, color: 'rgba(200,150,62,0.18)', w: 1 },
+      { s: 15, color: 'rgba(200,150,62,0.08)', w: 1 },
+    ];
+
+    curves.forEach(({ s, color, w }) => {
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = w;
+      for (let x = 0; x <= 400; x++) {
+        const t = x / 400 * 100;
+        const y = 40 + (1 - decay(t + frame * 10, s)) * 260;
+        x === 0 ? ctx.moveTo(20 + x, y) : ctx.lineTo(20 + x, y);
+      }
+      ctx.stroke();
+    });
+
+    // Dots representing memories
+    const dots = [0.05, 0.15, 0.3, 0.5, 0.75];
+    dots.forEach(p => {
+      const t = p * 100 + frame * 10;
+      const y = 40 + (1 - decay(t, 60)) * 260;
+      const x = 20 + p * 400;
+      const alpha = decay(t, 60) * 0.6;
+      ctx.beginPath();
+      ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,150,62,${alpha})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// Waitlist form
+document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = this.email.value;
+  const btn = this.querySelector('button');
+  const input = this.email;
+  const original = btn.textContent;
+
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  input.disabled = true;
+
+  try {
+    const res = await fetch('/api/waitlist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      btn.textContent = data.status === 'already_signed_up' ? 'Already on the list' : 'You\'re in';
+      btn.style.background = 'var(--heading)';
+      input.value = '';
+    } else {
+      btn.textContent = 'Try again';
+      btn.style.background = '#c0392b';
+    }
+  } catch {
+    btn.textContent = 'Try again';
+    btn.style.background = '#c0392b';
+  }
+
+  setTimeout(() => {
+    btn.textContent = original;
+    btn.style.background = '';
+    input.disabled = false;
+    btn.disabled = false;
+  }, 3000);
+});
+</script>
+</body>
+</html>

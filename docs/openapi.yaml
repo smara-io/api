@@ -116,6 +116,41 @@ components:
         error:
           type: string
 
+    UsageLimitError:
+      type: object
+      properties:
+        error:
+          type: string
+        plan:
+          type: string
+          description: Current plan name (e.g. "free", "pro").
+        limit:
+          type: integer
+          description: Maximum memories allowed on this plan.
+        used:
+          type: integer
+          description: Number of active memories currently stored.
+        upgrade_url:
+          type: string
+          format: uri
+          description: URL to upgrade your plan.
+
+    UsageResponse:
+      type: object
+      properties:
+        plan:
+          type: string
+          description: Current plan name (e.g. "free", "pro").
+        memory_limit:
+          type: integer
+          description: Maximum memories allowed on this plan.
+        memories_used:
+          type: integer
+          description: Number of active memories currently stored.
+        memories_remaining:
+          type: integer
+          description: How many more memories can be stored before hitting the limit.
+
 paths:
   /v1/memories:
     post:
@@ -166,6 +201,18 @@ paths:
               example:
                 action: duplicate
                 id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        "402":
+          description: Memory limit reached for current plan.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsageLimitError"
+              example:
+                error: "Memory limit reached"
+                plan: "free"
+                limit: 1000
+                used: 1000
+                upgrade_url: "https://smara.io/#pricing"
         "401":
           description: Unauthorized.
           content:
@@ -315,6 +362,34 @@ paths:
                 $ref: "#/components/schemas/Error"
               example:
                 error: "Memory not found or already deleted"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /v1/usage:
+    get:
+      operationId: getUsage
+      summary: Get plan usage
+      description: |
+        Returns the current plan name, memory limit, active memory count,
+        and remaining capacity. Use this to display usage meters or to
+        check headroom before storing memories.
+      tags: [Usage]
+      responses:
+        "200":
+          description: Current usage for the authenticated tenant.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsageResponse"
+              example:
+                plan: "free"
+                memory_limit: 1000
+                memories_used: 342
+                memories_remaining: 658
         "401":
           description: Unauthorized.
           content:
