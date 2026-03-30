@@ -8,9 +8,11 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 -- ── Tenants ─────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS tenants (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name        TEXT NOT NULL,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name          TEXT NOT NULL,
+  plan          TEXT NOT NULL DEFAULT 'free',          -- 'free' | 'developer' | 'pro'
+  memory_limit  INTEGER NOT NULL DEFAULT 10000,        -- max active memories
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- ── API Keys ─────────────────────────────────────────────────────────────────

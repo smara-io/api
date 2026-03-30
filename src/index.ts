@@ -15,10 +15,19 @@ async function migrate(): Promise<void> {
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS tenants (
-      id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      name       TEXT NOT NULL,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      name         TEXT NOT NULL,
+      plan         TEXT NOT NULL DEFAULT 'free',
+      memory_limit INTEGER NOT NULL DEFAULT 10000,
+      created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
+  `);
+  // Add plan/limit columns if table already exists
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE tenants ADD COLUMN IF NOT EXISTS plan TEXT NOT NULL DEFAULT 'free';
+      ALTER TABLE tenants ADD COLUMN IF NOT EXISTS memory_limit INTEGER NOT NULL DEFAULT 10000;
+    EXCEPTION WHEN others THEN NULL; END $$
   `);
 
   await pool.query(`

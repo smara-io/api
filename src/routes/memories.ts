@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import { authenticate } from '../middleware/auth.js';
 import { storeMemory, deleteMemory } from '../memory/store.js';
 import { searchMemories, getContext } from '../memory/search.js';
+import { pool } from '../db/pool.js';
 
 export async function memoriesRoutes(app: FastifyInstance): Promise<void> {
 
@@ -22,6 +23,24 @@ export async function memoriesRoutes(app: FastifyInstance): Promise<void> {
       },
     },
   }, async (request, reply) => {
+    // ── Usage limit check ──────────────────────────────────────────────
+    const { rows: [{ count }] } = await pool.query<{ count: string }>(
+      `SELECT COUNT(*)::TEXT AS count FROM memories
+       WHERE tenant_id = $1 AND valid_until IS NULL`,
+      [request.tenantId]
+    );
+    const activeCount = parseInt(count, 10);
+
+    if (activeCount >= request.tenantMemoryLimit) {
+      return reply.code(402).send({
+        error: 'Memory limit reached',
+        plan: request.tenantPlan,
+        limit: request.tenantMemoryLimit,
+        used: activeCount,
+        upgrade_url: 'https://smara.io/#pricing',
+      });
+    }
+
     const { user_id, fact, importance = 0.5 } = request.body;
     const result = await storeMemory(request.tenantId, user_id, fact, importance);
 
@@ -82,6 +101,24 @@ export async function memoriesRoutes(app: FastifyInstance): Promise<void> {
       return reply.code(404).send({ error: 'Memory not found or already deleted' });
     }
     return reply.code(204).send();
+  });
+
+  // GET /v1/usage — check current plan and memory usage
+  app.get('/v1/usage', {
+    preHandler: authenticate,
+  }, async (request, reply) => {
+    const { rows: [{ count }] } = await pool.query<{ count: string }>(
+      `SELECT COUNT(*)::TEXT AS count FROM memories
+       WHERE tenant_id = $1 AND valid_until IS NULL`,
+      [request.tenantId]
+    );
+
+    return reply.send({
+      plan: request.tenantPlan,
+      memory_limit: request.tenantMemoryLimit,
+      memories_used: parseInt(count, 10),
+      memories_remaining: Math.max(0, request.tenantMemoryLimit - parseInt(count, 10)),
+    });
   });
 
   // GET /v1/users/:userId/context — top-N memories formatted as LLM context
