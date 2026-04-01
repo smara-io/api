@@ -18,6 +18,42 @@ function hashKey(raw: string): string {
 }
 
 export async function setupRoutes(app: FastifyInstance): Promise<void> {
+  // Admin: create a new API key for an existing tenant (secured by SETUP_SECRET)
+  app.post<{ Body: { label?: string } }>(
+    '/admin/keys',
+    async (request, reply) => {
+      const secret = request.headers['x-setup-secret'] as string;
+      if (!secret || secret !== process.env.SETUP_SECRET) {
+        return reply.code(403).send({ error: 'Forbidden' });
+      }
+      const { rows } = await pool.query('SELECT id, name FROM tenants LIMIT 1');
+      if (rows.length === 0) return reply.code(404).send({ error: 'No tenants exist' });
+
+      const tenantId = rows[0].id;
+      const rawKey = generateApiKey();
+      const keyHash = hashKey(rawKey);
+      const label = request.body?.label ?? 'Admin-generated key';
+
+      await pool.query(
+        'INSERT INTO api_keys (tenant_id, key_hash, label) VALUES ($1, $2, $3)',
+        [tenantId, keyHash, label],
+      );
+      return reply.code(201).send({ tenant_id: tenantId, tenant_name: rows[0].name, api_key: rawKey, label });
+    },
+  );
+
+  // Admin: check tenant + memory stats (secured by SETUP_SECRET)
+  app.get('/admin/stats', async (request, reply) => {
+    const secret = request.headers['x-setup-secret'] as string;
+    if (!secret || secret !== process.env.SETUP_SECRET) {
+      return reply.code(403).send({ error: 'Forbidden' });
+    }
+    const tenants = await pool.query('SELECT id, name, plan, memory_limit FROM tenants');
+    const mems = await pool.query('SELECT COUNT(*) as count FROM memories WHERE valid_until IS NULL');
+    const keys = await pool.query('SELECT tenant_id, label, created_at FROM api_keys ORDER BY created_at');
+    return { tenants: tenants.rows, active_memories: Number(mems.rows[0].count), api_keys: keys.rows };
+  });
+
   app.post<{ Body: { tenant_name?: string } }>(
     '/setup',
     {

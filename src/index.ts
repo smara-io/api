@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { memoriesRoutes } from './routes/memories.js';
 import { setupRoutes } from './routes/setup.js';
+import { stripeWebhookRoutes } from './routes/stripe-webhook.js';
 import { pool } from './db/pool.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -22,13 +23,15 @@ async function migrate(): Promise<void> {
       created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `);
-  // Add plan/limit columns if table already exists
+  // Add plan/limit/stripe columns if table already exists
   await pool.query(`
     DO $$ BEGIN
       ALTER TABLE tenants ADD COLUMN IF NOT EXISTS plan TEXT NOT NULL DEFAULT 'free';
       ALTER TABLE tenants ADD COLUMN IF NOT EXISTS memory_limit INTEGER NOT NULL DEFAULT 10000;
+      ALTER TABLE tenants ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT;
     EXCEPTION WHEN others THEN NULL; END $$
   `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS tenants_stripe_customer_idx ON tenants(stripe_customer_id) WHERE stripe_customer_id IS NOT NULL`);
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS api_keys (
@@ -72,6 +75,19 @@ async function migrate(): Promise<void> {
       ON memories(tenant_id, user_id, valid_until) WHERE valid_until IS NULL
   `);
 
+  // v2: Add source and namespace columns
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE memories ADD COLUMN IF NOT EXISTS source TEXT NOT NULL DEFAULT 'api';
+      ALTER TABLE memories ADD COLUMN IF NOT EXISTS namespace TEXT NOT NULL DEFAULT 'default';
+    EXCEPTION WHEN others THEN NULL; END $$
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS memories_source_idx ON memories(source)`);
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS memories_tenant_user_ns_active_idx
+      ON memories(tenant_id, user_id, namespace, valid_until) WHERE valid_until IS NULL
+  `);
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS retrieval_logs (
       id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -112,6 +128,7 @@ if (existsSync(docsDir)) {
 
 await app.register(memoriesRoutes);
 await app.register(setupRoutes);
+await app.register(stripeWebhookRoutes);
 
 const PORT = parseInt(process.env.PORT ?? '3010', 10);
 

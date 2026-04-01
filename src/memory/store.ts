@@ -18,21 +18,24 @@ export async function storeMemory(
   tenantId: string,
   userId: string,
   fact: string,
-  importance: number = 0.5
+  importance: number = 0.5,
+  source: string = 'api',
+  namespace: string = 'default'
 ): Promise<StoreResult> {
   const embedding = await embed(fact);
   const vec = `[${embedding.join(',')}]`;
 
-  // Check for near-duplicate or contradiction in active memories
+  // Check for near-duplicate or contradiction in active memories (scoped by namespace)
   const { rows } = await pool.query<{ id: string; similarity: number }>(
     `SELECT id, 1 - (embedding <=> $1::vector) AS similarity
      FROM memories
      WHERE tenant_id = $2
        AND user_id = $3
+       AND namespace = $4
        AND valid_until IS NULL
      ORDER BY embedding <=> $1::vector
      LIMIT 1`,
-    [vec, tenantId, userId]
+    [vec, tenantId, userId, namespace]
   );
 
   const nearest = rows[0];
@@ -53,10 +56,10 @@ export async function storeMemory(
   }
 
   const insertResult = await pool.query<{ id: string }>(
-    `INSERT INTO memories (tenant_id, user_id, fact, embedding, importance, decay_score)
-     VALUES ($1, $2, $3, $4::vector, $5, 1.0)
+    `INSERT INTO memories (tenant_id, user_id, fact, embedding, importance, decay_score, source, namespace)
+     VALUES ($1, $2, $3, $4::vector, $5, 1.0, $6, $7)
      RETURNING id`,
-    [tenantId, userId, fact, vec, importance]
+    [tenantId, userId, fact, vec, importance, source, namespace]
   );
 
   return {

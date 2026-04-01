@@ -1,8 +1,8 @@
 ---
 title: How Ebbinghaus Forgetting Curves Make AI Agents Smarter
 published: false
-description: Why AI agent memory needs decay scoring, and how to implement it with 3 API calls
-tags: ai, agents, memory, psychology
+description: Why AI agent memory needs decay scoring, how to share memory across every AI tool, and how to implement it with 3 API calls
+tags: ai, agents, memory, psychology, mcp
 ---
 
 Every AI agent you've built has the same problem: amnesia.
@@ -131,6 +131,39 @@ q=what+should+I+know+about+this+user&top_n=5" \
 ```
 
 Drop the `context` string into your system prompt and your agent knows who it's talking to — with memories ranked by both relevance and freshness.
+
+## One memory for all your AI tools
+
+Here's the problem nobody's talking about: memory is siloed.
+
+Tell Claude Code you prefer Python. Switch to Cursor — it has no idea. Open Codex — starts from scratch. Every AI tool you use has its own isolated memory, and none of them talk to each other.
+
+Smara fixes this by being platform-agnostic. Every memory is tagged with its source — which tool stored it — but all memories live in one pool. A preference stored via Claude Code is instantly available in Cursor, Codex, or any tool connected to your Smara account.
+
+```json
+{
+  "fact": "Prefers Python over TypeScript for backend work",
+  "source": "claude-code",
+  "namespace": "default",
+  "decay_score": 0.97
+}
+```
+
+For MCP-compatible tools (Claude Code, Cursor, Windsurf), Smara's MCP server handles everything automatically — loading context at conversation start and storing new facts silently. No manual tool calls. Install once, and your AI tools remember across sessions and across platforms.
+
+```json
+{
+  "smara": {
+    "command": "npx",
+    "args": ["-y", "@smara/mcp-server"],
+    "env": { "SMARA_API_KEY": "your-key" }
+  }
+}
+```
+
+For OpenAI-compatible tools (Codex, ChatGPT, custom GPTs), Smara provides function definitions and a proxy endpoint. Same memories, different protocol.
+
+The result: switch between AI tools freely without losing context. Your memory follows you.
 
 ## How this compares to alternatives
 

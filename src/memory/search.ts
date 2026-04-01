@@ -9,6 +9,8 @@ export interface MemoryResult {
   decay_score: number;
   similarity: number;
   score: number;
+  source: string;
+  namespace: string;
   created_at: string;
 }
 
@@ -16,28 +18,39 @@ export async function searchMemories(
   tenantId: string,
   userId: string,
   query: string,
-  limit: number = 10
+  limit: number = 10,
+  source?: string,
+  namespace: string = 'default'
 ): Promise<MemoryResult[]> {
   const embedding = await embed(query);
   const vec = `[${embedding.join(',')}]`;
+
+  let sql = `SELECT id, fact, importance, created_at, source, namespace,
+                    1 - (embedding <=> $1::vector) AS similarity
+             FROM memories
+             WHERE tenant_id = $2
+               AND user_id = $3
+               AND namespace = $4
+               AND valid_until IS NULL`;
+  const params: unknown[] = [vec, tenantId, userId, namespace];
+
+  if (source) {
+    params.push(source);
+    sql += ` AND source = $${params.length}`;
+  }
+
+  params.push(limit * 2);
+  sql += ` ORDER BY embedding <=> $1::vector LIMIT $${params.length}`;
 
   const { rows } = await pool.query<{
     id: string;
     fact: string;
     importance: number;
     created_at: Date;
+    source: string;
+    namespace: string;
     similarity: number;
-  }>(
-    `SELECT id, fact, importance, created_at,
-            1 - (embedding <=> $1::vector) AS similarity
-     FROM memories
-     WHERE tenant_id = $2
-       AND user_id = $3
-       AND valid_until IS NULL
-     ORDER BY embedding <=> $1::vector
-     LIMIT $4`,
-    [vec, tenantId, userId, limit * 2]  // over-fetch to re-rank by decay
-  );
+  }>(sql, params);
 
   // Re-rank using Ebbinghaus decay blend
   const reranked = rows
@@ -50,6 +63,8 @@ export async function searchMemories(
         decay_score: parseFloat(decay.toFixed(4)),
         similarity: parseFloat(row.similarity.toFixed(4)),
         score: parseFloat(blendScore(row.similarity, decay).toFixed(4)),
+        source: row.source,
+        namespace: row.namespace,
         created_at: row.created_at.toISOString(),
       };
     })
@@ -72,18 +87,66 @@ export async function searchMemories(
   return reranked;
 }
 
+/** Return top-N memories by decay score alone (no query needed, no Voyage API call) */
+export async function getRecentMemories(
+  tenantId: string,
+  userId: string,
+  limit: number = 5,
+  namespace: string = 'default'
+): Promise<MemoryResult[]> {
+  const { rows } = await pool.query<{
+    id: string;
+    fact: string;
+    importance: number;
+    created_at: Date;
+    source: string;
+    namespace: string;
+  }>(
+    `SELECT id, fact, importance, created_at, source, namespace
+     FROM memories
+     WHERE tenant_id = $1
+       AND user_id = $2
+       AND namespace = $3
+       AND valid_until IS NULL
+     ORDER BY created_at DESC
+     LIMIT $4`,
+    [tenantId, userId, namespace, limit * 2]
+  );
+
+  return rows
+    .map(row => {
+      const decay = ebbinghaus(row.created_at, row.importance);
+      return {
+        id: row.id,
+        fact: row.fact,
+        importance: row.importance,
+        decay_score: parseFloat(decay.toFixed(4)),
+        similarity: 1,  // no vector search — full relevance assumed
+        score: parseFloat(decay.toFixed(4)),
+        source: row.source,
+        namespace: row.namespace,
+        created_at: row.created_at.toISOString(),
+      };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
+}
+
 export async function getContext(
   tenantId: string,
   userId: string,
-  query: string,
-  topN: number = 5
+  query: string | undefined,
+  topN: number = 5,
+  namespace: string = 'default'
 ): Promise<{ memories: MemoryResult[]; context: string }> {
-  const memories = await searchMemories(tenantId, userId, query, topN);
+  const memories = query
+    ? await searchMemories(tenantId, userId, query, topN, undefined, namespace)
+    : await getRecentMemories(tenantId, userId, topN, namespace);
 
   const context = memories.length === 0
     ? 'No relevant memories found.'
     : memories
-        .map((m, i) => `[${i + 1}] (importance: ${m.importance}, decay: ${m.decay_score}) ${m.fact}`)
+        .map((m, i) => `[${i + 1}] (importance: ${m.importance}, decay: ${m.decay_score}, source: ${m.source}) ${m.fact}`)
         .join('\n');
 
   return { memories, context };

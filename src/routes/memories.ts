@@ -8,7 +8,7 @@ export async function memoriesRoutes(app: FastifyInstance): Promise<void> {
 
   // POST /v1/memories — store a memory for a user
   app.post<{
-    Body: { user_id: string; fact: string; importance?: number };
+    Body: { user_id: string; fact: string; importance?: number; source?: string; namespace?: string };
   }>('/v1/memories', {
     preHandler: authenticate,
     schema: {
@@ -19,6 +19,8 @@ export async function memoriesRoutes(app: FastifyInstance): Promise<void> {
           user_id: { type: 'string', minLength: 1 },
           fact: { type: 'string', minLength: 1, maxLength: 2000 },
           importance: { type: 'number', minimum: 0, maximum: 1 },
+          source: { type: 'string', maxLength: 50 },
+          namespace: { type: 'string', maxLength: 100 },
         },
       },
     },
@@ -41,8 +43,8 @@ export async function memoriesRoutes(app: FastifyInstance): Promise<void> {
       });
     }
 
-    const { user_id, fact, importance = 0.5 } = request.body;
-    const result = await storeMemory(request.tenantId, user_id, fact, importance);
+    const { user_id, fact, importance = 0.5, source = 'api', namespace = 'default' } = request.body;
+    const result = await storeMemory(request.tenantId, user_id, fact, importance, source, namespace);
 
     if (result.action === 'duplicate') {
       return reply.code(200).send({ action: 'duplicate', id: result.id });
@@ -51,13 +53,15 @@ export async function memoriesRoutes(app: FastifyInstance): Promise<void> {
     return reply.code(201).send({
       action: result.action,
       id: result.id,
+      source,
+      namespace,
       ...(result.replacedId && { replaced_id: result.replacedId }),
     });
   });
 
   // GET /v1/memories/search — semantic search
   app.get<{
-    Querystring: { user_id: string; q: string; limit?: string };
+    Querystring: { user_id: string; q: string; limit?: string; source?: string; namespace?: string };
   }>('/v1/memories/search', {
     preHandler: authenticate,
     schema: {
@@ -68,16 +72,20 @@ export async function memoriesRoutes(app: FastifyInstance): Promise<void> {
           user_id: { type: 'string' },
           q: { type: 'string', minLength: 1 },
           limit: { type: 'string' },
+          source: { type: 'string' },
+          namespace: { type: 'string' },
         },
       },
     },
   }, async (request, reply) => {
-    const { user_id, q, limit } = request.query;
+    const { user_id, q, limit, source, namespace = 'default' } = request.query;
     const results = await searchMemories(
       request.tenantId,
       user_id,
       q,
-      Math.min(parseInt(limit ?? '10', 10), 50)
+      Math.min(parseInt(limit ?? '10', 10), 50),
+      source,
+      namespace
     );
     return reply.send({ results });
   });
@@ -124,7 +132,7 @@ export async function memoriesRoutes(app: FastifyInstance): Promise<void> {
   // GET /v1/users/:userId/context — top-N memories formatted as LLM context
   app.get<{
     Params: { userId: string };
-    Querystring: { q: string; top_n?: string };
+    Querystring: { q?: string; top_n?: string; namespace?: string };
   }>('/v1/users/:userId/context', {
     preHandler: authenticate,
     schema: {
@@ -135,22 +143,23 @@ export async function memoriesRoutes(app: FastifyInstance): Promise<void> {
       },
       querystring: {
         type: 'object',
-        required: ['q'],
         properties: {
           q: { type: 'string', minLength: 1 },
           top_n: { type: 'string' },
+          namespace: { type: 'string' },
         },
       },
     },
   }, async (request, reply) => {
     const { userId } = request.params;
-    const { q, top_n } = request.query;
+    const { q, top_n, namespace = 'default' } = request.query;
 
     const { memories, context } = await getContext(
       request.tenantId,
       userId,
       q,
-      Math.min(parseInt(top_n ?? '5', 10), 20)
+      Math.min(parseInt(top_n ?? '5', 10), 20),
+      namespace
     );
 
     return reply.send({ context, memories });
