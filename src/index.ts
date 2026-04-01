@@ -75,6 +75,14 @@ async function migrate(): Promise<void> {
       ON memories(tenant_id, user_id, valid_until) WHERE valid_until IS NULL
   `);
 
+  // Add email to tenants
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE tenants ADD COLUMN IF NOT EXISTS email TEXT;
+    EXCEPTION WHEN others THEN NULL; END $$
+  `);
+  await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS tenants_email_idx ON tenants(email) WHERE email IS NOT NULL`);
+
   // v2: Add source and namespace columns
   await pool.query(`
     DO $$ BEGIN

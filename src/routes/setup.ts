@@ -18,6 +18,78 @@ function hashKey(raw: string): string {
 }
 
 export async function setupRoutes(app: FastifyInstance): Promise<void> {
+  // Public signup: email → instant API key
+  app.post<{ Body: { email: string } }>(
+    '/v1/signup',
+    {
+      schema: {
+        body: {
+          type: 'object',
+          required: ['email'],
+          properties: {
+            email: { type: 'string', format: 'email' },
+          },
+        },
+      },
+    },
+    async (request, reply) => {
+      const email = request.body.email.toLowerCase().trim();
+      if (!email || !email.includes('@') || !email.includes('.')) {
+        return reply.code(400).send({ error: 'Invalid email' });
+      }
+
+      // Check if email already has a tenant
+      const { rows: existing } = await pool.query(
+        'SELECT t.id, t.name, ak.key_hash FROM tenants t JOIN api_keys ak ON ak.tenant_id = t.id WHERE t.email = $1 LIMIT 1',
+        [email],
+      );
+      if (existing.length > 0) {
+        return reply.code(409).send({
+          error: 'already_registered',
+          message: 'This email already has an account. Check your email for your API key, or contact support.',
+        });
+      }
+
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+
+        const { rows: tenantRows } = await client.query<{ id: string }>(
+          `INSERT INTO tenants (name, email, plan, memory_limit) VALUES ($1, $2, 'free', 10000) RETURNING id`,
+          [email.split('@')[0], email],
+        );
+        const tenantId = tenantRows[0].id;
+
+        const rawKey = generateApiKey();
+        const keyHash = hashKey(rawKey);
+
+        await client.query(
+          `INSERT INTO api_keys (tenant_id, key_hash, label) VALUES ($1, $2, 'Signup key')`,
+          [tenantId, keyHash],
+        );
+
+        await client.query('COMMIT');
+
+        return reply.code(201).send({
+          api_key: rawKey,
+          message: 'Save this API key — it cannot be recovered.',
+        });
+      } catch (err: any) {
+        await client.query('ROLLBACK');
+        // Handle race condition on duplicate email
+        if (err.code === '23505' && err.constraint?.includes('email')) {
+          return reply.code(409).send({
+            error: 'already_registered',
+            message: 'This email already has an account.',
+          });
+        }
+        throw err;
+      } finally {
+        client.release();
+      }
+    },
+  );
+
   // Admin: create a new API key for an existing tenant (secured by SETUP_SECRET)
   app.post<{ Body: { label?: string } }>(
     '/admin/keys',
