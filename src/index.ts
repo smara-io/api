@@ -6,6 +6,7 @@ import { dirname, join } from 'path';
 import { memoriesRoutes } from './routes/memories.js';
 import { setupRoutes } from './routes/setup.js';
 import { stripeWebhookRoutes } from './routes/stripe-webhook.js';
+import { openaiProxyRoutes } from './routes/openai-proxy.js';
 import { pool } from './db/pool.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -137,6 +138,7 @@ if (existsSync(docsDir)) {
 await app.register(memoriesRoutes);
 await app.register(setupRoutes);
 await app.register(stripeWebhookRoutes);
+await app.register(openaiProxyRoutes);
 
 const PORT = parseInt(process.env.PORT ?? '3010', 10);
 

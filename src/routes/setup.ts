@@ -6,8 +6,34 @@
  */
 
 import { createHash, randomBytes } from 'crypto';
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { pool } from '../db/pool.js';
+
+// Simple in-memory rate limiter for signup: max 5 per IP per hour
+const signupAttempts = new Map<string, { count: number; resetAt: number }>();
+const SIGNUP_LIMIT = 5;
+const SIGNUP_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+function checkSignupRate(request: FastifyRequest): boolean {
+  const ip = request.ip;
+  const now = Date.now();
+  const entry = signupAttempts.get(ip);
+  if (!entry || now > entry.resetAt) {
+    signupAttempts.set(ip, { count: 1, resetAt: now + SIGNUP_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= SIGNUP_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
+// Cleanup stale entries every 10 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of signupAttempts) {
+    if (now > entry.resetAt) signupAttempts.delete(ip);
+  }
+}, 10 * 60 * 1000).unref();
 
 function generateApiKey(): string {
   return `smara_${randomBytes(32).toString('hex')}`;
@@ -33,6 +59,10 @@ export async function setupRoutes(app: FastifyInstance): Promise<void> {
       },
     },
     async (request, reply) => {
+      if (!checkSignupRate(request)) {
+        return reply.code(429).send({ error: 'Too many signup attempts. Try again later.' });
+      }
+
       const email = request.body.email.toLowerCase().trim();
       if (!email || !email.includes('@') || !email.includes('.')) {
         return reply.code(400).send({ error: 'Invalid email' });
