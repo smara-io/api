@@ -7,6 +7,8 @@ import { memoriesRoutes } from './routes/memories.js';
 import { setupRoutes } from './routes/setup.js';
 import { stripeWebhookRoutes } from './routes/stripe-webhook.js';
 import { openaiProxyRoutes } from './routes/openai-proxy.js';
+import { webhookRoutes } from './routes/webhooks.js';
+import { feedbackRoutes } from './routes/feedback.js';
 import { pool } from './db/pool.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -32,7 +34,7 @@ async function migrate(): Promise<void> {
       ALTER TABLE tenants ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT;
     EXCEPTION WHEN others THEN NULL; END $$
   `);
-  await pool.query(`CREATE INDEX IF NOT EXISTS tenants_stripe_customer_idx ON tenants(stripe_customer_id) WHERE stripe_customer_id IS NOT NULL`);
+  await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS tenants_stripe_customer_id_idx ON tenants(stripe_customer_id) WHERE stripe_customer_id IS NOT NULL`);
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS api_keys (
@@ -108,6 +110,22 @@ async function migrate(): Promise<void> {
     )
   `);
 
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS feedback (
+      id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      tenant_id    UUID REFERENCES tenants(id) ON DELETE SET NULL,
+      type         TEXT NOT NULL CHECK (type IN ('feature', 'bug', 'general')),
+      title        TEXT NOT NULL,
+      description  TEXT,
+      email        TEXT,
+      status       TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new', 'reviewed', 'planned', 'done', 'wontfix')),
+      votes        INTEGER NOT NULL DEFAULT 1,
+      metadata     JSONB DEFAULT '{}',
+      created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS feedback_status_idx ON feedback(status, type)`);
+
   console.log('Database migration complete');
 }
 
@@ -135,10 +153,15 @@ if (existsSync(docsDir)) {
   });
 }
 
+// Webhook routes registered in an encapsulated context so the raw-body
+// content-type parser does not conflict with the default JSON parser.
+await app.register(webhookRoutes);
+
 await app.register(memoriesRoutes);
 await app.register(setupRoutes);
 await app.register(stripeWebhookRoutes);
 await app.register(openaiProxyRoutes);
+await app.register(feedbackRoutes);
 
 const PORT = parseInt(process.env.PORT ?? '3010', 10);
 

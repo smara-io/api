@@ -1,0 +1,6 @@
+name = "smara-landing"
+pages_build_output_dir = "."
+
+[[kv_namespaces]]
+binding = "WAITLIST"
+id = "a5a3e0104b9b4232b7dabeda4c2ff1f6"
