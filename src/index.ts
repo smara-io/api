@@ -7,7 +7,6 @@ import { memoriesRoutes } from './routes/memories.js';
 import { setupRoutes } from './routes/setup.js';
 import { stripeWebhookRoutes } from './routes/stripe-webhook.js';
 import { openaiProxyRoutes } from './routes/openai-proxy.js';
-import { webhookRoutes } from './routes/webhooks.js';
 import { feedbackRoutes } from './routes/feedback.js';
 import { pool } from './db/pool.js';
 
@@ -152,10 +151,6 @@ if (existsSync(docsDir)) {
     decorateReply: false,
   });
 }
-
-// Webhook routes registered in an encapsulated context so the raw-body
-// content-type parser does not conflict with the default JSON parser.
-await app.register(webhookRoutes);
 
 await app.register(memoriesRoutes);
 await app.register(setupRoutes);
