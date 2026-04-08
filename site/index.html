@@ -3,1223 +3,305 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smara — Persistent Memory for AI Tools</title>
-<meta name="description" content="Your AI tools forget everything. Smara gives Claude, Cursor, and Codex a shared memory that persists across sessions. Install in 30 seconds.">
-<meta name="keywords" content="AI memory, MCP server, persistent context, Claude Code memory, Cursor memory, AI agent memory, Ebbinghaus decay, vector database, semantic search, developer tools">
+<title>Smara &mdash; Persistent Memory for AI Tools</title>
+<meta name="description" content="Your AI tools forget everything. Smara gives Claude Code, Cursor, and Codex a shared memory that persists across sessions. Teams, decay scoring, REST API. Install in 30 seconds.">
+<meta name="keywords" content="AI memory, MCP server, persistent context, Claude Code memory, Cursor memory, AI agent memory, Ebbinghaus decay, vector database, semantic search, developer tools, team AI memory">
 <meta name="author" content="Smara">
 <meta name="theme-color" content="#0a0a0b">
 <link rel="canonical" href="https://smara.io">
-
-<!-- Open Graph -->
-<meta property="og:title" content="Smara — Your AI Tools Forget Everything. Fix That.">
-<meta property="og:description" content="Shared persistent memory for Claude Code, Cursor, Codex. Install once, remember everywhere. Ebbinghaus decay keeps context fresh.">
+<meta property="og:title" content="Smara &mdash; Your AI Tools Forget Everything. Fix That.">
+<meta property="og:description" content="Shared persistent memory for Claude Code, Cursor, Codex. Teams, decay scoring, REST API. Install once, remember everywhere.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://smara.io">
 <meta property="og:site_name" content="Smara">
 <meta property="og:image" content="https://smara.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@SmaraMemo">
-<meta name="twitter:title" content="Smara — Your AI Tools Forget Everything. Fix That.">
+<meta name="twitter:title" content="Smara &mdash; Your AI Tools Forget Everything. Fix That.">
 <meta name="twitter:description" content="Shared persistent memory for Claude Code, Cursor, Codex. Install once, remember everywhere.">
 <meta name="twitter:image" content="https://smara.io/og-image.png">
-<!-- Structured Data: Organization + SoftwareApplication + FAQPage + HowTo -->
 <script type="application/ld+json">
 [
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Smara",
-    "url": "https://smara.io",
-    "logo": "https://smara.io/og-image.png",
-    "sameAs": ["https://github.com/smara-io/smara", "https://twitter.com/SmaraMemo"]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Smara",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
-    "description": "Persistent memory layer for AI tools. Gives Claude Code, Cursor, Windsurf, and Codex shared context that survives across sessions using Ebbinghaus forgetting curves.",
-    "url": "https://smara.io",
-    "offers": [
-      {"@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free", "description": "10,000 memories, 1 team, 2 AI agents"},
-      {"@type": "Offer", "price": "19", "priceCurrency": "USD", "name": "Developer", "description": "200,000 memories, 3 teams, 10 AI agents, custom skills"},
-      {"@type": "Offer", "price": "99", "priceCurrency": "USD", "name": "Pro", "description": "2M memories, unlimited teams, unlimited agents and skills"}
-    ],
-    "featureList": ["MCP protocol support", "REST API", "Ebbinghaus decay scoring", "Semantic search", "Source tagging", "Zero-config auto-memory", "Team collaboration", "Role-based access", "AI agents"]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    "name": "How to add persistent memory to your AI tools with Smara",
-    "description": "Install Smara in 30 seconds to give Claude Code, Cursor, and Codex shared memory across sessions.",
-    "totalTime": "PT30S",
-    "step": [
-      {"@type": "HowToStep", "position": 1, "name": "Install", "text": "Run npx @smara/mcp-server --init to add Smara to your AI tool. Works with any MCP-compatible client."},
-      {"@type": "HowToStep", "position": 2, "name": "Code normally", "text": "Smara auto-captures decisions, patterns, and context as you work. No manual tagging needed."},
-      {"@type": "HowToStep", "position": 3, "name": "Context follows you", "text": "Switch tools, start new sessions — your context is always there. Ebbinghaus decay keeps it fresh."}
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is Smara?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Smara is a persistent memory layer for AI coding tools. It gives Claude Code, Cursor, Windsurf, Codex, and any MCP-compatible client shared context that survives across sessions. Install with one command: npx @smara/mcp-server --init."}
-      },
-      {
-        "@type": "Question",
-        "name": "How does Smara's Ebbinghaus decay work?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Smara uses Ebbinghaus forgetting curves to score memory relevance over time. Important facts persist while trivial details naturally fade, just like human memory. The decay formula is R = e^(-t/S) where t is time elapsed and S is memory strength based on importance and access frequency."}
-      },
-      {
-        "@type": "Question",
-        "name": "What AI tools does Smara work with?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Smara works with any MCP-compatible AI tool including Claude Code, Cursor, Windsurf, Codex, VS Code with Copilot, and any custom MCP client. It also provides a REST API for direct integration."}
-      },
-      {
-        "@type": "Question",
-        "name": "How much does Smara cost?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Smara has a free tier with 10,000 memories, 1 team, and 2 AI agents. The Developer plan is $19/month for 200,000 memories, 3 teams, and 10 AI agents. The Pro plan is $99/month for 2M memories, unlimited teams, and unlimited agents."}
-      },
-      {
-        "@type": "Question",
-        "name": "How is Smara different from Mem0 or Zep?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Smara is the only AI memory tool that uses Ebbinghaus forgetting curves for temporal relevance scoring. Unlike Mem0 or Zep, memories naturally decay over time — important facts persist while outdated context fades. Smara is also MCP-native, meaning it integrates directly with AI coding tools via the Model Context Protocol."}
-      },
-      {
-        "@type": "Question",
-        "name": "How do Smara teams work? What stays private?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Create a team and invite members by email. Memories are automatically classified: project decisions and conventions become team memories visible to all members, while personal preferences stay private. Your AI tool handles this automatically via the MCP server — no manual tagging needed. You can always override visibility per memory. Combined search returns both your private and team memories together."}
-      }
-    ]
-  }
+  {"@context":"https://schema.org","@type":"Organization","name":"Smara","url":"https://smara.io","logo":"https://smara.io/og-image.png","sameAs":["https://github.com/smara-io/smara","https://twitter.com/SmaraMemo"]},
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Smara","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Persistent memory layer for AI tools. Gives Claude Code, Cursor, Windsurf, and Codex shared context using Ebbinghaus forgetting curves.","url":"https://smara.io","offers":[{"@type":"Offer","price":"0","priceCurrency":"USD","name":"Free","description":"10,000 memories, 1 team/3 members, 2 AI agents, Full API+MCP"},{"@type":"Offer","price":"19","priceCurrency":"USD","name":"Developer","description":"200,000 memories, 3 teams/10 members, 10 AI agents + 5 custom skills, Priority pipeline"},{"@type":"Offer","price":"99","priceCurrency":"USD","name":"Pro","description":"2M memories, Unlimited teams/50 members, Unlimited agents+skills, Dedicated queue, Slack+SLA"}],"featureList":["MCP protocol support","REST API","Ebbinghaus decay scoring","Semantic search","Source tagging","Zero-config auto-memory","Team collaboration","Role-based access","AI agents"]},
+  {"@context":"https://schema.org","@type":"HowTo","name":"How to add persistent memory to your AI tools with Smara","description":"Install Smara in 30 seconds to give Claude Code, Cursor, and Codex shared memory across sessions.","totalTime":"PT30S","step":[{"@type":"HowToStep","position":1,"name":"Install","text":"Add Smara to your MCP config with one JSON block."},{"@type":"HowToStep","position":2,"name":"Code normally","text":"Smara auto-captures decisions and context as you work. No manual tagging needed."},{"@type":"HowToStep","position":3,"name":"Context follows you","text":"Switch tools, start new sessions — your context is always there. Ebbinghaus decay keeps it fresh."}]},
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Smara?","acceptedAnswer":{"@type":"Answer","text":"Smara is a persistent memory layer for AI coding tools. It gives Claude Code, Cursor, Windsurf, Codex, and any MCP-compatible client shared context that survives across sessions. Install with: npx @smara/mcp-server --init"}},{"@type":"Question","name":"How does Smara's Ebbinghaus decay work?","acceptedAnswer":{"@type":"Answer","text":"Smara uses Ebbinghaus forgetting curves to score memory relevance over time. The formula is R = e^(-t/S) where t is time elapsed and S is memory strength based on importance and access frequency."}},{"@type":"Question","name":"What AI tools does Smara work with?","acceptedAnswer":{"@type":"Answer","text":"Any MCP-compatible tool: Claude Code, Cursor, Windsurf, Codex, VS Code with Copilot, and any custom MCP client. Plus a REST API for direct integration."}},{"@type":"Question","name":"How do Smara teams work? What stays private?","acceptedAnswer":{"@type":"Answer","text":"Project decisions become team memories visible to all members. Personal preferences stay private. Your AI classifies automatically via MCP. Override anytime. Combined search returns both private and team memories."}},{"@type":"Question","name":"Is my data private?","acceptedAnswer":{"@type":"Answer","text":"Yes. Each API key isolates your data. Memories are encrypted in transit (TLS) and stored in isolated PostgreSQL schemas. We never use your data for training."}},{"@type":"Question","name":"How much does Smara cost?","acceptedAnswer":{"@type":"Answer","text":"Free ($0): 10,000 memories, 1 team/3 members, 2 AI agents. Developer ($19/mo): 200K memories, 3 teams/10 members, 10 AI agents + 5 custom skills. Pro ($99/mo): 2M memories, unlimited teams/50 members, unlimited agents+skills."}}]}
 ]
 </script>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-
 :root{
-  --bg:       #0a0a0b;
-  --bg-raised:#111113;
-  --bg-code:  #0d0d0f;
-  --border:   #1e1e22;
-  --border-subtle: #161619;
-  --text:     #c4c3c8;
-  --text-dim: #6e6d73;
-  --text-faint:#3a3a3f;
-  --heading:  #eae9ed;
-  --amber:    #c8963e;
-  --amber-dim:#8a6828;
-  --amber-glow: rgba(200,150,62,0.08);
-  --green:    #48bb78;
-  --blue:     #63b3ed;
-  --mono:     'DM Mono', 'SF Mono', 'Fira Code', monospace;
-  --serif:    'Newsreader', 'Georgia', serif;
+  --bg:#0a0a0b; --bg-raised:#111113; --bg-code:#0d0d0f;
+  --border:#1e1e22; --border-subtle:#161619;
+  --text:#c4c3c8; --text-dim:#6e6d73; --text-faint:#3a3a3f; --heading:#eae9ed;
+  --amber:#c8963e; --amber-dim:#8a6828; --amber-glow:rgba(200,150,62,0.08);
+  --green:#48bb78; --blue:#63b3ed; --red:#f87171;
+  --mono:'DM Mono','SF Mono','Fira Code',monospace;
+  --serif:'Newsreader','Georgia',serif;
 }
-
-html{
-  font-size:16px;
-  scroll-behavior:smooth;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
-
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:var(--mono);
-  font-weight:400;
-  line-height:1.7;
-  overflow-x:hidden;
-}
-
-::selection{
-  background:var(--amber);
-  color:var(--bg);
-}
-
+html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-weight:400;line-height:1.7;overflow-x:hidden}
+::selection{background:var(--amber);color:var(--bg)}
 a{color:var(--amber);text-decoration:none;transition:color .2s}
 a:hover{color:var(--heading)}
-
-/* --- Layout --- */
-.container{
-  max-width:1060px;
-  margin:0 auto;
-  padding:0 24px;
-}
-
-section{
-  padding:120px 0;
-  position:relative;
-}
-
-/* --- Noise overlay --- */
 body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events:none;
-  z-index:9999;
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.5;
 }
-
-/* --- Nav --- */
-nav{
-  position:fixed;
-  top:0;left:0;right:0;
-  z-index:100;
-  padding:16px 0;
-  background:rgba(10,10,11,0.85);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-  border-bottom:1px solid transparent;
-  transition:border-color .3s;
-}
-nav.scrolled{border-bottom-color:var(--border)}
-
-nav .container{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.nav-logo{
-  font-size:15px;
-  font-weight:500;
-  color:var(--heading);
-  letter-spacing:0.02em;
-}
+.container{max-width:1060px;margin:0 auto;padding:0 24px}
+section{padding:120px 0;position:relative}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+.glow-orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(120px)}
+.badge-new{display:inline-block;padding:3px 10px;border:1px solid var(--green);border-radius:100px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-left:8px;vertical-align:middle}
+.badge-soon{display:inline-block;padding:3px 10px;border:1px solid var(--blue);border-radius:100px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-left:8px;vertical-align:middle}
+.section-label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.section-label::before{content:'';width:24px;height:1px;background:var(--amber-dim);display:inline-block;flex-shrink:0}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;background:transparent;border-bottom:1px solid transparent;transition:background .4s,border-color .4s,backdrop-filter .4s}
+nav.scrolled{background:rgba(10,10,11,0.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom-color:var(--border)}
+nav .container{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:15px;font-weight:500;color:var(--heading);letter-spacing:0.02em}
 .nav-logo span{color:var(--amber)}
-
 .nav-center{display:flex;gap:28px;align-items:center}
-.nav-center a{
-  font-size:12px;
-  color:var(--text-dim);
-  letter-spacing:0.04em;
-  transition:color .2s;
-}
+.nav-center a{font-size:12px;color:var(--text-dim);letter-spacing:0.04em;transition:color .2s}
 .nav-center a:hover{color:var(--heading)}
-
 .nav-right{display:flex;gap:12px;align-items:center}
-.nav-github{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:12px;color:var(--text-dim);letter-spacing:0.03em;
-  transition:color .2s;
-}
+.nav-github{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim);transition:color .2s}
 .nav-github:hover{color:var(--heading)}
 .nav-github svg{width:16px;height:16px}
-
-.btn-nav{
-  color:var(--amber)!important;
-  border:1px solid var(--amber-dim);
-  padding:6px 16px;
-  border-radius:4px;
-  font-size:12px;
-  transition:all .2s;
-}
-.btn-nav:hover{
-  background:var(--amber);
-  color:var(--bg)!important;
-  border-color:var(--amber);
-}
-
-/* --- Hero --- */
-.hero{
-  padding:180px 0 100px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
-}
-
-.hero-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  font-size:11px;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  color:var(--amber);
-  padding:6px 16px;
-  border:1px solid var(--amber-dim);
-  border-radius:100px;
-  margin-bottom:40px;
-}
-.hero-badge .dot{
-  width:6px;height:6px;
-  border-radius:50%;
-  background:var(--amber);
-  animation:pulse 2s infinite;
-}
-@keyframes pulse{
-  0%,100%{opacity:1}
-  50%{opacity:0.3}
-}
-
-.hero h1{
-  font-family:var(--serif);
-  font-size:clamp(36px, 5.5vw, 60px);
-  font-weight:300;
-  line-height:1.15;
-  color:var(--heading);
-  max-width:750px;
-  margin:0 auto 24px;
-  letter-spacing:-0.02em;
-}
-.hero h1 em{
-  font-style:italic;
-  color:var(--amber);
-}
-.hero h1 .dim{color:var(--text-dim);font-weight:300}
-
-.hero-sub{
-  font-size:15px;
-  line-height:1.8;
-  color:var(--text-dim);
-  max-width:520px;
-  margin:0 auto 44px;
-}
-
-.hero-cta{
-  display:flex;
-  gap:12px;
-  align-items:center;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-bottom:16px;
-}
-
-.hero-install{
-  display:flex;
-  align-items:center;
-  gap:0;
-  background:var(--bg-code);
-  border:1px solid var(--border);
-  border-radius:6px;
-  overflow:hidden;
-  max-width:440px;
-  margin:0 auto 48px;
-}
-.hero-install code{
-  flex:1;
-  padding:12px 20px;
-  font-family:var(--mono);
-  font-size:13px;
-  color:var(--text);
-  white-space:nowrap;
-}
+.btn-nav{color:var(--amber)!important;border:1px solid var(--amber-dim);padding:6px 16px;border-radius:4px;font-size:12px;transition:all .2s}
+.btn-nav:hover{background:var(--amber);color:var(--bg)!important;border-color:var(--amber)}
+/* HERO */
+.hero{padding:200px 0 130px;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse at center,rgba(200,150,62,0.08) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);padding:6px 16px;border:1px solid var(--amber-dim);border-radius:100px;margin-bottom:40px;opacity:0;transform:translateY(20px)}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(200,150,62,0.4)}50%{opacity:0.6;box-shadow:0 0 0 5px rgba(200,150,62,0)}}
+.hero h1{font-family:var(--serif);font-size:clamp(38px,5.5vw,68px);font-weight:300;line-height:1.1;color:var(--heading);max-width:800px;margin:0 auto 28px;letter-spacing:-0.025em;opacity:0;transform:translateY(30px)}
+.hero h1 em{font-style:italic;color:var(--amber)}
+.hero h1 .dim{color:var(--text-dim)}
+.hero-sub{font-size:15px;line-height:1.85;color:var(--text-dim);max-width:540px;margin:0 auto 48px;opacity:0;transform:translateY(24px)}
+.hero-cta{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px;opacity:0;transform:translateY(20px)}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:13px 30px;background:var(--amber);color:var(--bg);font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:0.03em;border:none;border-radius:4px;cursor:pointer;transition:all .25s;text-decoration:none;box-shadow:0 0 30px rgba(200,150,62,0.2)}
+.btn-primary:hover{background:var(--heading);color:var(--bg);transform:translateY(-2px);box-shadow:0 8px 30px rgba(200,150,62,0.25)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:13px 30px;background:transparent;color:var(--text);font-family:var(--mono);font-size:13px;letter-spacing:0.03em;border:1px solid var(--border);border-radius:4px;cursor:pointer;transition:all .25s;text-decoration:none}
+.btn-ghost:hover{border-color:var(--text-dim);color:var(--heading);transform:translateY(-1px)}
+.hero-install{display:flex;align-items:center;background:var(--bg-code);border:1px solid var(--border);border-radius:6px;overflow:hidden;max-width:460px;margin:0 auto 56px;opacity:0;transform:translateY(16px);transition:border-color .3s}
+.hero-install:hover{border-color:var(--amber-dim)}
+.hero-install code{flex:1;padding:13px 20px;font-family:var(--mono);font-size:13px;color:var(--text);white-space:nowrap}
 .hero-install code span{color:var(--amber)}
-.hero-install button{
-  padding:12px 20px;
-  background:var(--amber);
-  color:var(--bg);
-  border:none;
-  font-family:var(--mono);
-  font-size:12px;
-  font-weight:500;
-  cursor:pointer;
-  transition:background .2s;
-  letter-spacing:0.03em;
-}
+.hero-install button{padding:13px 20px;background:var(--amber);color:var(--bg);border:none;font-family:var(--mono);font-size:12px;font-weight:500;cursor:pointer;transition:background .2s;white-space:nowrap}
 .hero-install button:hover{background:var(--heading)}
-
-.btn-primary{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:12px 28px;
-  background:var(--amber);
-  color:var(--bg);
-  font-family:var(--mono);
-  font-size:13px;
-  font-weight:500;
-  letter-spacing:0.03em;
-  border:none;
-  border-radius:4px;
-  cursor:pointer;
-  transition:all .2s;
-  text-decoration:none;
-}
-.btn-primary:hover{
-  background:var(--heading);
-  color:var(--bg);
-  transform:translateY(-1px);
-}
-
-.btn-ghost{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:12px 28px;
-  background:transparent;
-  color:var(--text);
-  font-family:var(--mono);
-  font-size:13px;
-  font-weight:400;
-  letter-spacing:0.03em;
-  border:1px solid var(--border);
-  border-radius:4px;
-  cursor:pointer;
-  transition:all .2s;
-  text-decoration:none;
-}
-.btn-ghost:hover{
-  border-color:var(--text-dim);
-  color:var(--heading);
-}
-
-/* --- Logos Strip --- */
-.logos{
-  padding:48px 0;
-  border-top:1px solid var(--border-subtle);
-  border-bottom:1px solid var(--border-subtle);
-}
-.logos-label{
-  font-size:11px;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  color:var(--text-faint);
-  text-align:center;
-  margin-bottom:28px;
-}
-.logos-grid{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:48px;
-  flex-wrap:wrap;
-}
-.logo-item{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:14px;
-  color:var(--text-dim);
-  letter-spacing:0.02em;
-  transition:color .2s;
-}
+.hero-stats{display:flex;gap:48px;justify-content:center;align-items:center;flex-wrap:wrap;opacity:0}
+.stat-item{text-align:center}
+.stat-num{display:block;font-family:var(--serif);font-size:28px;font-weight:300;color:var(--heading);letter-spacing:-0.02em}
+.stat-accent{color:var(--amber)}
+.stat-label{font-size:11px;color:var(--text-faint);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px}
+.stat-divider{width:1px;height:40px;background:var(--border-subtle)}
+/* LOGOS */
+.logos{padding:52px 0;border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle)}
+.logos-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-faint);text-align:center;margin-bottom:28px}
+.logos-grid{display:flex;justify-content:center;align-items:center;gap:48px;flex-wrap:wrap}
+.logo-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-dim);letter-spacing:0.02em;transition:color .25s}
 .logo-item:hover{color:var(--heading)}
-.logo-item svg{width:20px;height:20px;opacity:0.7}
-.logo-item .logo-dot{
-  width:8px;height:8px;border-radius:50%;
-}
-
-/* --- Problem/Solution --- */
-.problem{
-  padding:120px 0;
-}
-.problem-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:80px;
-  align-items:center;
-}
-.problem-left h2{
-  font-family:var(--serif);
-  font-size:clamp(24px,3.5vw,36px);
-  font-weight:300;
-  color:var(--heading);
-  line-height:1.3;
-  margin-bottom:24px;
-  letter-spacing:-0.01em;
-}
-.problem-left p{
-  font-size:14px;
-  color:var(--text-dim);
-  line-height:1.8;
-  margin-bottom:16px;
-}
-.problem-right{
-  position:relative;
-}
-.terminal-window{
-  background:var(--bg-code);
-  border:1px solid var(--border);
-  border-radius:8px;
-  overflow:hidden;
-}
-.terminal-header{
-  padding:10px 16px;
-  border-bottom:1px solid var(--border-subtle);
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
+.logo-dot{width:8px;height:8px;border-radius:50%}
+/* PROBLEM/SOLUTION */
+.problem{padding:120px 0;overflow:hidden}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.problem-left h2{font-family:var(--serif);font-size:clamp(26px,3.5vw,40px);font-weight:300;color:var(--heading);line-height:1.25;margin-bottom:24px;letter-spacing:-0.015em}
+.problem-left p{font-size:14px;color:var(--text-dim);line-height:1.85;margin-bottom:16px}
+/* TERMINAL */
+.terminal-window{background:var(--bg-code);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color .3s,box-shadow .3s}
+.terminal-window:hover{border-color:rgba(200,150,62,0.2);box-shadow:0 8px 40px rgba(0,0,0,0.4)}
+.terminal-header{padding:10px 16px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:8px}
 .terminal-dot{width:8px;height:8px;border-radius:50%}
-.terminal-dot.r{background:#ff5f56}
-.terminal-dot.y{background:#ffbd2e}
-.terminal-dot.g{background:#27c93f}
-.terminal-title{font-size:11px;color:var(--text-faint);margin-left:8px}
-.terminal-body{padding:20px;font-size:12px;line-height:1.8}
+.terminal-dot.r{background:#ff5f56} .terminal-dot.y{background:#ffbd2e} .terminal-dot.g{background:#27c93f}
+.terminal-title{font-size:11px;color:var(--text-faint);margin-left:8px;flex:1}
+.terminal-body{padding:20px;font-size:12px;line-height:1.85}
 .terminal-body .line{margin-bottom:2px}
-.terminal-body .prompt{color:var(--green)}
-.terminal-body .cmd{color:var(--text)}
-.terminal-body .comment{color:var(--text-faint);font-style:italic}
-.terminal-body .output{color:var(--text-dim)}
-.terminal-body .highlight{color:var(--amber)}
-.terminal-body .fade{opacity:0.4}
-
-/* --- Animated Terminal Demos --- */
-.demo-line{
-  opacity:0;
-  animation: fadeInLine 0.3s ease forwards;
-}
-@keyframes fadeInLine{
-  to{opacity:1}
-}
-@keyframes blink{
-  0%,100%{opacity:1} 50%{opacity:0}
-}
-@keyframes typewriter{
-  from{width:0} to{width:100%}
-}
-.cursor-blink::after{
-  content:'_';
-  animation:blink 0.8s step-end infinite;
-  color:var(--amber);
-}
-.demo-terminal .terminal-body{
-  min-height:180px;
-}
-.demo-terminal .demo-line:nth-child(1){animation-delay:0.3s}
-.demo-terminal .demo-line:nth-child(2){animation-delay:1.2s}
-.demo-terminal .demo-line:nth-child(3){animation-delay:2.0s}
-.demo-terminal .demo-line:nth-child(4){animation-delay:2.8s}
-.demo-terminal .demo-line:nth-child(5){animation-delay:3.6s}
-.demo-terminal .demo-line:nth-child(6){animation-delay:4.4s}
-.demo-terminal .demo-line:nth-child(7){animation-delay:5.2s}
-.demo-terminal .demo-line:nth-child(8){animation-delay:6.0s}
-.demo-terminal .demo-line:nth-child(9){animation-delay:6.8s}
-.demo-terminal .demo-line:nth-child(10){animation-delay:7.6s}
-.demo-terminal .demo-line:nth-child(11){animation-delay:8.4s}
-.demo-terminal .demo-line:nth-child(12){animation-delay:9.2s}
-
-.demo-terminal-slow .demo-line:nth-child(1){animation-delay:0.3s}
-.demo-terminal-slow .demo-line:nth-child(2){animation-delay:1.5s}
-.demo-terminal-slow .demo-line:nth-child(3){animation-delay:2.5s}
-.demo-terminal-slow .demo-line:nth-child(4){animation-delay:3.8s}
-.demo-terminal-slow .demo-line:nth-child(5){animation-delay:5.0s}
-.demo-terminal-slow .demo-line:nth-child(6){animation-delay:6.2s}
-.demo-terminal-slow .demo-line:nth-child(7){animation-delay:7.8s}
-.demo-terminal-slow .demo-line:nth-child(8){animation-delay:9.0s}
-.demo-terminal-slow .demo-line:nth-child(9){animation-delay:10.2s}
-.demo-terminal-slow .demo-line:nth-child(10){animation-delay:11.5s}
-
+.terminal-body .prompt{color:var(--green)} .terminal-body .cmd{color:var(--text)}
+.terminal-body .comment{color:var(--text-faint);font-style:italic} .terminal-body .output{color:var(--text-dim)}
+.terminal-body .highlight{color:var(--amber)} .terminal-body .fade{opacity:0.35} .terminal-body .err{color:var(--red)}
+.demo-line{opacity:0;transform:translateY(4px)}
+/* STEPS */
+.steps{padding:120px 0}
+.steps h2{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:300;color:var(--heading);text-align:center;margin-bottom:80px;letter-spacing:-0.015em}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;position:relative}
+.steps-grid::before{content:'';position:absolute;top:40px;left:16%;right:16%;height:1px;background:linear-gradient(90deg,rgba(200,150,62,0),var(--amber-dim),rgba(200,150,62,0))}
+.step{text-align:center;padding:0 24px;position:relative}
+.step-num{width:48px;height:48px;border-radius:50%;border:1px solid var(--amber-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:17px;color:var(--amber);font-weight:500;background:var(--bg);position:relative;z-index:1;transition:border-color .3s,box-shadow .3s}
+.step:hover .step-num{border-color:var(--amber);box-shadow:0 0 20px rgba(200,150,62,0.25)}
+.step h3{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--heading);margin-bottom:10px}
+.step p{font-size:13px;color:var(--text-dim);line-height:1.75}
+.step-code{margin-top:20px;background:var(--bg-code);border:1px solid var(--border);border-radius:6px;padding:14px 16px;text-align:left;font-size:11px;line-height:1.7;color:var(--text-dim);overflow-x:auto}
+.step-code .tok-str{color:var(--amber)} .step-code .tok-comment{color:var(--text-faint)}
+/* DEMO */
 .demo-section{padding:100px 0}
-.demo-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:32px;
-  margin-top:48px;
-}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:48px}
 .demo-card{display:flex;flex-direction:column;gap:12px}
-.demo-label{
-  font-size:11px;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  color:var(--text-faint);
-}
-.demo-caption{
-  font-size:13px;
-  color:var(--text-dim);
-  line-height:1.6;
-  margin-top:8px;
-}
-@media(max-width:768px){
-  .demo-grid{grid-template-columns:1fr;gap:48px}
-}
-
-/* --- How It Works (3 Steps) --- */
-.steps{
-  padding:120px 0;
-}
-.steps .section-label{
-  font-size:11px;
-  letter-spacing:0.15em;
-  text-transform:uppercase;
-  color:var(--amber);
-  margin-bottom:12px;
-  text-align:center;
-}
-.steps h2{
-  font-family:var(--serif);
-  font-size:clamp(28px,4vw,40px);
-  font-weight:300;
-  color:var(--heading);
-  text-align:center;
-  margin-bottom:80px;
-  letter-spacing:-0.01em;
-}
-
-.steps-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:2px;
-  position:relative;
-}
-.steps-grid::before{
-  content:'';
-  position:absolute;
-  top:44px;left:16.66%;right:16.66%;
-  height:1px;
-  background:linear-gradient(90deg,var(--amber-dim),var(--amber),var(--amber-dim));
-  opacity:0.3;
-}
-
-.step{
-  text-align:center;
-  padding:0 24px;
-  position:relative;
-}
-.step-num{
-  width:48px;height:48px;
-  border-radius:50%;
-  border:1px solid var(--amber-dim);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 24px;
-  font-size:16px;
-  color:var(--amber);
-  font-weight:500;
-  background:var(--bg);
-  position:relative;
-  z-index:1;
-}
-.step-num .step-icon{width:20px;height:20px}
-.step h3{
-  font-family:var(--mono);
-  font-size:14px;
-  font-weight:500;
-  color:var(--heading);
-  margin-bottom:8px;
-}
-.step p{
-  font-size:13px;
-  color:var(--text-dim);
-  line-height:1.7;
-}
-.step-code{
-  margin-top:20px;
-  background:var(--bg-code);
-  border:1px solid var(--border);
-  border-radius:6px;
-  padding:14px 16px;
-  text-align:left;
-  font-size:11px;
-  line-height:1.6;
-  color:var(--text-dim);
-  overflow-x:auto;
-}
-.step-code .tok-str{color:var(--amber)}
-
-/* --- Code Section --- */
+.demo-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-faint)}
+.demo-caption{font-size:13px;color:var(--text-dim);line-height:1.65;margin-top:4px}
+/* CODE */
 .code-section{padding:120px 0}
-.code-section .section-label{
-  font-size:11px;
-  letter-spacing:0.15em;
-  text-transform:uppercase;
-  color:var(--amber);
-  margin-bottom:12px;
-  display:flex;align-items:center;gap:12px;
-}
-.code-section .section-label::before{
-  content:'';width:24px;height:1px;background:var(--amber-dim);
-}
-
-.code-section h2{
-  font-family:var(--serif);
-  font-size:clamp(28px,4vw,40px);
-  font-weight:300;
-  color:var(--heading);
-  margin-bottom:16px;
-  letter-spacing:-0.01em;
-}
-
-.code-section > .container > p{
-  color:var(--text-dim);
-  font-size:14px;
-  max-width:500px;
-  margin-bottom:48px;
-}
-
-.code-tabs{
-  display:flex;
-  gap:0;
-  border-bottom:1px solid var(--border);
-}
-.code-tab{
-  padding:10px 20px;
-  font-family:var(--mono);
-  font-size:12px;
-  color:var(--text-dim);
-  background:transparent;
-  border:none;
-  border-bottom:2px solid transparent;
-  cursor:pointer;
-  transition:all .2s;
-  letter-spacing:0.03em;
-}
-.code-tab:hover{color:var(--text)}
-.code-tab.active{
-  color:var(--amber);
-  border-bottom-color:var(--amber);
-}
-
+.code-section h2{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:300;color:var(--heading);margin-bottom:14px;letter-spacing:-0.015em}
+.code-tabs{display:flex;border-bottom:1px solid var(--border)}
+.code-tab{padding:10px 20px;font-family:var(--mono);font-size:12px;color:var(--text-dim);background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;letter-spacing:0.03em}
+.code-tab:hover{color:var(--text)} .code-tab.active{color:var(--amber);border-bottom-color:var(--amber)}
 .code-panels{position:relative}
-.code-panel{
-  display:none;
-  background:var(--bg-code);
-  border:1px solid var(--border);
-  border-top:none;
-  border-radius:0 0 6px 6px;
-  overflow:hidden;
-}
+.code-panel{display:none;background:var(--bg-code);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;overflow:hidden}
 .code-panel.active{display:block}
-
-.code-panel-header{
-  padding:12px 20px;
-  border-bottom:1px solid var(--border-subtle);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.code-panel-header span{
-  font-size:11px;
-  color:var(--text-faint);
-  letter-spacing:0.05em;
-}
-.code-panel-header .method{
-  font-size:10px;
-  font-weight:500;
-  padding:2px 8px;
-  border-radius:3px;
-  letter-spacing:0.06em;
-}
-.method-post{background:rgba(72,187,120,0.12);color:#48bb78}
-.method-get{background:rgba(99,179,237,0.12);color:#63b3ed}
-
-pre{
-  padding:20px;
-  overflow-x:auto;
-  font-family:var(--mono);
-  font-size:13px;
-  line-height:1.7;
-  color:var(--text);
-  tab-size:2;
-}
-
-.tok-key{color:#7c8da6}
-.tok-str{color:#c8963e}
-.tok-num{color:#d4879c}
-.tok-comment{color:var(--text-faint);font-style:italic}
-.tok-method{color:#81a7d6}
-
-.code-response{
-  border-top:1px solid var(--border-subtle);
-  padding:16px 20px;
-  background:rgba(200,150,62,0.02);
-}
-.code-response-label{
-  font-size:10px;
-  color:var(--text-faint);
-  letter-spacing:0.06em;
-  text-transform:uppercase;
-  margin-bottom:8px;
-}
-.code-response pre{
-  padding:0;
-  font-size:12px;
-  color:var(--text-dim);
-}
-
-/* --- Audience --- */
-.audience{padding:120px 0}
-.audience h2{
-  font-family:var(--serif);
-  font-size:clamp(28px,4vw,36px);
-  font-weight:300;
-  color:var(--heading);
-  text-align:center;
-  margin-bottom:64px;
-  letter-spacing:-0.01em;
-}
-.audience-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1px;
-  background:var(--border);
-  border:1px solid var(--border);
-  border-radius:6px;
-  overflow:hidden;
-}
-.audience-card{
-  background:var(--bg);
-  padding:40px 32px;
-  transition:background .3s;
-}
-.audience-card:hover{background:var(--bg-raised)}
-.audience-card .emoji{font-size:24px;margin-bottom:16px;display:block}
-.audience-card h3{
-  font-family:var(--mono);
-  font-size:14px;
-  font-weight:500;
-  color:var(--heading);
-  margin-bottom:10px;
-}
-.audience-card p{
-  font-size:13px;
-  color:var(--text-dim);
-  line-height:1.7;
-}
-
-/* --- Decay Section --- */
-.decay-section{padding:120px 0}
-.decay-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:80px;
-  align-items:center;
-}
-.decay-text h2{
-  font-family:var(--serif);
-  font-size:clamp(24px,3.5vw,36px);
-  font-weight:300;
-  color:var(--heading);
-  line-height:1.3;
-  margin-bottom:24px;
-}
-.decay-text p{
-  font-size:14px;
-  color:var(--text-dim);
-  line-height:1.8;
-  margin-bottom:16px;
-}
+.code-panel-header{padding:12px 20px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:space-between}
+.code-panel-header span{font-size:11px;color:var(--text-faint);letter-spacing:0.05em}
+.method{font-size:10px;font-weight:500;padding:2px 8px;border-radius:3px;letter-spacing:0.06em}
+.method-post{background:rgba(72,187,120,0.12);color:#48bb78} .method-get{background:rgba(99,179,237,0.12);color:#63b3ed}
+pre{padding:20px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.75;color:var(--text);tab-size:2}
+.tok-key{color:#7c8da6} .tok-str{color:#c8963e} .tok-num{color:#d4879c}
+.tok-comment{color:var(--text-faint);font-style:italic} .tok-method{color:#81a7d6}
+.code-response{border-top:1px solid var(--border-subtle);padding:16px 20px;background:rgba(200,150,62,0.02)}
+.code-response-label{font-size:10px;color:var(--text-faint);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px}
+.code-response pre{padding:0;font-size:12px;color:var(--text-dim)}
+/* TEAMS */
+.teams-section{background:var(--bg);position:relative;overflow:hidden}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-top:64px}
+.team-flow{display:flex;flex-direction:column;gap:14px}
+.team-flow-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.team-node{padding:10px 16px;background:var(--bg-code);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text);white-space:nowrap;transition:border-color .25s}
+.team-node:hover{border-color:var(--amber-dim)}
+.team-node.shared{border-color:var(--amber-dim);color:var(--amber);background:rgba(200,150,62,0.05)}
+.team-node .role{font-size:10px;color:var(--text-faint);display:block;margin-top:2px}
+.team-arrow{color:var(--text-faint);font-size:14px}
+.teams-features{display:flex;flex-direction:column;gap:28px}
+.teams-feature-item{display:flex;gap:16px;align-items:flex-start}
+.teams-feature-icon{width:36px;height:36px;min-width:36px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:6px;color:var(--amber);transition:border-color .25s,box-shadow .25s}
+.teams-feature-item:hover .teams-feature-icon{border-color:var(--amber-dim);box-shadow:0 0 12px rgba(200,150,62,0.15)}
+.teams-feature-item h4{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--heading);margin-bottom:4px}
+.teams-feature-item p{font-size:12px;line-height:1.75;color:var(--text-dim)}
+/* NL CONTROL */
+.nl-section{padding:100px 0}
+.nl-terminal{max-width:680px;margin:48px auto 0}
+/* MCP TOOLS */
+.mcp-section{padding:100px 0}
+.mcp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:48px}
+.mcp-tool{background:var(--bg);padding:28px 24px;transition:background .3s;cursor:default}
+.mcp-tool:hover{background:var(--bg-raised)}
+.mcp-tool-name{font-size:12px;font-weight:500;color:var(--amber);margin-bottom:6px;letter-spacing:0.02em;display:flex;align-items:center;gap:8px}
+.mcp-badge{font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(200,150,62,0.12);color:var(--amber);letter-spacing:0.05em;font-weight:400}
+.mcp-tool-desc{font-size:12px;color:var(--text-dim);line-height:1.65}
+/* DECAY */
+.decay-section{padding:120px 0;overflow:hidden}
+.decay-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.decay-text h2{font-family:var(--serif);font-size:clamp(24px,3.5vw,40px);font-weight:300;color:var(--heading);line-height:1.25;margin-bottom:24px;letter-spacing:-0.015em}
+.decay-text p{font-size:14px;color:var(--text-dim);line-height:1.85;margin-bottom:16px}
 .decay-text .highlight{color:var(--amber)}
-.decay-visual{
-  position:relative;
-  height:300px;
-}
-.decay-visual canvas{
-  width:100%;
-  height:100%;
-}
-
-/* --- Features --- */
-.features-grid{
-  display:grid;
-  grid-template-columns:repeat(2, 1fr);
-  gap:1px;
-  background:var(--border);
-  border:1px solid var(--border);
-  border-radius:6px;
-  overflow:hidden;
-  margin-top:64px;
-}
-
-.feature{
-  background:var(--bg);
-  padding:40px 36px;
-  transition:background .3s;
-}
-.feature:hover{background:var(--bg-raised)}
-
-.feature-icon{
-  width:32px;height:32px;
-  margin-bottom:20px;
-  color:var(--amber);
-  opacity:0.8;
-}
-
-.feature h3{
-  font-family:var(--mono);
-  font-size:14px;
-  font-weight:500;
-  color:var(--heading);
-  margin-bottom:10px;
-  letter-spacing:0.01em;
-}
-
-.feature p{
-  font-size:13px;
-  line-height:1.7;
-  color:var(--text-dim);
-}
-
-/* --- Teams Section --- */
-.teams-section{background:var(--bg)}
-
-.teams-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:64px;
-  align-items:center;
-  margin-top:64px;
-}
-
-.teams-visual{
-  position:relative;
-}
-
-.team-flow{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-.team-flow-row{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.team-node{
-  padding:10px 16px;
-  background:var(--bg-code);
-  border:1px solid var(--border);
-  border-radius:6px;
-  font-size:12px;
-  color:var(--text);
-  white-space:nowrap;
-}
-.team-node.shared{
-  border-color:var(--amber-dim);
-  color:var(--amber);
-  background:rgba(200,150,62,0.05);
-}
-.team-node .role{
-  font-size:10px;
-  color:var(--text-faint);
-  display:block;
-  margin-top:2px;
-}
-
-.team-arrow{
-  color:var(--text-faint);
-  font-size:14px;
-}
-
-.teams-features{
-  display:flex;
-  flex-direction:column;
-  gap:24px;
-}
-
-.teams-feature-item{
-  display:flex;
-  gap:16px;
-  align-items:flex-start;
-}
-
-.teams-feature-icon{
-  width:36px;
-  height:36px;
-  min-width:36px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border:1px solid var(--border);
-  border-radius:6px;
-  color:var(--amber);
-  font-size:16px;
-}
-
-.teams-feature-item h4{
-  font-family:var(--mono);
-  font-size:13px;
-  font-weight:500;
-  color:var(--heading);
-  margin-bottom:4px;
-}
-
-.teams-feature-item p{
-  font-size:12px;
-  line-height:1.7;
-  color:var(--text-dim);
-}
-
-.badge-coming-soon{
-  display:inline-block;
-  padding:3px 10px;
-  border:1px solid #63b3ed;
-  border-radius:100px;
-  font-size:10px;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:#63b3ed;
-  margin-left:8px;
-  vertical-align:middle;
-}
-
-.badge-new{
-  display:inline-block;
-  padding:3px 10px;
-  border:1px solid var(--green);
-  border-radius:100px;
-  font-size:10px;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--green);
-  margin-left:8px;
-  vertical-align:middle;
-}
-
-/* --- Pricing --- */
-.pricing{background:var(--bg)}
-
-.pricing-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1px;
-  background:var(--border);
-  border:1px solid var(--border);
-  border-radius:6px;
-  overflow:hidden;
-  margin-top:64px;
-}
-
-.price-card{
-  background:var(--bg);
-  padding:44px 36px;
-  display:flex;
-  flex-direction:column;
-  transition:background .3s;
-}
-.price-card:hover{background:var(--bg-raised)}
-.price-card.featured{
-  background:var(--amber-glow);
-}
-.price-card.featured:hover{
-  background:rgba(200,150,62,0.12);
-}
-
-.price-tier{
-  font-size:11px;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  color:var(--text-dim);
-  margin-bottom:16px;
-}
+.decay-formula{display:inline-block;padding:12px 20px;background:var(--bg-code);border:1px solid var(--border);border-radius:6px;font-size:16px;color:var(--heading);font-family:var(--serif);font-style:italic;margin-top:8px}
+.decay-formula span{color:var(--amber)}
+.decay-visual{position:relative;height:320px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.decay-visual canvas{width:100%;height:100%}
+/* AUDIENCE */
+.audience{padding:120px 0}
+.audience h2{font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--heading);text-align:center;margin-bottom:64px;letter-spacing:-0.015em}
+.audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.audience-card{background:var(--bg);padding:44px 36px;transition:background .3s}
+.audience-card:hover{background:var(--bg-raised)}
+.aud-icon{width:44px;height:44px;border-radius:8px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--amber);margin-bottom:20px;transition:border-color .25s}
+.audience-card:hover .aud-icon{border-color:var(--amber-dim)}
+.audience-card h3{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--heading);margin-bottom:10px}
+.audience-card p{font-size:13px;color:var(--text-dim);line-height:1.75}
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:64px}
+.feature{background:var(--bg);padding:40px 36px;transition:background .3s;position:relative;overflow:hidden}
+.feature::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 0%,rgba(200,150,62,0.05) 0%,transparent 60%);opacity:0;transition:opacity .4s}
+.feature:hover{background:var(--bg-raised)} .feature:hover::before{opacity:1}
+.feature-icon{width:32px;height:32px;margin-bottom:20px;color:var(--amber);opacity:0.85}
+.feature h3{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--heading);margin-bottom:10px;letter-spacing:0.01em}
+.feature p{font-size:13px;line-height:1.75;color:var(--text-dim)}
+/* FAQ */
+.faq-section{padding:100px 0}
+.faq-section h2{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:300;color:var(--heading);letter-spacing:-0.015em;margin-bottom:48px}
+.faq-list{max-width:720px;display:flex;flex-direction:column;gap:0}
+details.faq-item{border:1px solid var(--border);margin-top:-1px;overflow:hidden;transition:border-color .25s;position:relative}
+details.faq-item:first-child{border-radius:8px 8px 0 0} details.faq-item:last-child{border-radius:0 0 8px 8px}
+details.faq-item[open]{border-color:rgba(200,150,62,0.3);z-index:1}
+.faq-summary{padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center;transition:background .2s;user-select:none}
+.faq-summary:hover{background:rgba(200,150,62,0.03)} .faq-summary::-webkit-details-marker{display:none}
+.faq-plus{color:var(--text-faint);font-size:18px;transition:transform .25s,color .25s;flex-shrink:0;margin-left:12px}
+details[open] .faq-plus{transform:rotate(45deg);color:var(--amber)}
+.faq-body{padding:0 24px 20px;font-size:14px;line-height:1.85;color:var(--text)}
+.faq-body p{margin-bottom:8px} .faq-body ul{margin:12px 0;padding-left:20px;color:var(--text-dim)} .faq-body li{margin-bottom:6px}
+.faq-body code{color:var(--amber);font-size:12px}
+/* PRICING */
+.pricing{padding:120px 0;background:var(--bg);position:relative;overflow:hidden}
+.pricing h2{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:300;color:var(--heading);letter-spacing:-0.015em}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:64px}
+.price-card{background:var(--bg);padding:44px 36px;display:flex;flex-direction:column;transition:background .3s;position:relative;overflow:hidden}
+.price-card:hover{background:var(--bg-raised)} .price-card.featured{background:var(--amber-glow)} .price-card.featured:hover{background:rgba(200,150,62,0.12)}
+.price-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent)}
+.price-tier{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px}
 .price-card.featured .price-tier{color:var(--amber)}
-
-.price-amount{
-  font-family:var(--serif);
-  font-size:40px;
-  font-weight:300;
-  color:var(--heading);
-  margin-bottom:4px;
-  letter-spacing:-0.02em;
-}
-.price-amount span{
-  font-size:15px;
-  color:var(--text-dim);
-  font-family:var(--mono);
-}
-
-.price-desc{
-  font-size:13px;
-  color:var(--text-dim);
-  margin-bottom:28px;
-  padding-bottom:28px;
-  border-bottom:1px solid var(--border-subtle);
-}
-
-.price-features{
-  list-style:none;
-  flex:1;
-  margin-bottom:32px;
-}
-.price-features li{
-  font-size:13px;
-  color:var(--text-dim);
-  padding:6px 0;
-  display:flex;
-  align-items:baseline;
-  gap:10px;
-}
-.price-features li::before{
-  content:'\2013';
-  color:var(--text-faint);
-  flex-shrink:0;
-}
-
-.price-btn{
-  display:block;
-  text-align:center;
-  padding:10px 0;
-  font-family:var(--mono);
-  font-size:12px;
-  letter-spacing:0.04em;
-  border-radius:4px;
-  border:1px solid var(--border);
-  color:var(--text-dim);
-  transition:all .2s;
-  cursor:pointer;
-  background:none;
-  text-decoration:none;
-}
-.price-btn:hover{
-  border-color:var(--text-dim);
-  color:var(--heading);
-}
-.price-card.featured .price-btn{
-  background:var(--amber);
-  color:var(--bg);
-  border-color:var(--amber);
-  font-weight:500;
-}
-.price-card.featured .price-btn:hover{
-  background:var(--heading);
-  border-color:var(--heading);
-}
-
-/* --- Signup --- */
-.signup-section{
-  text-align:center;
-  padding:140px 0;
-}
-
-.signup-section h2{
-  font-family:var(--serif);
-  font-size:clamp(28px,4vw,40px);
-  font-weight:300;
-  color:var(--heading);
-  margin-bottom:16px;
-  letter-spacing:-0.01em;
-}
-
-.signup-section > .container > p{
-  color:var(--text-dim);
-  font-size:14px;
-  max-width:420px;
-  margin:0 auto 40px;
-}
-
-.signup-form{
-  display:flex;
-  gap:8px;
-  max-width:440px;
-  margin:0 auto;
-}
-
-.signup-form input[type="email"]{
-  flex:1;
-  padding:12px 16px;
-  background:var(--bg-raised);
-  border:1px solid var(--border);
-  border-radius:4px;
-  font-family:var(--mono);
-  font-size:13px;
-  color:var(--heading);
-  outline:none;
-  transition:border-color .2s;
-}
-.signup-form input[type="email"]::placeholder{color:var(--text-faint)}
-.signup-form input[type="email"]:focus{border-color:var(--amber-dim)}
-
-.signup-form button{
-  padding:12px 24px;
-  background:var(--amber);
-  color:var(--bg);
-  font-family:var(--mono);
-  font-size:13px;
-  font-weight:500;
-  letter-spacing:0.03em;
-  border:none;
-  border-radius:4px;
-  cursor:pointer;
-  transition:all .2s;
-  white-space:nowrap;
-}
+.price-amount{font-family:var(--serif);font-size:44px;font-weight:300;color:var(--heading);margin-bottom:4px;letter-spacing:-0.025em}
+.price-amount span{font-size:15px;color:var(--text-dim);font-family:var(--mono)}
+.price-desc{font-size:13px;color:var(--text-dim);margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border-subtle)}
+.price-features{list-style:none;flex:1;margin-bottom:32px}
+.price-features li{font-size:13px;color:var(--text-dim);padding:6px 0;display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--border-subtle)}
+.price-features li:last-child{border-bottom:none} .price-features li::before{content:'\2013';color:var(--text-faint);flex-shrink:0}
+.price-btn{display:block;text-align:center;padding:11px 0;font-family:var(--mono);font-size:12px;letter-spacing:0.04em;border-radius:4px;border:1px solid var(--border);color:var(--text-dim);transition:all .25s;cursor:pointer;background:none;text-decoration:none}
+.price-btn:hover{border-color:var(--text-dim);color:var(--heading)}
+.price-card.featured .price-btn{background:var(--amber);color:var(--bg);border-color:var(--amber);font-weight:500}
+.price-card.featured .price-btn:hover{background:var(--heading);border-color:var(--heading)}
+/* SIGNUP */
+.signup-section{text-align:center;padding:140px 0;position:relative;overflow:hidden}
+.signup-section h2{font-family:var(--serif);font-size:clamp(28px,4vw,48px);font-weight:300;color:var(--heading);margin-bottom:16px;letter-spacing:-0.015em}
+.signup-form{display:flex;gap:8px;max-width:440px;margin:0 auto}
+.signup-form input[type="email"]{flex:1;padding:13px 16px;background:var(--bg-raised);border:1px solid var(--border);border-radius:4px;font-family:var(--mono);font-size:13px;color:var(--heading);outline:none;transition:border-color .2s}
+.signup-form input[type="email"]::placeholder{color:var(--text-faint)} .signup-form input[type="email"]:focus{border-color:var(--amber-dim)}
+.signup-form button{padding:13px 24px;background:var(--amber);color:var(--bg);font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:0.03em;border:none;border-radius:4px;cursor:pointer;transition:all .25s;white-space:nowrap}
 .signup-form button:hover{background:var(--heading)}
-
-.signup-note{
-  font-size:11px;
-  color:var(--text-faint);
-  margin-top:16px;
-}
-
-/* --- Divider --- */
-.divider{
-  height:1px;
-  background:linear-gradient(90deg, transparent, var(--border), transparent);
-}
-
-/* --- Footer --- */
-footer{
-  padding:48px 0;
-  border-top:1px solid var(--border);
-}
-
-footer .container{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.footer-left{
-  font-size:12px;
-  color:var(--text-faint);
-}
+.signup-note{font-size:11px;color:var(--text-faint);margin-top:16px}
+/* BETA */
+.beta-section{padding:80px 0;background:var(--bg-raised);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.fb-type-btn{padding:8px 16px;border-radius:6px;font-size:13px;font-family:var(--mono);cursor:pointer;transition:all .2s}
+.fb-type-btn.active{border:1px solid var(--amber-dim);background:rgba(200,150,62,0.1);color:var(--amber)}
+.fb-type-btn:not(.active){border:1px solid var(--border);background:var(--bg);color:var(--text-dim)}
+.fb-input{width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--heading);font-size:14px;font-family:var(--mono);outline:none;transition:border-color .2s}
+.fb-input:focus{border-color:var(--amber-dim)}
+.fb-textarea{width:100%;padding:12px 16px;resize:vertical;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;font-family:var(--mono);outline:none;transition:border-color .2s;min-height:80px}
+.fb-textarea:focus{border-color:var(--amber-dim)}
+/* FOOTER */
+footer{padding:52px 0;border-top:1px solid var(--border)}
+footer .container{display:flex;align-items:center;justify-content:space-between}
+.footer-left{font-size:12px;color:var(--text-faint)}
 .footer-left span{color:var(--text-dim)}
-
 .footer-links{display:flex;gap:24px}
-.footer-links a{
-  font-size:12px;
-  color:var(--text-dim);
-  letter-spacing:0.03em;
-  transition:color .2s;
-}
+.footer-links a{font-size:12px;color:var(--text-dim);letter-spacing:0.03em;transition:color .2s}
 .footer-links a:hover{color:var(--amber)}
-
-/* --- Scroll Animations --- */
-.reveal{
-  opacity:0;
-  transform:translateY(24px);
-  transition:opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-.reveal.visible{
-  opacity:1;
-  transform:translateY(0);
-}
-.reveal-d1{transition-delay:0.1s}
-.reveal-d2{transition-delay:0.2s}
-.reveal-d3{transition-delay:0.3s}
-.reveal-d4{transition-delay:0.4s}
-
-/* --- Responsive --- */
+/* RESPONSIVE */
 @media(max-width:900px){
   .problem-grid,.decay-grid{grid-template-columns:1fr;gap:48px}
-  .steps-grid{grid-template-columns:1fr;gap:48px}
-  .steps-grid::before{display:none}
-  .audience-grid{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr;gap:48px} .steps-grid::before{display:none}
+  .audience-grid{grid-template-columns:1fr} .teams-grid{grid-template-columns:1fr;gap:40px}
+  .mcp-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:768px){
-  section{padding:80px 0}
-  .hero{padding:140px 0 80px}
-  .features-grid{grid-template-columns:1fr}
-  .teams-grid{grid-template-columns:1fr;gap:40px}
-  .pricing-grid{grid-template-columns:1fr}
-  .nav-center{display:none}
-  .logos-grid{gap:24px}
-  .logo-item{font-size:12px}
-  .signup-form{flex-direction:column}
-  footer .container{flex-direction:column;gap:20px;text-align:center}
+  section{padding:80px 0} .hero{padding:160px 0 90px}
+  .features-grid{grid-template-columns:1fr} .pricing-grid{grid-template-columns:1fr}
+  .nav-center{display:none} .logos-grid{gap:24px}
+  .demo-grid{grid-template-columns:1fr;gap:48px} .signup-form{flex-direction:column}
+  footer .container{flex-direction:column;gap:20px;text-align:center} .hero-stats{gap:24px} .stat-divider{display:none}
 }
 @media(max-width:480px){
-  .container{padding:0 16px}
-  .hero h1{font-size:32px}
-  pre{font-size:11px;padding:16px}
-  .code-tab{padding:8px 12px;font-size:11px}
+  .container{padding:0 16px} .hero h1{font-size:32px} pre{font-size:11px;padding:16px}
+  .code-tab{padding:8px 12px;font-size:11px} .mcp-grid,.audience-grid,.pricing-grid{grid-template-columns:1fr}
 }
+/* GSAP initial opacity=0 — overridden by JS */
+.g0{opacity:0} .g0l{opacity:0;transform:translateX(-60px)} .g0r{opacity:0;transform:translateX(60px)}
 </style>
 </head>
 <body>
@@ -1233,10 +315,11 @@ footer .container{
       <a href="#code">API</a>
       <a href="#teams">Teams</a>
       <a href="#pricing">Pricing</a>
-      <a href="https://api.smara.io/docs/" target="_blank">Docs</a>
+      <a href="https://api.smara.io/docs/" target="_blank" rel="noopener">Docs</a>
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener">GitHub</a>
     </div>
     <div class="nav-right">
-      <a href="https://github.com/smara-io/smara" target="_blank" class="nav-github">
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener" class="nav-github">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
         <span id="gh-stars"></span>
       </a>
@@ -1245,99 +328,101 @@ footer .container{
   </div>
 </nav>
 
-<!-- Hero -->
-<section class="hero">
-  <div class="container">
-    <div class="hero-badge reveal"><span class="dot"></span> Now available</div>
-    <h1 class="reveal reveal-d1">Your AI tools<br><em>forget everything.</em><br><span class="dim">Fix that.</span></h1>
-    <p class="hero-sub reveal reveal-d2">Every session starts from zero. Smara gives Claude Code, Cursor, and Codex a shared memory that persists, decays naturally, and follows you across tools.</p>
-    <div class="hero-cta reveal reveal-d3">
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-glow"></div>
+  <div class="glow-orb" style="background:rgba(200,150,62,0.07);width:600px;height:400px;top:-100px;left:50%;transform:translateX(-50%)"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="hero-badge"><span class="dot"></span> Now available &mdash; v2.2</div>
+    <h1>Your AI tools<br><em>forget everything.</em><br><span class="dim">Fix that.</span></h1>
+    <p class="hero-sub">Every session starts from zero. Smara gives Claude Code, Cursor, and Codex a shared memory that persists, decays naturally, and follows you across tools.</p>
+    <div class="hero-cta">
       <a href="#signup" class="btn-primary">Get started free</a>
       <a href="#code" class="btn-ghost">See the API</a>
     </div>
-    <div class="hero-install reveal reveal-d4">
+    <div class="hero-install">
       <code>npx <span>@smara/mcp-server</span> --init</code>
       <button onclick="navigator.clipboard.writeText('npx @smara/mcp-server --init');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)">Copy</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num"><span class="counter stat-accent" data-target="10000" data-suffix="+" data-prefix="">0</span></span>
+        <div class="stat-label">Memories stored</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num"><span class="counter stat-accent" data-target="7" data-suffix="" data-prefix="">0</span></span>
+        <div class="stat-label">MCP tools</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num"><span class="counter stat-accent" data-target="6" data-suffix="" data-prefix="">0</span></span>
+        <div class="stat-label">AI tools supported</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num"><span class="counter stat-accent" data-target="30" data-suffix="s" data-prefix="">0</span></span>
+        <div class="stat-label">Install time</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- Works With -->
-<div class="logos">
+<!-- LOGO STRIP -->
+<div class="logos" id="logos">
   <div class="container">
     <div class="logos-label">Works with your tools</div>
     <div class="logos-grid">
-      <div class="logo-item">
-        <div class="logo-dot" style="background:#d97706"></div>
-        Claude Code
-      </div>
-      <div class="logo-item">
-        <div class="logo-dot" style="background:#22d3ee"></div>
-        Cursor
-      </div>
-      <div class="logo-item">
-        <div class="logo-dot" style="background:#a78bfa"></div>
-        Windsurf
-      </div>
-      <div class="logo-item">
-        <div class="logo-dot" style="background:#34d399"></div>
-        Codex
-      </div>
-      <div class="logo-item">
-        <div class="logo-dot" style="background:#60a5fa"></div>
-        VS Code
-      </div>
-      <div class="logo-item">
-        <div class="logo-dot" style="background:#f472b6"></div>
-        Any MCP client
-      </div>
+      <div class="logo-item"><div class="logo-dot" style="background:#d97706"></div>Claude Code</div>
+      <div class="logo-item"><div class="logo-dot" style="background:#22d3ee"></div>Cursor</div>
+      <div class="logo-item"><div class="logo-dot" style="background:#a78bfa"></div>Windsurf</div>
+      <div class="logo-item"><div class="logo-dot" style="background:#34d399"></div>Codex</div>
+      <div class="logo-item"><div class="logo-dot" style="background:#60a5fa"></div>VS Code</div>
+      <div class="logo-item"><div class="logo-dot" style="background:#f472b6"></div>Any MCP client</div>
     </div>
   </div>
 </div>
 
-<!-- Problem / Solution -->
-<section class="problem">
-  <div class="container">
+<!-- PROBLEM / SOLUTION -->
+<section class="problem" id="problem">
+  <div class="glow-orb" style="background:rgba(200,150,62,0.06);width:500px;height:400px;top:50%;right:-200px;transform:translateY(-50%)"></div>
+  <div class="container" style="position:relative;z-index:1">
     <div class="problem-grid">
-      <div class="problem-left reveal">
+      <div class="problem-left g0l">
         <h2>You explain the same things to your AI.<br><em style="color:var(--amber)">Every. Single. Session.</em></h2>
-        <p>"I use Tailwind, not Bootstrap." "The API is at /v2, not /v1." "We deploy to Fly.io." You've said it before. Your AI forgot.</p>
+        <p style="margin-top:20px">"I use Tailwind, not Bootstrap." "The API is at /v2, not /v1." "We deploy to Fly.io." You've said it before. Your AI forgot.</p>
         <p>Smara stores context automatically as you work. Next session &mdash; in any tool &mdash; your AI already knows.</p>
       </div>
-      <div class="problem-right reveal reveal-d2">
-        <div class="terminal-window demo-terminal">
+      <div class="problem-right g0r" style="display:flex;flex-direction:column;gap:12px">
+        <div class="terminal-window" data-term="prob-bad">
           <div class="terminal-header">
-            <div class="terminal-dot r"></div>
-            <div class="terminal-dot y"></div>
-            <div class="terminal-dot g"></div>
+            <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
             <span class="terminal-title">without smara</span>
           </div>
           <div class="terminal-body">
             <div class="line demo-line"><span class="comment"># Monday in Claude Code</span></div>
             <div class="line demo-line"><span class="prompt">you:</span> <span class="cmd">We use Postgres, not MySQL</span></div>
             <div class="line demo-line"><span class="output">Got it! I'll use Postgres.</span></div>
-            <div class="line demo-line" style="margin-top:12px"><span class="comment"># Tuesday in Cursor</span></div>
-            <div class="line demo-line"><span class="prompt">cursor:</span> <span class="cmd fade">Setting up MySQL connection...</span></div>
-            <div class="line demo-line"><span class="prompt">you:</span> <span class="cmd" style="color:#f87171">No! We use Postgres!</span></div>
-            <div class="line demo-line" style="margin-top:12px"><span class="comment"># Wednesday in Claude Code again</span></div>
-            <div class="line demo-line"><span class="prompt">claude:</span> <span class="cmd fade">What database are you using?</span></div>
-            <div class="line demo-line"><span class="prompt">you:</span> <span class="cmd" style="color:#f87171">... 😤</span></div>
+            <div class="line demo-line" style="margin-top:10px"><span class="comment"># Tuesday in Cursor &mdash; new session</span></div>
+            <div class="line demo-line"><span class="prompt">cursor:</span> <span class="fade">Setting up MySQL connection...</span></div>
+            <div class="line demo-line"><span class="prompt">you:</span> <span class="err">No! We use Postgres!</span></div>
+            <div class="line demo-line" style="margin-top:10px"><span class="comment"># Wednesday in Claude Code again</span></div>
+            <div class="line demo-line"><span class="prompt">claude:</span> <span class="fade">What database are you using?</span></div>
+            <div class="line demo-line"><span class="prompt">you:</span> <span class="err">... &#x1f92c;</span></div>
           </div>
         </div>
-        <div class="terminal-window demo-terminal" style="margin-top:12px;border-color:rgba(200,150,62,0.3)">
-          <div class="terminal-header" style="border-bottom-color:rgba(200,150,62,0.15)">
-            <div class="terminal-dot r"></div>
-            <div class="terminal-dot y"></div>
-            <div class="terminal-dot g"></div>
+        <div class="terminal-window" style="border-color:rgba(200,150,62,0.25)" data-term="prob-good">
+          <div class="terminal-header" style="border-bottom-color:rgba(200,150,62,0.12)">
+            <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
             <span class="terminal-title" style="color:var(--amber)">with smara</span>
           </div>
           <div class="terminal-body">
-            <div class="line demo-line"><span class="comment"># Any day, any tool — context is already there</span></div>
+            <div class="line demo-line"><span class="comment"># Any day, any tool &mdash; context is already loaded</span></div>
             <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">Loading 23 memories for this project...</span></div>
-            <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">✓ Uses Postgres on Fly.io <span style="color:var(--text-faint)">(relevance: 0.97)</span></span></div>
-            <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">✓ Tailwind CSS, not Bootstrap <span style="color:var(--text-faint)">(relevance: 0.94)</span></span></div>
-            <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">✓ API v2 at /api/v2, auth via JWT <span style="color:var(--text-faint)">(relevance: 0.91)</span></span></div>
-            <div class="line demo-line"><span class="prompt">claude:</span> <span class="cmd">I'll connect to your Postgres on Fly.io and use the v2 API...</span></div>
+            <div class="line demo-line"><span class="highlight">[smara]</span> <span style="color:var(--green)">&#x2713;</span> <span class="output">Uses Postgres on Fly.io <span class="fade">(relevance: 0.97)</span></span></div>
+            <div class="line demo-line"><span class="highlight">[smara]</span> <span style="color:var(--green)">&#x2713;</span> <span class="output">Tailwind CSS, not Bootstrap <span class="fade">(0.94)</span></span></div>
+            <div class="line demo-line"><span class="highlight">[smara]</span> <span style="color:var(--green)">&#x2713;</span> <span class="output">API v2 at /api/v2, JWT auth <span class="fade">(0.91)</span></span></div>
+            <div class="line demo-line" style="margin-top:8px"><span class="prompt">claude:</span> <span class="cmd">I'll connect to your Postgres on Fly.io and use the v2 API...</span></div>
           </div>
         </div>
       </div>
@@ -1347,14 +432,13 @@ footer .container{
 
 <div class="divider"></div>
 
-<!-- How It Works -->
+<!-- HOW IT WORKS -->
 <section class="steps" id="how">
   <div class="container">
-    <div class="section-label reveal">How it works</div>
-    <h2 class="reveal reveal-d1">Three steps. Thirty seconds.</h2>
-
+    <div class="section-label g0" style="justify-content:center">How it works</div>
+    <h2 class="g0">Three steps. Thirty seconds.</h2>
     <div class="steps-grid">
-      <div class="step reveal">
+      <div class="step g0">
         <div class="step-num">1</div>
         <h3>Install</h3>
         <p>Add Smara to your MCP config. One JSON block. Works in Claude Code, Cursor, Windsurf, or any MCP client.</p>
@@ -1362,32 +446,31 @@ footer .container{
 {<br>
 &nbsp;&nbsp;<span class="tok-str">"smara"</span>: {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="tok-str">"command"</span>: <span class="tok-str">"npx"</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="tok-str">"args"</span>: [<span class="tok-str">"-y"</span>, <span class="tok-str">"@smara/mcp-server"</span>]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="tok-str">"args"</span>: [<span class="tok-str">"-y"</span>, <span class="tok-str">"@smara/mcp-server"</span>],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="tok-str">"env"</span>: {<span class="tok-str">"SMARA_API_KEY"</span>: <span class="tok-str">"sk_..."</span>}<br>
 &nbsp;&nbsp;}<br>
 }
         </div>
       </div>
-
-      <div class="step reveal reveal-d1">
+      <div class="step g0">
         <div class="step-num">2</div>
         <h3>Code normally</h3>
-        <p>Smara runs silently. It auto-loads context at conversation start and stores new facts as you work. No tool calls needed.</p>
+        <p>Smara runs silently. It auto-loads context at conversation start and stores new facts as you work. No manual commands.</p>
         <div class="step-code">
-<span style="color:var(--text-faint)"># You never see this happen:</span><br>
+<span class="tok-comment"># You never see this happen:</span><br>
 <span style="color:var(--green)">auto-stored:</span> "Uses Next.js 14 app router"<br>
 <span style="color:var(--green)">auto-stored:</span> "API keys in .env.local"<br>
 <span style="color:var(--green)">auto-stored:</span> "Prefers server components"
         </div>
       </div>
-
-      <div class="step reveal reveal-d2">
+      <div class="step g0">
         <div class="step-num">3</div>
         <h3>Context follows you</h3>
-        <p>Switch to Cursor, open Codex, start a new Claude session &mdash; your context is already there. One memory pool, every tool.</p>
+        <p>Switch to Cursor, open Codex, start a new Claude session &mdash; your context is already there. One pool, every tool.</p>
         <div class="step-code">
-<span style="color:var(--amber)">Claude</span> <span style="color:var(--text-faint)">&rarr;</span> <span style="color:var(--blue)">Cursor</span> <span style="color:var(--text-faint)">&rarr;</span> <span style="color:var(--green)">Codex</span><br>
-<span style="color:var(--text-faint)">same memories, same context</span><br>
-<span style="color:var(--text-faint)">ranked by relevance &times; freshness</span>
+<span style="color:var(--amber)">Claude</span> <span class="tok-comment">&rarr;</span> <span style="color:var(--blue)">Cursor</span> <span class="tok-comment">&rarr;</span> <span style="color:var(--green)">Codex</span><br>
+<span class="tok-comment">same memories, same context</span><br>
+<span class="tok-comment">ranked by relevance &times; freshness</span>
         </div>
       </div>
     </div>
@@ -1396,108 +479,90 @@ footer .container{
 
 <div class="divider"></div>
 
-<!-- Live Demos -->
-<section class="demo-section">
+<!-- INTERACTIVE DEMOS -->
+<section class="demo-section" id="demos">
   <div class="container">
-    <div class="section-label reveal" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:12px;justify-content:center"><span style="width:24px;height:1px;background:var(--amber-dim);display:inline-block"></span> See it in action <span style="width:24px;height:1px;background:var(--amber-dim);display:inline-block"></span></div>
-    <h2 class="reveal reveal-d1" style="font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--heading);letter-spacing:-0.01em;text-align:center;margin-top:12px">Your context, everywhere.</h2>
-
+    <div class="section-label g0" style="justify-content:center"><span>See it in action</span></div>
+    <h2 class="g0" style="font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:300;color:var(--heading);letter-spacing:-0.015em;text-align:center;margin-top:12px">Your context, everywhere.</h2>
     <div class="demo-grid">
-      <!-- Demo 1: Install & First Memory -->
-      <div class="demo-card reveal">
+      <div class="demo-card g0">
         <div class="demo-label">Demo 1 &mdash; Install &amp; auto-capture</div>
-        <div class="terminal-window demo-terminal-slow" id="demo1">
+        <div class="terminal-window" data-demo="1">
           <div class="terminal-header">
-            <div class="terminal-dot r"></div>
-            <div class="terminal-dot y"></div>
-            <div class="terminal-dot g"></div>
+            <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
             <span class="terminal-title">claude-code &mdash; ~/myproject</span>
           </div>
-          <div class="terminal-body">
+          <div class="terminal-body" style="min-height:180px">
             <div class="line demo-line"><span class="prompt">$</span> <span class="cmd">npx @smara/mcp-server --init</span></div>
-            <div class="line demo-line"><span class="output" style="color:var(--green)">✓ Smara MCP server installed</span></div>
-            <div class="line demo-line"><span class="output" style="color:var(--green)">✓ API key configured</span></div>
-            <div class="line demo-line" style="margin-top:8px"><span class="prompt">you:</span> <span class="cmd">set up the auth — we use Clerk, not Auth0</span></div>
+            <div class="line demo-line"><span style="color:var(--green)">&#x2713;</span> <span class="output">Smara MCP server installed</span></div>
+            <div class="line demo-line"><span style="color:var(--green)">&#x2713;</span> <span class="output">API key configured</span></div>
+            <div class="line demo-line" style="margin-top:8px"><span class="prompt">you:</span> <span class="cmd">set up auth &mdash; we use Clerk, not Auth0</span></div>
             <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">stored: "Project uses Clerk for auth, not Auth0"</span></div>
-            <div class="line demo-line"><span class="prompt">you:</span> <span class="cmd">deploy this to Vercel, staging branch</span></div>
+            <div class="line demo-line"><span class="prompt">you:</span> <span class="cmd">deploy this to Vercel staging branch</span></div>
             <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">stored: "Deploys to Vercel, staging branch for preview"</span></div>
-            <div class="line demo-line" style="margin-top:8px"><span class="output" style="color:var(--text-faint)">// 2 memories auto-captured. No manual work.</span></div>
+            <div class="line demo-line" style="margin-top:8px"><span class="comment">// 2 memories captured. Zero effort.</span></div>
           </div>
         </div>
         <p class="demo-caption">Smara silently captures decisions as you work. No tagging, no commands &mdash; just code normally.</p>
       </div>
-
-      <!-- Demo 2: Cross-Tool Recall -->
-      <div class="demo-card reveal reveal-d1">
+      <div class="demo-card g0">
         <div class="demo-label">Demo 2 &mdash; Cross-tool recall</div>
-        <div class="terminal-window demo-terminal-slow" id="demo2">
+        <div class="terminal-window" data-demo="2">
           <div class="terminal-header">
-            <div class="terminal-dot r"></div>
-            <div class="terminal-dot y"></div>
-            <div class="terminal-dot g"></div>
+            <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
             <span class="terminal-title" style="color:#22d3ee">cursor &mdash; ~/myproject</span>
           </div>
-          <div class="terminal-body">
-            <div class="line demo-line"><span class="output" style="color:var(--text-faint)">// Next day, different tool. New session.</span></div>
+          <div class="terminal-body" style="min-height:180px">
+            <div class="line demo-line"><span class="comment">// Next day, different tool. New session.</span></div>
             <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">Loading context for ~/myproject...</span></div>
-            <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">✓ Auth: Clerk <span style="color:var(--text-faint)">(0.97)</span></span></div>
-            <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">✓ Deploy: Vercel staging <span style="color:var(--text-faint)">(0.95)</span></span></div>
-            <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">✓ DB: Postgres on Supabase <span style="color:var(--text-faint)">(0.89)</span></span></div>
+            <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">&#x2713; Auth: Clerk <span class="fade">(0.97)</span></span></div>
+            <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">&#x2713; Deploy: Vercel staging <span class="fade">(0.95)</span></span></div>
+            <div class="line demo-line"><span class="highlight">[smara]</span> <span class="output">&#x2713; DB: Postgres on Supabase <span class="fade">(0.89)</span></span></div>
             <div class="line demo-line" style="margin-top:8px"><span class="prompt">you:</span> <span class="cmd">add a login page</span></div>
-            <div class="line demo-line"><span class="prompt">cursor:</span> <span class="cmd">I'll set up a Clerk sign-in page and deploy the preview to Vercel staging...</span></div>
-            <div class="line demo-line" style="margin-top:4px"><span class="output" style="color:var(--text-faint)">// No "we use Clerk". No "deploy to Vercel". It knows.</span></div>
+            <div class="line demo-line"><span class="prompt">cursor:</span> <span class="cmd">I'll set up a Clerk sign-in page and deploy to Vercel staging...</span></div>
+            <div class="line demo-line" style="margin-top:4px"><span class="comment">// No re-explaining. It knows.</span></div>
           </div>
         </div>
         <p class="demo-caption">Switch from Claude Code to Cursor &mdash; your context follows. Zero re-explaining.</p>
       </div>
-
-      <!-- Demo 3: Memory Decay -->
-      <div class="demo-card reveal reveal-d2">
+      <div class="demo-card g0">
         <div class="demo-label">Demo 3 &mdash; Smart decay</div>
-        <div class="terminal-window demo-terminal-slow" id="demo3">
+        <div class="terminal-window" data-demo="3">
           <div class="terminal-header">
-            <div class="terminal-dot r"></div>
-            <div class="terminal-dot y"></div>
-            <div class="terminal-dot g"></div>
+            <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
             <span class="terminal-title">smara &mdash; memory health</span>
           </div>
-          <div class="terminal-body">
+          <div class="terminal-body" style="min-height:180px">
             <div class="line demo-line"><span class="prompt">$</span> <span class="cmd">smara memories --project myproject</span></div>
-            <div class="line demo-line" style="margin-top:4px"><span class="output" style="color:var(--green)">█████████░</span> <span class="cmd">Auth: Clerk</span> <span style="color:var(--text-faint)">0.97 &mdash; used 3 days ago</span></div>
-            <div class="line demo-line"><span class="output" style="color:var(--green)">████████░░</span> <span class="cmd">Deploy: Vercel</span> <span style="color:var(--text-faint)">0.89 &mdash; used 5 days ago</span></div>
-            <div class="line demo-line"><span class="output" style="color:var(--amber)">██████░░░░</span> <span class="cmd">DB: Postgres</span> <span style="color:var(--text-faint)">0.64 &mdash; used 2 weeks ago</span></div>
-            <div class="line demo-line"><span class="output" style="color:#f87171">███░░░░░░░</span> <span class="cmd" style="opacity:0.5">Old: tried Redis cache</span> <span style="color:var(--text-faint)">0.12 &mdash; 30 days ago</span></div>
-            <div class="line demo-line"><span class="output" style="color:#f87171;opacity:0.4">█░░░░░░░░░</span> <span class="cmd" style="opacity:0.3">Stale: "use port 3001"</span> <span style="color:var(--text-faint)">0.03 &mdash; 60 days, contradicted</span></div>
-            <div class="line demo-line" style="margin-top:8px"><span class="output" style="color:var(--text-faint)">// Important facts persist. Old noise fades. Automatically.</span></div>
+            <div class="line demo-line" style="margin-top:4px"><span style="color:var(--green)">&#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2591;</span> <span class="cmd">Auth: Clerk</span> <span class="fade">0.97 &mdash; used 3d ago</span></div>
+            <div class="line demo-line"><span style="color:var(--green)">&#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2591;&#x2591;</span> <span class="cmd">Deploy: Vercel</span> <span class="fade">0.89 &mdash; used 5d ago</span></div>
+            <div class="line demo-line"><span style="color:var(--amber)">&#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2588;&#x2591;&#x2591;&#x2591;&#x2591;</span> <span class="cmd">DB: Postgres</span> <span class="fade">0.64 &mdash; used 2w ago</span></div>
+            <div class="line demo-line"><span style="color:#f87171">&#x2588;&#x2588;&#x2588;&#x2591;&#x2591;&#x2591;&#x2591;&#x2591;&#x2591;&#x2591;</span> <span class="cmd fade">Old: tried Redis cache</span> <span class="fade">0.12 &mdash; 30d ago</span></div>
+            <div class="line demo-line"><span style="color:#f87171;opacity:0.4">&#x2588;&#x2591;&#x2591;&#x2591;&#x2591;&#x2591;&#x2591;&#x2591;&#x2591;&#x2591;</span> <span class="cmd" style="opacity:0.3">Stale: "use port 3001"</span> <span class="fade">0.03 &mdash; 60d, contradicted</span></div>
+            <div class="line demo-line" style="margin-top:8px"><span class="comment">// Important facts persist. Old noise fades.</span></div>
           </div>
         </div>
-        <p class="demo-caption">Ebbinghaus decay keeps context fresh. Frequently-used facts stay strong. Outdated noise fades naturally.</p>
+        <p class="demo-caption">Ebbinghaus decay keeps context fresh. Frequently-used facts stay strong. Old noise fades naturally.</p>
       </div>
-
-      <!-- Demo 4: REST API -->
-      <div class="demo-card reveal reveal-d3">
+      <div class="demo-card g0">
         <div class="demo-label">Demo 4 &mdash; API integration</div>
-        <div class="terminal-window demo-terminal-slow" id="demo4">
+        <div class="terminal-window" data-demo="4">
           <div class="terminal-header">
-            <div class="terminal-dot r"></div>
-            <div class="terminal-dot y"></div>
-            <div class="terminal-dot g"></div>
+            <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
             <span class="terminal-title">bash &mdash; api call</span>
           </div>
-          <div class="terminal-body">
+          <div class="terminal-body" style="min-height:180px">
             <div class="line demo-line"><span class="prompt">$</span> <span class="cmd">curl smara.io/v1/memories/search \</span></div>
             <div class="line demo-line"><span class="cmd">&nbsp; -H "Authorization: Bearer sk_..." \</span></div>
             <div class="line demo-line"><span class="cmd">&nbsp; -d '{"query": "what database?"}'</span></div>
             <div class="line demo-line" style="margin-top:8px"><span class="output">{</span></div>
-            <div class="line demo-line"><span class="output">&nbsp; "memories": [{</span></div>
-            <div class="line demo-line"><span class="output">&nbsp;&nbsp;&nbsp; "fact": <span style="color:var(--green)">"Uses Postgres on Supabase"</span>,</span></div>
-            <div class="line demo-line"><span class="output">&nbsp;&nbsp;&nbsp; "relevance": <span style="color:var(--amber)">0.97</span>,</span></div>
-            <div class="line demo-line"><span class="output">&nbsp;&nbsp;&nbsp; "source": <span style="color:var(--blue)">"claude-code"</span>,</span></div>
-            <div class="line demo-line"><span class="output">&nbsp;&nbsp;&nbsp; "decay": <span style="color:var(--amber)">0.94</span></span></div>
-            <div class="line demo-line"><span class="output">&nbsp; }]</span></div>
+            <div class="line demo-line"><span class="output">&nbsp; "memories": [{ "fact": <span style="color:var(--green)">"Uses Postgres on Supabase"</span>,</span></div>
+            <div class="line demo-line"><span class="output">&nbsp;&nbsp;&nbsp; "relevance": <span style="color:var(--amber)">0.97</span>, "source": <span style="color:var(--blue)">"claude-code"</span>,</span></div>
+            <div class="line demo-line"><span class="output">&nbsp;&nbsp;&nbsp; "decay": <span style="color:var(--amber)">0.94</span> }]</span></div>
+            <div class="line demo-line"><span class="output">}</span></div>
           </div>
         </div>
-        <p class="demo-caption">Simple REST API. 3 endpoints: store, search, context. Works from any language.</p>
+        <p class="demo-caption">Simple REST API. Store, search, context &mdash; 3 endpoints. Works from any language.</p>
       </div>
     </div>
   </div>
@@ -1505,76 +570,60 @@ footer .container{
 
 <div class="divider"></div>
 
-<!-- Code Examples -->
+<!-- REST API -->
 <section class="code-section" id="code">
   <div class="container">
-    <div class="section-label reveal">REST API</div>
-    <h2 class="reveal reveal-d1">Three calls. That's it.</h2>
-    <p class="reveal reveal-d2">No SDKs to install. No schemas to define. Just REST.</p>
-
-    <div class="reveal reveal-d3">
+    <div class="section-label g0">REST API</div>
+    <h2 class="g0">Three calls. That's it.</h2>
+    <p class="g0" style="color:var(--text-dim);font-size:14px;max-width:500px;margin-bottom:48px">No SDKs to install. No schemas to define. Just REST.</p>
+    <div class="g0">
       <div class="code-tabs">
         <button class="code-tab active" data-tab="store">store</button>
         <button class="code-tab" data-tab="search">search</button>
         <button class="code-tab" data-tab="context">context</button>
       </div>
-
       <div class="code-panels">
         <div class="code-panel active" id="panel-store">
-          <div class="code-panel-header">
-            <span>POST /v1/memories</span>
-            <span class="method method-post">POST</span>
-          </div>
+          <div class="code-panel-header"><span>POST /v1/memories</span><span class="method method-post">POST</span></div>
 <pre>curl -X POST https://api.smara.io/v1/memories \
   -H <span class="tok-str">"Authorization: Bearer smara_your_key"</span> \
   -H <span class="tok-str">"Content-Type: application/json"</span> \
   -d '{
     <span class="tok-key">"user_id"</span>:    <span class="tok-str">"user_42"</span>,
     <span class="tok-key">"fact"</span>:       <span class="tok-str">"Prefers dark mode. Uses vim keybindings."</span>,
-    <span class="tok-key">"importance"</span>: <span class="tok-num">0.7</span>
+    <span class="tok-key">"importance"</span>: <span class="tok-num">0.7</span>,
+    <span class="tok-key">"visibility"</span>: <span class="tok-str">"private"</span>  <span class="tok-comment">// or "team"</span>
   }'</pre>
-          <div class="code-response">
-            <div class="code-response-label">Response</div>
-<pre>{ <span class="tok-key">"id"</span>: <span class="tok-str">"mem_8f3a..."</span>, <span class="tok-key">"decay_score"</span>: <span class="tok-num">1.0</span>, <span class="tok-key">"status"</span>: <span class="tok-str">"stored"</span> }</pre>
-          </div>
+          <div class="code-response"><div class="code-response-label">Response</div>
+<pre>{ <span class="tok-key">"id"</span>: <span class="tok-str">"mem_8f3a..."</span>, <span class="tok-key">"decay_score"</span>: <span class="tok-num">1.0</span>, <span class="tok-key">"status"</span>: <span class="tok-str">"stored"</span> }</pre></div>
         </div>
-
         <div class="code-panel" id="panel-search">
-          <div class="code-panel-header">
-            <span>GET /v1/memories/search</span>
-            <span class="method method-get">GET</span>
-          </div>
+          <div class="code-panel-header"><span>GET /v1/memories/search</span><span class="method method-get">GET</span></div>
 <pre>curl https://api.smara.io/v1/memories/search \
   -H <span class="tok-str">"Authorization: Bearer smara_your_key"</span> \
   -G \
   -d <span class="tok-key">user_id</span>=<span class="tok-str">user_42</span> \
   -d <span class="tok-key">q</span>=<span class="tok-str">"editor preferences"</span> \
-  -d <span class="tok-key">limit</span>=<span class="tok-num">5</span></pre>
-          <div class="code-response">
-            <div class="code-response-label">Response</div>
+  -d <span class="tok-key">limit</span>=<span class="tok-num">5</span> \
+  -d <span class="tok-key">include_team</span>=<span class="tok-str">true</span></pre>
+          <div class="code-response"><div class="code-response-label">Response</div>
 <pre>{ <span class="tok-key">"memories"</span>: [
     { <span class="tok-key">"fact"</span>: <span class="tok-str">"Prefers dark mode. Uses vim keybindings."</span>,
-      <span class="tok-key">"similarity"</span>: <span class="tok-num">0.94</span>, <span class="tok-key">"decay_score"</span>: <span class="tok-num">0.97</span> }
-  ] }</pre>
-          </div>
+      <span class="tok-key">"similarity"</span>: <span class="tok-num">0.94</span>, <span class="tok-key">"decay_score"</span>: <span class="tok-num">0.97</span>,
+      <span class="tok-key">"visibility"</span>: <span class="tok-str">"private"</span>, <span class="tok-key">"source"</span>: <span class="tok-str">"claude-code"</span> }
+  ] }</pre></div>
         </div>
-
         <div class="code-panel" id="panel-context">
-          <div class="code-panel-header">
-            <span>GET /v1/users/:user_id/context</span>
-            <span class="method method-get">GET</span>
-          </div>
+          <div class="code-panel-header"><span>GET /v1/users/:user_id/context</span><span class="method method-get">GET</span></div>
 <pre>curl https://api.smara.io/v1/users/user_42/context \
   -H <span class="tok-str">"Authorization: Bearer smara_your_key"</span></pre>
-          <div class="code-response">
-            <div class="code-response-label">Response &mdash; full context, ranked by relevance &times; decay</div>
+          <div class="code-response"><div class="code-response-label">Response &mdash; full context, ranked by relevance &times; decay</div>
 <pre>{ <span class="tok-key">"user_id"</span>: <span class="tok-str">"user_42"</span>,
   <span class="tok-key">"memory_count"</span>: <span class="tok-num">23</span>,
   <span class="tok-key">"context"</span>: [
     { <span class="tok-key">"fact"</span>: <span class="tok-str">"Prefers dark mode. Uses vim keybindings."</span>, <span class="tok-key">"score"</span>: <span class="tok-num">0.96</span> },
     { <span class="tok-key">"fact"</span>: <span class="tok-str">"Working on a Rust CLI tool for log parsing"</span>, <span class="tok-key">"score"</span>: <span class="tok-num">0.89</span> }
-  ] }</pre>
-          </div>
+  ] }</pre></div>
         </div>
       </div>
     </div>
@@ -1583,130 +632,15 @@ footer .container{
 
 <div class="divider"></div>
 
-<!-- Who Is This For -->
-<section class="audience" id="audience">
-  <div class="container">
-    <h2 class="reveal">Built for people who ship with AI</h2>
-    <div class="audience-grid">
-      <div class="audience-card reveal">
-        <span class="emoji" aria-hidden="true">&#x1f9d1;&#x200d;&#x1f4bb;</span>
-        <h3>Solo developers</h3>
-        <p>You switch between Claude Code and Cursor daily. Smara means you never re-explain your stack, preferences, or project conventions.</p>
-      </div>
-      <div class="audience-card reveal reveal-d1">
-        <span class="emoji" aria-hidden="true">&#x1f916;</span>
-        <h3>Agent builders</h3>
-        <p>Your AI agents need persistent memory across sessions. Three API calls replace a custom database, embedding pipeline, and retrieval system.</p>
-      </div>
-      <div class="audience-card reveal reveal-d2">
-        <span class="emoji" aria-hidden="true">&#x1f465;</span>
-        <h3>Teams</h3>
-        <p>Shared context across team members and tools. New developers inherit institutional knowledge. AI onboards itself from team memory.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- Smart Decay -->
-<section class="decay-section">
-  <div class="container">
-    <div class="decay-grid">
-      <div class="decay-text reveal">
-        <h2>Memory that forgets<br><em style="color:var(--amber)">on purpose.</em></h2>
-        <p>Infinite context is noise. Smara uses <span class="highlight">Ebbinghaus decay scoring</span> &mdash; the same curve that models human forgetting.</p>
-        <p>Recent facts stay sharp. Old trivia fades. Important memories that keep getting reinforced persist forever. Contradictions are auto-resolved &mdash; "uses MySQL" gets replaced when you mention Postgres.</p>
-        <p style="color:var(--text-faint);font-size:13px;margin-top:24px">The result: your AI's context window is always fresh, relevant, and right-sized. No bloat, no stale facts.</p>
-      </div>
-      <div class="decay-visual reveal reveal-d2">
-        <canvas id="decay-canvas"></canvas>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- Features -->
-<section id="features">
-  <div class="container">
-    <div class="section-label reveal" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:12px"><span style="width:24px;height:1px;background:var(--amber-dim);display:inline-block"></span> Under the hood</div>
-    <h2 class="reveal reveal-d1" style="font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--heading);letter-spacing:-0.01em">Everything you'd build yourself,<br>already done.</h2>
-
-    <div class="features-grid">
-      <div class="feature reveal">
-        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M8 8h16M8 16h16M8 24h16" stroke-linecap="round"/>
-          <circle cx="4" cy="8" r="2" fill="currentColor" stroke="none"/>
-          <circle cx="4" cy="16" r="2" fill="currentColor" stroke="none" opacity="0.6"/>
-          <circle cx="4" cy="24" r="2" fill="currentColor" stroke="none" opacity="0.3"/>
-        </svg>
-        <h3>Universal protocol</h3>
-        <p>MCP for Claude Code, Cursor, Windsurf. OpenAI function calling for Codex and ChatGPT. REST API for everything else.</p>
-      </div>
-      <div class="feature reveal reveal-d1">
-        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M16 4v24M4 16h24" stroke-linecap="round" opacity="0.3"/>
-          <path d="M8 8l16 16M24 8L8 24" stroke-linecap="round" opacity="0.3"/>
-          <circle cx="16" cy="16" r="6"/>
-          <circle cx="16" cy="16" r="2" fill="currentColor" stroke="none"/>
-        </svg>
-        <h3>Zero-config auto-memory</h3>
-        <p>Install the MCP server. That's it. Context loads automatically at conversation start. New facts store silently as you work.</p>
-      </div>
-      <div class="feature reveal reveal-d2">
-        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M4 24 C8 8, 16 6, 28 4" stroke-linecap="round"/>
-          <path d="M4 24 C8 14, 16 12, 28 10" stroke-linecap="round" opacity="0.4"/>
-          <circle cx="4" cy="24" r="2" fill="currentColor" stroke="none"/>
-        </svg>
-        <h3>Ebbinghaus decay</h3>
-        <p>Old trivia fades. Important facts persist. Contradictions auto-resolve. Your context stays fresh without manual cleanup.</p>
-      </div>
-      <div class="feature reveal reveal-d3">
-        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="4" y="8" width="24" height="4" rx="1"/>
-          <rect x="4" y="14" width="24" height="4" rx="1" opacity="0.6"/>
-          <rect x="4" y="20" width="24" height="4" rx="1" opacity="0.3"/>
-        </svg>
-        <h3>Source tagging</h3>
-        <p>Every memory knows its origin &mdash; Claude Code, Cursor, Codex, or your API. Filter by source or see everything.</p>
-      </div>
-      <div class="feature reveal reveal-d4">
-        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M22 21v-2a4 4 0 0 0-4-4h-4a4 4 0 0 0-4 4v2" stroke-linecap="round"/>
-          <circle cx="16" cy="8" r="3"/>
-          <path d="M28 21v-1.5a3 3 0 0 0-2.5-2.96" stroke-linecap="round" opacity="0.6"/>
-          <circle cx="25" cy="10" r="2.5" opacity="0.6"/>
-        </svg>
-        <h3>Team collaboration <span class="badge-new" style="font-size:9px;padding:2px 7px;margin-left:4px">New</span></h3>
-        <p>Shared memory pools for your team. Private stays private. Team memories are visible to all members.</p>
-      </div>
-      <div class="feature reveal reveal-d5">
-        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" style="color:#63b3ed">
-          <rect x="6" y="4" width="20" height="24" rx="3"/>
-          <circle cx="16" cy="14" r="4"/>
-          <path d="M11 24c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5" stroke-linecap="round"/>
-        </svg>
-        <h3>AI Agents <span class="badge-coming-soon" style="font-size:9px;padding:2px 7px;margin-left:4px">Soon</span></h3>
-        <p>Persistent agents with memory, skills, and team context. Create once, use across any LLM or MCP client.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- Teams -->
+<!-- TEAMS -->
 <section class="teams-section" id="teams">
-  <div class="container">
-    <div class="section-label reveal" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:12px"><span style="width:24px;height:1px;background:var(--amber-dim);display:inline-block"></span> Team collaboration <span class="badge-new">New</span></div>
-    <h2 class="reveal reveal-d1" style="font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--heading);letter-spacing:-0.01em">Shared memory<br>for your whole team.</h2>
-    <p class="reveal reveal-d2" style="font-size:15px;color:var(--text-dim);max-width:600px;line-height:1.8;margin-top:16px">Your AI automatically sorts memories &mdash; project decisions go to the team, personal preferences stay private. Override anytime. Search returns both.</p>
-
+  <div class="glow-orb" style="background:rgba(200,150,62,0.06);width:600px;height:500px;top:-100px;left:-200px"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="section-label g0">Team collaboration <span class="badge-new">New</span></div>
+    <h2 class="g0" style="font-family:var(--serif);font-size:clamp(28px,4vw,48px);font-weight:300;color:var(--heading);letter-spacing:-0.015em">Shared memory<br>for your whole team.</h2>
+    <p class="g0" style="font-size:15px;color:var(--text-dim);max-width:600px;line-height:1.85;margin-top:16px">Your AI automatically sorts memories &mdash; project decisions go to the team, personal preferences stay private. Override anytime. Search returns both.</p>
     <div class="teams-grid">
-      <div class="teams-visual reveal reveal-d2">
+      <div class="teams-visual g0l">
         <div class="team-flow">
           <div class="team-flow-row">
             <div class="team-node">Alice<span class="role">admin</span></div>
@@ -1715,36 +649,33 @@ footer .container{
             <span class="team-arrow">&larr;</span>
             <div class="team-node">Bob<span class="role">member</span></div>
           </div>
-          <div style="padding-left:48px">
-            <div class="terminal-window" style="margin-top:16px">
+          <div style="margin-top:16px">
+            <div class="terminal-window" data-term="team">
               <div class="terminal-header">
-                <span class="terminal-dot r"></span>
-                <span class="terminal-dot y"></span>
-                <span class="terminal-dot g"></span>
-                <span class="terminal-title">team memory</span>
+                <span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span>
+                <span class="terminal-title">team memory flow</span>
               </div>
               <div class="terminal-body" style="font-size:11px;line-height:1.9;padding:16px">
-                <div class="line"><span class="comment"># Alice stores a team memory</span></div>
-                <div class="line"><span class="highlight">POST</span> <span class="output">/v1/memories</span></div>
-                <div class="line"><span class="output">{ team_id: "eng-team", visibility: "team",</span></div>
-                <div class="line"><span class="output">&nbsp; fact: "Auth service uses JWT with RS256" }</span></div>
-                <div class="line" style="margin-top:8px"><span class="comment"># Bob searches &mdash; sees private + team</span></div>
-                <div class="line"><span class="highlight">GET</span> <span class="output">/v1/memories/search?include_team=true</span></div>
-                <div class="line"><span class="output">&raquo; "Auth service uses JWT with RS256"</span> <span class="highlight">0.94</span></div>
+                <div class="line demo-line"><span class="comment"># Alice stores a team memory</span></div>
+                <div class="line demo-line"><span class="highlight">POST</span> <span class="output">/v1/memories</span></div>
+                <div class="line demo-line"><span class="output">{ team_id: <span style="color:var(--amber)">"eng-team"</span>, visibility: <span style="color:var(--amber)">"team"</span>,</span></div>
+                <div class="line demo-line"><span class="output">&nbsp; fact: <span style="color:var(--amber)">"Auth service uses JWT with RS256"</span> }</span></div>
+                <div class="line demo-line" style="margin-top:8px"><span class="comment"># Bob searches &mdash; sees private + team</span></div>
+                <div class="line demo-line"><span class="highlight">GET</span> <span class="output">/v1/memories/search?include_team=true</span></div>
+                <div class="line demo-line"><span class="output">&raquo; "Auth service uses JWT with RS256"</span> <span class="highlight">0.94</span></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="teams-features reveal reveal-d3">
+      <div class="teams-features g0r">
         <div class="teams-feature-item">
           <div class="teams-feature-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           </div>
           <div>
             <h4>Role-based access</h4>
-            <p>Admin, member, or read-only. Control who can store, search, and manage team memories.</p>
+            <p>Admin, member, or read-only. Control who can store, search, and manage team memories across the pool.</p>
           </div>
         </div>
         <div class="teams-feature-item">
@@ -1753,7 +684,7 @@ footer .container{
           </div>
           <div>
             <h4>Private + team memory</h4>
-            <p>Your AI classifies automatically &mdash; &ldquo;uses RS256&rdquo; goes to the team, &ldquo;prefers dark mode&rdquo; stays private. You can always override per memory.</p>
+            <p>AI classifies automatically &mdash; "uses RS256" goes to the team, "prefers dark mode" stays private. Override with natural language or explicit <code style="color:var(--amber);font-size:11px">visibility</code> field.</p>
           </div>
         </div>
         <div class="teams-feature-item">
@@ -1762,16 +693,16 @@ footer .container{
           </div>
           <div>
             <h4>Email invitations</h4>
-            <p>Invite teammates with a link. They accept, join the team, and immediately see shared context.</p>
+            <p>Invite teammates with a link. They accept, join the team, and immediately see shared context in their AI tools.</p>
           </div>
         </div>
         <div class="teams-feature-item">
-          <div class="teams-feature-icon" style="color:#63b3ed;border-color:rgba(99,179,237,0.3)">
+          <div class="teams-feature-icon" style="color:var(--blue);border-color:rgba(99,179,237,0.25)">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           </div>
           <div>
-            <h4>AI Agents <span class="badge-coming-soon">Coming soon</span></h4>
-            <p>Create AI agents with persistent memory, skills, and shared team context. Plug into any LLM.</p>
+            <h4>AI Agents <span class="badge-soon">Coming soon</span></h4>
+            <p>Persistent agents with memory, skills, and shared team context. Create once, plug into any LLM or MCP client.</p>
           </div>
         </div>
       </div>
@@ -1781,41 +712,256 @@ footer .container{
 
 <div class="divider"></div>
 
-<!-- FAQ (visible for SEO + AEO) -->
-<section class="faq" id="faq" style="padding:80px 0">
+<!-- NATURAL LANGUAGE CONTROL -->
+<section class="nl-section" id="nl-control">
   <div class="container">
-    <h2 class="reveal reveal-d1" style="font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--heading);letter-spacing:-0.01em;margin-bottom:48px">Questions</h2>
-    <div style="max-width:720px;display:flex;flex-direction:column;gap:24px">
-      <details class="reveal" style="border:1px solid var(--border);border-radius:8px;padding:0">
-        <summary style="padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center">What is Smara?<span style="color:var(--text-faint);font-size:18px;transition:transform 0.2s">+</span></summary>
-        <p style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">Smara is a persistent memory layer for AI coding tools. It gives Claude Code, Cursor, Windsurf, Codex, and any MCP-compatible client shared context that survives across sessions. Install with one command: <code style="color:var(--amber)">npx @smara/mcp-server --init</code>.</p>
-      </details>
-      <details class="reveal reveal-d1" style="border:1px solid var(--border);border-radius:8px;padding:0">
-        <summary style="padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center">How does Ebbinghaus decay work?<span style="color:var(--text-faint);font-size:18px;transition:transform 0.2s">+</span></summary>
-        <p style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">Smara uses Ebbinghaus forgetting curves to score memory relevance over time. Important facts persist while trivial details naturally fade, just like human memory. The formula is <code style="color:var(--amber)">R = e^(-t/S)</code> where t is time elapsed and S is memory strength based on importance and access frequency.</p>
-      </details>
-      <details class="reveal reveal-d2" style="border:1px solid var(--border);border-radius:8px;padding:0">
-        <summary style="padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center">What AI tools does Smara work with?<span style="color:var(--text-faint);font-size:18px;transition:transform 0.2s">+</span></summary>
-        <p style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">Any MCP-compatible tool: Claude Code, Cursor, Windsurf, Codex, VS Code with Copilot, and any custom MCP client. Smara also provides a REST API for direct integration from any language or framework.</p>
-      </details>
-      <details class="reveal reveal-d3" style="border:1px solid var(--border);border-radius:8px;padding:0">
-        <summary style="padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center">How is Smara different from Mem0 or Zep?<span style="color:var(--text-faint);font-size:18px;transition:transform 0.2s">+</span></summary>
-        <p style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">Smara is the only AI memory tool with Ebbinghaus forgetting curves for temporal relevance. Unlike Mem0 or Zep, memories naturally decay over time &mdash; important facts persist while outdated context fades. Smara is also MCP-native, integrating directly with AI coding tools via the Model Context Protocol.</p>
-      </details>
-      <details class="reveal reveal-d4" style="border:1px solid var(--border);border-radius:8px;padding:0">
-        <summary style="padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center">How do teams work? What stays private?<span style="color:var(--text-faint);font-size:18px;transition:transform 0.2s">+</span></summary>
-        <div style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">
-          <p>Create a team, invite members by email, and memories are automatically sorted into <strong style="color:var(--heading)">private</strong> or <strong style="color:var(--heading)">team</strong>:</p>
-          <ul style="margin:12px 0;padding-left:20px;color:var(--text-dim)">
-            <li><strong style="color:var(--heading)">Team memories</strong> &mdash; project decisions, architecture choices, conventions. Visible to all members. <em>Example: &ldquo;Auth service uses JWT with RS256&rdquo;</em></li>
-            <li><strong style="color:var(--heading)">Private memories</strong> &mdash; personal preferences, individual notes. Only you can see them. <em>Example: &ldquo;I prefer dark mode and tabs over spaces&rdquo;</em></li>
-          </ul>
-          <p>With the MCP server, your AI tool makes this decision automatically based on content &mdash; no manual tagging. You can always override by explicitly setting <code style="color:var(--amber)">visibility: "private"</code> or <code style="color:var(--amber)">"team"</code>. When you search, combined mode returns both your private memories and your team&rsquo;s shared context together.</p>
+    <div class="section-label g0" style="justify-content:center">Memory control</div>
+    <h2 class="g0" style="font-family:var(--serif);font-size:clamp(26px,4vw,44px);font-weight:300;color:var(--heading);letter-spacing:-0.015em;text-align:center;margin-top:12px">Control your memory in plain English.</h2>
+    <p class="g0" style="font-size:15px;color:var(--text-dim);text-align:center;max-width:560px;margin:12px auto 0;line-height:1.85">No dashboards needed. Just tell your AI what you want. Smara's MCP tools handle the rest.</p>
+    <div class="nl-terminal g0">
+      <div class="terminal-window" data-term="nl">
+        <div class="terminal-header">
+          <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+          <span class="terminal-title">natural language memory control</span>
+        </div>
+        <div class="terminal-body" style="font-size:12px;line-height:2">
+          <div class="line demo-line"><span class="prompt">you:</span> <span class="cmd">show my memories</span></div>
+          <div class="line demo-line"><span class="prompt">claude:</span> <span class="output">[calls list_memories] You have 14 memories. Top 3:</span></div>
+          <div class="line demo-line"><span class="output">&nbsp;&nbsp;1. "Uses Postgres on Fly.io" (private, score: 0.97)</span></div>
+          <div class="line demo-line"><span class="output">&nbsp;&nbsp;2. "Auth: Clerk" (private, score: 0.94)</span></div>
+          <div class="line demo-line"><span class="output">&nbsp;&nbsp;3. "Team convention: tabs not spaces" (team, score: 0.91)</span></div>
+          <div class="line demo-line" style="margin-top:8px"><span class="prompt">you:</span> <span class="cmd">make the Postgres one private</span></div>
+          <div class="line demo-line"><span class="prompt">claude:</span> <span class="output">[calls update_memory] Done &mdash; "Uses Postgres on Fly.io" is now private.</span></div>
+          <div class="line demo-line" style="margin-top:8px"><span class="prompt">you:</span> <span class="cmd">share the auth memory with the team</span></div>
+          <div class="line demo-line"><span class="prompt">claude:</span> <span class="output">[calls update_memory] "Auth: Clerk" is now visible to your whole team.</span></div>
+          <div class="line demo-line" style="margin-top:8px"><span class="prompt">you:</span> <span class="cmd">forget the Redis experiment</span></div>
+          <div class="line demo-line"><span class="prompt">claude:</span> <span class="output">[calls delete_memory] Memory deleted. Won't affect future context.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MCP TOOLS REFERENCE -->
+<section class="mcp-section" id="mcp-tools">
+  <div class="container">
+    <div class="section-label g0">MCP tools</div>
+    <h2 class="g0" style="font-family:var(--serif);font-size:clamp(26px,4vw,44px);font-weight:300;color:var(--heading);letter-spacing:-0.015em">7 tools. All the memory you need.</h2>
+    <p class="g0" style="color:var(--text-dim);font-size:14px;max-width:500px;margin-top:8px">Every Smara MCP server exposes these tools to your AI. No configuration required.</p>
+    <div class="mcp-grid g0">
+      <div class="mcp-tool">
+        <div class="mcp-tool-name">store_memory <span class="mcp-badge">write</span></div>
+        <div class="mcp-tool-desc">Store a fact with importance score and optional team or project tag. AI calls this automatically during conversation.</div>
+      </div>
+      <div class="mcp-tool">
+        <div class="mcp-tool-name">search_memories <span class="mcp-badge">read</span></div>
+        <div class="mcp-tool-desc">Semantic search across private + team memories. Returns ranked results by similarity &times; decay score.</div>
+      </div>
+      <div class="mcp-tool">
+        <div class="mcp-tool-name">get_user_context <span class="mcp-badge">read</span></div>
+        <div class="mcp-tool-desc">Load full context at conversation start. Called automatically by the MCP server on every new session.</div>
+      </div>
+      <div class="mcp-tool">
+        <div class="mcp-tool-name">update_memory <span class="mcp-badge">write</span></div>
+        <div class="mcp-tool-desc">Change a memory's visibility (private/team), importance, or fact content. Natural language triggers this tool.</div>
+      </div>
+      <div class="mcp-tool">
+        <div class="mcp-tool-name">list_memories <span class="mcp-badge">read</span></div>
+        <div class="mcp-tool-desc">Paginated list of all memories. Supports filter by source, visibility, or decay score range.</div>
+      </div>
+      <div class="mcp-tool">
+        <div class="mcp-tool-name">delete_memory <span class="mcp-badge">write</span></div>
+        <div class="mcp-tool-desc">Permanently delete a memory by ID. "Forget the Redis experiment" triggers this automatically.</div>
+      </div>
+      <div class="mcp-tool" style="grid-column:span 3">
+        <div class="mcp-tool-name">get_usage <span class="mcp-badge">read</span></div>
+        <div class="mcp-tool-desc">Check memory usage, team quota, and API call counts against your current plan limits. No arguments needed.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EBBINGHAUS DECAY -->
+<section class="decay-section" id="decay">
+  <div class="glow-orb" style="background:rgba(200,150,62,0.05);width:500px;height:400px;top:50%;right:-150px;transform:translateY(-50%)"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="decay-grid">
+      <div class="decay-text g0l">
+        <div class="section-label" style="margin-bottom:16px">Ebbinghaus decay</div>
+        <h2>Memory that forgets<br><em style="color:var(--amber)">on purpose.</em></h2>
+        <p>Infinite context is noise. Smara uses <span class="highlight">Ebbinghaus decay scoring</span> &mdash; the same curve that models human forgetting.</p>
+        <p>Recent facts stay sharp. Old trivia fades. Important memories that keep getting reinforced persist forever. Contradictions are auto-resolved &mdash; "uses MySQL" gets replaced when you mention Postgres.</p>
+        <div class="decay-formula">R = e<sup>(-t/S)</sup> <span style="font-size:13px;font-family:var(--mono);font-style:normal;color:var(--text-dim)">S = importance &times; access freq.</span></div>
+        <p style="color:var(--text-faint);font-size:13px;margin-top:20px">The result: your AI's context window is always fresh, relevant, and right-sized. No bloat, no stale facts.</p>
+      </div>
+      <div class="decay-visual g0r">
+        <canvas id="decay-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHO IS THIS FOR -->
+<section class="audience" id="audience">
+  <div class="container">
+    <h2 class="g0">Built for people who ship with AI</h2>
+    <div class="audience-grid">
+      <div class="audience-card g0">
+        <div class="aud-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Solo developers</h3>
+        <p>You switch between Claude Code and Cursor daily. Smara means you never re-explain your stack, preferences, or project conventions. Just code.</p>
+      </div>
+      <div class="audience-card g0">
+        <div class="aud-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Dev teams</h3>
+        <p>Shared context across team members and tools. New developers inherit institutional knowledge. AI onboards itself from the team memory pool.</p>
+      </div>
+      <div class="audience-card g0">
+        <div class="aud-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M2 12h4M18 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <h3>AI agent builders</h3>
+        <p>Your AI agents need persistent memory across sessions. Three API calls replace a custom database, embedding pipeline, and retrieval system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES GRID -->
+<section id="features" style="padding:120px 0">
+  <div class="container">
+    <div class="section-label g0">Under the hood</div>
+    <h2 class="g0" style="font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:300;color:var(--heading);letter-spacing:-0.015em">Everything you'd build yourself,<br>already done.</h2>
+    <div class="features-grid">
+      <div class="feature g0">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 8h16M8 16h16M8 24h16" stroke-linecap="round"/>
+          <circle cx="4" cy="8" r="2" fill="currentColor" stroke="none"/>
+          <circle cx="4" cy="16" r="2" fill="currentColor" stroke="none" opacity="0.6"/>
+          <circle cx="4" cy="24" r="2" fill="currentColor" stroke="none" opacity="0.3"/>
+        </svg>
+        <h3>Universal protocol</h3>
+        <p>MCP for Claude Code, Cursor, Windsurf. REST API for everything else. One memory layer, every tool you use.</p>
+      </div>
+      <div class="feature g0">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="16" cy="16" r="6"/>
+          <circle cx="16" cy="16" r="2" fill="currentColor" stroke="none"/>
+          <path d="M16 4v4M16 24v4M4 16h4M24 16h4" stroke-linecap="round" opacity="0.4"/>
+        </svg>
+        <h3>Zero-config auto-memory</h3>
+        <p>Install the MCP server. That's it. Context loads at conversation start. New facts store silently as you work.</p>
+      </div>
+      <div class="feature g0">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 24 C8 8, 16 6, 28 4" stroke-linecap="round"/>
+          <path d="M4 24 C8 14, 16 12, 28 10" stroke-linecap="round" opacity="0.4"/>
+          <circle cx="4" cy="24" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+        <h3>Ebbinghaus decay</h3>
+        <p>Old trivia fades. Important facts persist. Contradictions auto-resolve. Your context stays fresh without manual cleanup.</p>
+      </div>
+      <div class="feature g0">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="4" y="8" width="24" height="4" rx="1"/>
+          <rect x="4" y="14" width="24" height="4" rx="1" opacity="0.6"/>
+          <rect x="4" y="20" width="24" height="4" rx="1" opacity="0.3"/>
+        </svg>
+        <h3>Source tagging</h3>
+        <p>Every memory knows its origin &mdash; Claude Code, Cursor, Codex, or your API. Filter by source or see everything together.</p>
+      </div>
+      <div class="feature g0">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M22 21v-2a4 4 0 0 0-4-4h-4a4 4 0 0 0-4 4v2" stroke-linecap="round"/>
+          <circle cx="16" cy="8" r="3"/>
+          <path d="M28 21v-1.5a3 3 0 0 0-2.5-2.96" stroke-linecap="round" opacity="0.6"/>
+          <circle cx="25" cy="10" r="2.5" opacity="0.6"/>
+        </svg>
+        <h3>Team collaboration <span class="badge-new" style="font-size:9px;padding:2px 7px;margin-left:4px">New</span></h3>
+        <p>Shared memory pools for your team. Private stays private. Team memories visible to all members. Role-based access.</p>
+      </div>
+      <div class="feature g0">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--blue)">
+          <rect x="6" y="4" width="20" height="24" rx="3"/>
+          <circle cx="16" cy="14" r="4"/>
+          <path d="M11 24c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5" stroke-linecap="round"/>
+        </svg>
+        <h3>AI Agents <span class="badge-soon" style="font-size:9px;padding:2px 7px;margin-left:4px">Soon</span></h3>
+        <p>Persistent agents with memory, skills, and team context. Create once, use across any LLM or MCP client.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="container">
+    <h2 class="g0">Questions</h2>
+    <div class="faq-list">
+      <details class="faq-item g0">
+        <summary class="faq-summary">What is Smara?<span class="faq-plus">+</span></summary>
+        <div class="faq-body">
+          <p>Smara is a persistent memory layer for AI coding tools. It gives Claude Code, Cursor, Windsurf, Codex, and any MCP-compatible client shared context that survives across sessions.</p>
+          <p>Install with one command: <code>npx @smara/mcp-server --init</code></p>
         </div>
       </details>
-      <details class="reveal reveal-d5" style="border:1px solid var(--border);border-radius:8px;padding:0">
-        <summary style="padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center">Is my data private?<span style="color:var(--text-faint);font-size:18px;transition:transform 0.2s">+</span></summary>
-        <p style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">Yes. Each API key isolates your data completely. Memories are encrypted in transit (TLS) and stored in isolated PostgreSQL schemas. We never use your data for training. You can delete all memories at any time via the API.</p>
+      <details class="faq-item g0">
+        <summary class="faq-summary">How does Ebbinghaus decay work?<span class="faq-plus">+</span></summary>
+        <div class="faq-body">
+          <p>Smara uses Ebbinghaus forgetting curves to score memory relevance over time. Important facts persist while trivial details naturally fade, just like human memory.</p>
+          <p>The formula is <code>R = e^(-t/S)</code> where t is time elapsed and S is memory strength based on importance and access frequency. A memory referenced daily stays near score 1.0; something mentioned once 60 days ago fades toward 0.</p>
+        </div>
+      </details>
+      <details class="faq-item g0">
+        <summary class="faq-summary">What AI tools does Smara work with?<span class="faq-plus">+</span></summary>
+        <div class="faq-body">
+          <p>Any MCP-compatible tool: Claude Code, Cursor, Windsurf, Codex, VS Code with Copilot, and any custom MCP client.</p>
+          <p>Smara also provides a REST API for direct integration from any language or framework &mdash; Python, TypeScript, Go, Ruby, anything that can make HTTP requests.</p>
+        </div>
+      </details>
+      <details class="faq-item g0">
+        <summary class="faq-summary">How do teams work? What stays private?<span class="faq-plus">+</span></summary>
+        <div class="faq-body">
+          <p>Create a team, invite members by email, and memories are automatically sorted into <strong style="color:var(--heading)">private</strong> or <strong style="color:var(--heading)">team</strong>:</p>
+          <ul>
+            <li><strong style="color:var(--heading)">Team memories</strong> &mdash; project decisions, architecture choices, conventions. Visible to all members. <em>Example: "Auth service uses JWT with RS256"</em></li>
+            <li><strong style="color:var(--heading)">Private memories</strong> &mdash; personal preferences, individual notes. Only you. <em>Example: "I prefer dark mode and tabs over spaces"</em></li>
+          </ul>
+          <p>Your AI classifies automatically via MCP &mdash; no manual tagging. Override by saying "make that private" or setting <code>visibility: "team"</code>. Combined search returns both private and team memories together.</p>
+        </div>
+      </details>
+      <details class="faq-item g0">
+        <summary class="faq-summary">Is my data private?<span class="faq-plus">+</span></summary>
+        <div class="faq-body">
+          <p>Yes. Each API key isolates your data completely. Memories are encrypted in transit (TLS 1.3) and stored in isolated PostgreSQL schemas. We never use your data for training.</p>
+          <p>You can delete all memories at any time via the <code>delete_memory</code> MCP tool or the REST API.</p>
+        </div>
+      </details>
+      <details class="faq-item g0">
+        <summary class="faq-summary">How much does Smara cost?<span class="faq-plus">+</span></summary>
+        <div class="faq-body">
+          <p>Three plans:</p>
+          <ul>
+            <li><strong style="color:var(--heading)">Free</strong> &mdash; $0/mo. 10,000 memories, 1 team/3 members, 2 AI agents, Full API+MCP, Ebbinghaus decay.</li>
+            <li><strong style="color:var(--heading)">Developer</strong> &mdash; $19/mo. 200K memories, 3 teams/10 members, 10 AI agents + 5 custom skills, Priority pipeline, Email support.</li>
+            <li><strong style="color:var(--heading)">Pro</strong> &mdash; $99/mo. 2M memories, Unlimited teams/50 members, Unlimited agents+skills, Dedicated queue, Slack support + SLA.</li>
+          </ul>
+          <p>No credit card required for the free tier. Cancel anytime.</p>
+        </div>
       </details>
     </div>
   </div>
@@ -1823,14 +969,14 @@ footer .container{
 
 <div class="divider"></div>
 
-<!-- Pricing -->
+<!-- PRICING -->
 <section class="pricing" id="pricing">
-  <div class="container">
-    <div class="section-label reveal" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:12px"><span style="width:24px;height:1px;background:var(--amber-dim);display:inline-block"></span> Pricing</div>
-    <h2 class="reveal reveal-d1" style="font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--heading);letter-spacing:-0.01em">Start free.<br>Scale when you need to.</h2>
-
+  <div class="glow-orb" style="background:rgba(200,150,62,0.05);width:700px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="section-label g0">Pricing</div>
+    <h2 class="g0">Start free.<br>Scale when you need to.</h2>
     <div class="pricing-grid">
-      <div class="price-card reveal">
+      <div class="price-card g0">
         <div class="price-tier">Free</div>
         <div class="price-amount">$0</div>
         <div class="price-desc">For trying it out and side projects</div>
@@ -1839,12 +985,11 @@ footer .container{
           <li>1 team / 3 members</li>
           <li>2 AI agents</li>
           <li>Full API + MCP access</li>
-          <li>Ebbinghaus decay</li>
+          <li>Ebbinghaus decay scoring</li>
         </ul>
         <a href="#signup" class="price-btn">Get started free</a>
       </div>
-
-      <div class="price-card featured reveal reveal-d1">
+      <div class="price-card featured g0">
         <div class="price-tier">Developer</div>
         <div class="price-amount">$19<span>/mo</span></div>
         <div class="price-desc">For production agents and daily use</div>
@@ -1855,10 +1000,9 @@ footer .container{
           <li>Priority embedding pipeline</li>
           <li>Email support</li>
         </ul>
-        <a href="https://buy.stripe.com/9B6dR2gpngbo3Ew3tAcEw00" target="_blank" class="price-btn">Subscribe</a>
+        <a href="https://buy.stripe.com/9B6dR2gpngbo3Ew3tAcEw00" target="_blank" rel="noopener" class="price-btn">Subscribe</a>
       </div>
-
-      <div class="price-card reveal reveal-d2">
+      <div class="price-card g0">
         <div class="price-tier">Pro</div>
         <div class="price-amount">$99<span>/mo</span></div>
         <div class="price-desc">For teams shipping at scale</div>
@@ -1869,7 +1013,7 @@ footer .container{
           <li>Dedicated embedding queue</li>
           <li>Slack support + SLA</li>
         </ul>
-        <a href="https://buy.stripe.com/9B6cMY1utbV82As1lscEw01" target="_blank" class="price-btn">Subscribe</a>
+        <a href="https://buy.stripe.com/9B6cMY1utbV82As1lscEw01" target="_blank" rel="noopener" class="price-btn">Subscribe</a>
       </div>
     </div>
   </div>
@@ -1877,17 +1021,17 @@ footer .container{
 
 <div class="divider"></div>
 
-<!-- Signup -->
+<!-- SIGNUP -->
 <section class="signup-section" id="signup">
-  <div class="container">
-    <h2 class="reveal">Get your API key</h2>
-    <p class="reveal reveal-d1">Free tier. 10,000 memories. No credit card.</p>
-    <form class="signup-form reveal reveal-d2" id="signup-form">
+  <div class="glow-orb" style="background:rgba(200,150,62,0.07);width:600px;height:400px;top:-80px;left:50%;transform:translateX(-50%)"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <h2 class="g0">Get your API key</h2>
+    <p class="g0" style="color:var(--text-dim);font-size:14px;max-width:420px;margin:0 auto 40px">Free tier. 10,000 memories. No credit card required.</p>
+    <form class="signup-form g0" id="signup-form">
       <input type="email" name="email" placeholder="you@example.com" required autocomplete="email">
       <button type="submit">Get API key</button>
     </form>
-    <p class="signup-note reveal reveal-d3" id="signup-note">Takes 2 seconds. Your key appears right here.</p>
-
+    <p class="signup-note" id="signup-note">Takes 2 seconds. Your key appears right here.</p>
     <div id="signup-success" style="display:none;margin-top:32px;text-align:left;max-width:540px;margin-left:auto;margin-right:auto">
       <p style="color:var(--amber);font-size:13px;margin-bottom:16px;font-weight:500">Your API key (save it &mdash; shown only once):</p>
       <div style="background:var(--bg-code);border:1px solid var(--border);border-radius:6px;padding:16px 20px;margin-bottom:24px;position:relative">
@@ -1909,33 +1053,30 @@ footer .container{
   </div>
 </section>
 
-<!-- Beta Callout + Feature Request -->
-<section style="padding:80px 0;background:var(--bg-raised);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+<!-- BETA / FEEDBACK -->
+<section class="beta-section" id="feedback">
   <div class="container" style="max-width:720px;text-align:center">
-    <div class="reveal" style="display:inline-block;padding:4px 14px;border:1px solid var(--amber-dim);border-radius:20px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);margin-bottom:24px">Early access &mdash; we need your feedback</div>
-    <h2 class="reveal reveal-d1" style="font-family:var(--serif);font-size:clamp(24px,3.5vw,36px);font-weight:300;color:var(--heading);letter-spacing:-0.01em;line-height:1.3;margin-bottom:16px">Smara is in beta.<br>Help us build it right.</h2>
-    <p class="reveal reveal-d2" style="font-size:15px;color:var(--text-dim);line-height:1.8;margin-bottom:32px">We're a small team shipping fast. The best features come from real developers hitting real problems. Try Smara, break things, and tell us what's missing.</p>
-
-    <!-- Feedback Form -->
-    <div class="reveal reveal-d3" id="feedback-section" style="max-width:560px;margin:0 auto 40px">
-      <div style="display:flex;gap:8px;margin-bottom:16px;justify-content:center">
-        <button onclick="setFeedbackType('feature')" id="fb-type-feature" style="padding:8px 16px;border:1px solid var(--amber-dim);background:rgba(200,150,62,0.1);color:var(--amber);border-radius:6px;font-size:13px;font-family:var(--mono);cursor:pointer">Feature request</button>
-        <button onclick="setFeedbackType('bug')" id="fb-type-bug" style="padding:8px 16px;border:1px solid var(--border);background:var(--bg);color:var(--text-dim);border-radius:6px;font-size:13px;font-family:var(--mono);cursor:pointer">Bug report</button>
-        <button onclick="setFeedbackType('general')" id="fb-type-general" style="padding:8px 16px;border:1px solid var(--border);background:var(--bg);color:var(--text-dim);border-radius:6px;font-size:13px;font-family:var(--mono);cursor:pointer">General feedback</button>
+    <div class="g0" style="display:inline-block;padding:4px 14px;border:1px solid var(--amber-dim);border-radius:20px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);margin-bottom:24px">Early access &mdash; we need your feedback</div>
+    <h2 class="g0" style="font-family:var(--serif);font-size:clamp(24px,3.5vw,40px);font-weight:300;color:var(--heading);letter-spacing:-0.015em;line-height:1.25;margin-bottom:16px">Smara is in beta.<br>Help us build it right.</h2>
+    <p class="g0" style="font-size:15px;color:var(--text-dim);line-height:1.85;margin-bottom:32px">We're a small team shipping fast. The best features come from real developers hitting real problems. Try Smara, break things, and tell us what's missing.</p>
+    <div class="g0" id="feedback-section" style="max-width:560px;margin:0 auto 40px">
+      <div style="display:flex;gap:8px;margin-bottom:16px;justify-content:center;flex-wrap:wrap">
+        <button onclick="setFeedbackType('feature')" id="fb-type-feature" class="fb-type-btn active">Feature request</button>
+        <button onclick="setFeedbackType('bug')" id="fb-type-bug" class="fb-type-btn">Bug report</button>
+        <button onclick="setFeedbackType('general')" id="fb-type-general" class="fb-type-btn">General feedback</button>
       </div>
       <form id="feedback-form" style="display:flex;flex-direction:column;gap:12px">
-        <input type="text" id="fb-title" placeholder="What would make Smara better?" required maxlength="200" style="padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--heading);font-size:14px;font-family:var(--mono);outline:none">
-        <textarea id="fb-description" placeholder="Details (optional)" rows="3" maxlength="5000" style="padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;font-family:var(--mono);outline:none;resize:vertical"></textarea>
+        <input type="text" id="fb-title" class="fb-input" placeholder="What would make Smara better?" required maxlength="200">
+        <textarea id="fb-description" class="fb-textarea" placeholder="Details (optional)" rows="3" maxlength="5000"></textarea>
         <div style="display:flex;gap:12px;align-items:center">
-          <input type="email" id="fb-email" placeholder="Email (optional, for follow-up)" style="flex:1;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;font-family:var(--mono);outline:none">
-          <button type="submit" style="padding:12px 24px;background:var(--amber);color:var(--bg);border:none;border-radius:6px;font-size:13px;font-family:var(--mono);cursor:pointer;white-space:nowrap;font-weight:500">Send</button>
+          <input type="email" id="fb-email" class="fb-input" placeholder="Email (optional, for follow-up)" style="flex:1">
+          <button type="submit" style="padding:12px 24px;background:var(--amber);color:var(--bg);border:none;border-radius:6px;font-size:13px;font-family:var(--mono);cursor:pointer;white-space:nowrap;font-weight:500;transition:background .2s">Send</button>
         </div>
       </form>
       <p id="fb-status" style="margin-top:12px;font-size:13px;color:var(--text-faint);text-align:center;display:none"></p>
     </div>
-
-    <div class="reveal reveal-d4" style="display:flex;flex-direction:column;gap:16px;max-width:560px;margin:0 auto">
-      <p style="font-size:12px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;text-align:center">Or reach out directly</p>
+    <div class="g0" style="display:flex;flex-direction:column;gap:16px;max-width:560px;margin:0 auto">
+      <p style="font-size:12px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em">Or reach out directly</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
         <a href="mailto:sri@smara.io?subject=Smara%20feedback" style="padding:8px 16px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;font-family:var(--mono);text-decoration:none">sri@smara.io</a>
         <a href="https://twitter.com/parallelromb" target="_blank" rel="noopener" style="padding:8px 16px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;font-family:var(--mono);text-decoration:none">@parallelromb</a>
@@ -1945,29 +1086,138 @@ footer .container{
   </div>
 </section>
 
-<!-- Footer -->
+<!-- FOOTER -->
 <footer>
   <div class="container">
-    <div class="footer-left">
-      <span>smara</span> &mdash; &#x0938;&#x094D;&#x092E;&#x0930; &mdash; the act of remembrance
-    </div>
+    <div class="footer-left"><span>smara</span> &mdash; &#x0938;&#x094D;&#x092E;&#x0930; &mdash; the act of remembrance</div>
     <div class="footer-links">
-      <a href="https://api.smara.io/docs/" target="_blank">Docs</a>
-      <a href="https://github.com/smara-io/smara" target="_blank">GitHub</a>
-      <a href="https://npmjs.com/package/@smara/mcp-server" target="_blank">npm</a>
-      <a href="https://twitter.com/parallelromb" target="_blank">@parallelromb</a>
+      <a href="https://api.smara.io/docs/" target="_blank" rel="noopener">Docs</a>
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://npmjs.com/package/@smara/mcp-server" target="_blank" rel="noopener">npm</a>
+      <a href="https://twitter.com/parallelromb" target="_blank" rel="noopener">@parallelromb</a>
     </div>
   </div>
 </footer>
 
 <script>
-// Nav scroll effect
+// ===================== GSAP =====================
+gsap.registerPlugin(ScrollTrigger);
+
+// ===================== NAV =====================
 const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+
+// ===================== HERO ENTRANCE =====================
+(function() {
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  tl.to('.hero-badge',  { opacity: 1, y: 0, duration: 0.8, delay: 0.2 })
+    .to('.hero h1',     { opacity: 1, y: 0, duration: 0.9 }, '-=0.4')
+    .to('.hero-sub',    { opacity: 1, y: 0, duration: 0.8 }, '-=0.5')
+    .to('.hero-cta',    { opacity: 1, y: 0, duration: 0.7 }, '-=0.45')
+    .to('.hero-install',{ opacity: 1, y: 0, duration: 0.7 }, '-=0.4')
+    .to('.hero-stats',  { opacity: 1, duration: 0.7 }, '-=0.3');
+})();
+
+// ===================== SCROLL REVEALS =====================
+function scrollReveal(sel, fromVars) {
+  gsap.utils.toArray(sel).forEach(el => {
+    gsap.fromTo(el, { opacity: 0, ...fromVars }, {
+      opacity: 1, x: 0, y: 0, scale: 1, duration: 0.85, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+    });
+  });
+}
+scrollReveal('.g0',  { y: 50 });
+scrollReveal('.g0l', { x: -60 });
+scrollReveal('.g0r', { x: 60 });
+
+// Steps stagger
+gsap.utils.toArray('.step').forEach((el, i) => {
+  gsap.fromTo(el, { opacity: 0, y: 50 }, {
+    opacity: 1, y: 0, duration: 0.85, delay: i * 0.12, ease: 'power3.out',
+    scrollTrigger: { trigger: '.steps-grid', start: 'top 85%', toggleActions: 'play none none none' }
+  });
+});
+
+// Logo items
+gsap.from('.logo-item', {
+  opacity: 0, y: 20, stagger: 0.07, duration: 0.6, ease: 'power2.out',
+  scrollTrigger: { trigger: '.logos', start: 'top 88%', toggleActions: 'play none none none' }
+});
+
+// Feature cards
+gsap.utils.toArray('.feature').forEach((el, i) => {
+  gsap.fromTo(el, { opacity: 0, y: 40 }, {
+    opacity: 1, y: 0, duration: 0.8, delay: (i % 2) * 0.1, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' }
+  });
+});
+
+// MCP tools stagger
+gsap.utils.toArray('.mcp-tool').forEach((el, i) => {
+  gsap.fromTo(el, { opacity: 0, y: 30 }, {
+    opacity: 1, y: 0, duration: 0.7, delay: (i % 3) * 0.08, ease: 'power2.out',
+    scrollTrigger: { trigger: '.mcp-grid', start: 'top 85%', toggleActions: 'play none none none' }
+  });
+});
+
+// Audience cards
+gsap.utils.toArray('.audience-card').forEach((el, i) => {
+  gsap.fromTo(el, { opacity: 0, y: 40 }, {
+    opacity: 1, y: 0, duration: 0.8, delay: i * 0.1, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' }
+  });
+});
+
+// Pricing cards
+gsap.utils.toArray('.price-card').forEach((el, i) => {
+  gsap.fromTo(el, { opacity: 0, y: 50 }, {
+    opacity: 1, y: 0, duration: 0.85, delay: i * 0.12, ease: 'power3.out',
+    scrollTrigger: { trigger: '.pricing-grid', start: 'top 85%', toggleActions: 'play none none none' }
+  });
+});
+
+// FAQ items stagger
+gsap.utils.toArray('.faq-item').forEach((el, i) => {
+  gsap.fromTo(el, { opacity: 0, y: 30 }, {
+    opacity: 1, y: 0, duration: 0.7, delay: i * 0.06, ease: 'power2.out',
+    scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' }
+  });
+});
+
+// ===================== HERO PARALLAX =====================
 window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 40);
+  const y = window.scrollY;
+  const g = document.querySelector('.hero-glow');
+  if (g) g.style.transform = 'translateX(-50%) translateY(' + (y * 0.25) + 'px)';
+  const h1 = document.querySelector('.hero h1');
+  if (h1 && y < 600) h1.style.transform = 'translateY(' + (y * 0.07) + 'px)';
 }, { passive: true });
 
-// Code tabs
+// ===================== ANIMATED COUNTERS =====================
+function animateCounter(el, target, suffix, prefix) {
+  const start = performance.now();
+  const dur = 1800;
+  (function tick(now) {
+    const p = Math.min((now - start) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    const v = Math.round(e * target);
+    el.textContent = prefix + (target >= 1000 ? v.toLocaleString() : v) + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  })(start);
+}
+const cObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      animateCounter(el, +el.dataset.target, el.dataset.suffix || '', el.dataset.prefix || '');
+      cObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.counter').forEach(el => cObs.observe(el));
+
+// ===================== CODE TABS =====================
 document.querySelectorAll('.code-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
@@ -1977,259 +1227,195 @@ document.querySelectorAll('.code-tab').forEach(tab => {
   });
 });
 
-// Scroll reveal animations
-const revealObserver = new IntersectionObserver((entries) => {
+// ===================== TERMINAL ANIMATIONS =====================
+function animateTerm(terminal) {
+  const lines = terminal.querySelectorAll('.demo-line');
+  lines.forEach((line, i) => {
+    setTimeout(() => {
+      gsap.to(line, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+    }, i * 400 + 150);
+  });
+}
+const tObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      revealObserver.unobserve(e.target);
+    if (e.isIntersecting && !e.target._anim) {
+      e.target._anim = true;
+      animateTerm(e.target);
+      tObs.unobserve(e.target);
     }
   });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.25 });
+document.querySelectorAll('[data-demo], [data-term]').forEach(t => { tObs.observe(t); });
 
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-// Demo terminal animations — only start when scrolled into view
-const demoObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('demo-active');
-      // Reset and replay: remove demo-line opacity:0, let animation run
-      e.target.querySelectorAll('.demo-line').forEach(line => {
-        line.style.animationPlayState = 'running';
-      });
-      demoObserver.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.3 });
-
-// Pause all demo animations until visible
-document.querySelectorAll('.demo-terminal, .demo-terminal-slow').forEach(term => {
-  term.querySelectorAll('.demo-line').forEach(line => {
-    line.style.animationPlayState = 'paused';
-  });
-  demoObserver.observe(term);
-});
-
-// Decay curve canvas
+// ===================== DECAY CANVAS =====================
 (function() {
   const c = document.getElementById('decay-canvas');
   if (!c) return;
   const ctx = c.getContext('2d');
-  const rect = c.parentElement.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
-  const W = rect.width || 480;
-  const H = 300;
-  c.width = W * dpr;
-  c.height = H * dpr;
-  c.style.width = W + 'px';
-  c.style.height = H + 'px';
+  const W = c.parentElement.offsetWidth || 460;
+  const H = 320;
+  const dpr = devicePixelRatio || 1;
+  c.width = W * dpr; c.height = H * dpr;
+  c.style.width = W + 'px'; c.style.height = H + 'px';
   ctx.scale(dpr, dpr);
 
-  function decay(t, s) { return Math.exp(-t / s); }
-
-  const labels = ['importance: high', 'importance: medium', 'importance: low'];
-  let frame = 0;
+  let frame = 0, running = false;
+  const PL = 44, PB = 36, PT = 20, PR = 20;
+  const PW = W - PL - PR, PH = H - PT - PB;
+  const dec = (t, s) => Math.exp(-t / s);
 
   function draw() {
+    if (!running) return;
     ctx.clearRect(0, 0, W, H);
-    frame += 0.002;
+    frame += 0.0015;
 
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+      const y = PT + (PH / 4) * i;
+      ctx.beginPath(); ctx.moveTo(PL, y); ctx.lineTo(W - PR, y); ctx.stroke();
+    }
     // Axes
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(40, 20); ctx.lineTo(40, H - 30);
-    ctx.lineTo(W - 20, H - 30);
-    ctx.stroke();
-
+    ctx.strokeStyle = 'rgba(255,255,255,0.09)';
+    ctx.beginPath(); ctx.moveTo(PL, PT); ctx.lineTo(PL, H - PB); ctx.lineTo(W - PR, H - PB); ctx.stroke();
     // Labels
-    ctx.font = '10px "DM Mono", monospace';
-    ctx.fillStyle = 'rgba(255,255,255,0.15)';
-    ctx.fillText('score', 6, 18);
-    ctx.fillText('time', W - 40, H - 10);
-    ctx.fillText('1.0', 14, 28);
-    ctx.fillText('0', 22, H - 32);
+    ctx.font = '10px "DM Mono", monospace'; ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.fillText('1.0', 6, PT + 4); ctx.fillText('0', 20, H - PB + 4); ctx.fillText('time \u2192', W - PR - 40, H - 8);
 
     const curves = [
-      { s: 80, color: 'rgba(200,150,62,0.5)', w: 2, label: labels[0] },
-      { s: 35, color: 'rgba(200,150,62,0.25)', w: 1.5, label: labels[1] },
-      { s: 12, color: 'rgba(200,150,62,0.1)', w: 1, label: labels[2] },
+      { s: 90, color: 'rgba(200,150,62,0.95)', w: 2, label: 'high importance', fill: true },
+      { s: 38, color: 'rgba(200,150,62,0.45)', w: 1.5, label: 'medium' },
+      { s: 14, color: 'rgba(200,150,62,0.18)', w: 1.2, label: 'low' },
     ];
 
-    const plotW = W - 70;
-    const plotH = H - 60;
-
-    curves.forEach(({ s, color, w, label }, i) => {
+    curves.forEach(({ s, color, w, label, fill }, idx) => {
       ctx.beginPath();
-      ctx.strokeStyle = color;
-      ctx.lineWidth = w;
-      for (let x = 0; x <= plotW; x++) {
-        const t = x / plotW * 100;
-        const y = 24 + (1 - decay(t + frame * 8, s)) * plotH;
-        x === 0 ? ctx.moveTo(44 + x, y) : ctx.lineTo(44 + x, y);
+      ctx.strokeStyle = color; ctx.lineWidth = w;
+      if (idx === 0) { ctx.shadowColor = 'rgba(200,150,62,0.3)'; ctx.shadowBlur = 8; }
+      for (let x = 0; x <= PW; x++) {
+        const t = (x / PW) * 100;
+        const py = PT + (1 - dec(t + frame * 6, s)) * PH;
+        x === 0 ? ctx.moveTo(PL + x, py) : ctx.lineTo(PL + x, py);
       }
-      ctx.stroke();
+      ctx.stroke(); ctx.shadowBlur = 0;
 
-      // Legend
-      ctx.fillStyle = color;
-      ctx.fillRect(W - 160, 30 + i * 20, 12, 2);
-      ctx.font = '10px "DM Mono", monospace';
-      ctx.fillText(label, W - 142, 34 + i * 20);
+      if (fill) {
+        ctx.save();
+        const grad = ctx.createLinearGradient(0, PT, 0, H - PB);
+        grad.addColorStop(0, 'rgba(200,150,62,0.13)'); grad.addColorStop(1, 'rgba(200,150,62,0)');
+        ctx.beginPath(); ctx.moveTo(PL, H - PB);
+        for (let x = 0; x <= PW; x++) {
+          const t = (x / PW) * 100;
+          ctx.lineTo(PL + x, PT + (1 - dec(t + frame * 6, s)) * PH);
+        }
+        ctx.lineTo(PL + PW, H - PB); ctx.closePath();
+        ctx.fillStyle = grad; ctx.fill(); ctx.restore();
+      }
+
+      ctx.fillStyle = color; ctx.fillRect(W - 145, 26 + idx * 22, 14, 2);
+      ctx.font = '10px "DM Mono", monospace'; ctx.fillText(label, W - 126, 31 + idx * 22);
     });
 
-    // Memory dots
-    const dots = [
-      { p: 0.05, label: 'now' },
-      { p: 0.2, label: '1h' },
-      { p: 0.45, label: '1d' },
-      { p: 0.7, label: '1w' },
-      { p: 0.9, label: '1mo' },
-    ];
-    dots.forEach(({ p, label }) => {
-      const t = p * 100 + frame * 8;
-      const y = 24 + (1 - decay(t, 80)) * plotH;
-      const x = 44 + p * plotW;
-      const alpha = decay(t, 80);
-
-      ctx.beginPath();
-      ctx.arc(x, y, 3, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200,150,62,${alpha * 0.8})`;
-      ctx.fill();
-
-      ctx.font = '9px "DM Mono", monospace';
-      ctx.fillStyle = `rgba(255,255,255,${0.15 + alpha * 0.15})`;
-      ctx.fillText(label, x - 8, H - 14);
+    [0.02, 0.18, 0.38, 0.62, 0.88].forEach(p => {
+      const t = p * 100 + frame * 6, r = dec(t, 90);
+      const px = PL + p * PW, py = PT + (1 - r) * PH;
+      ctx.beginPath(); ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(200,150,62,' + (0.3 + r * 0.7) + ')'; ctx.fill();
+      ctx.beginPath(); ctx.arc(px, py, 7, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(200,150,62,' + (r * 0.12) + ')'; ctx.fill();
     });
 
     requestAnimationFrame(draw);
   }
-  draw();
+
+  new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting && !running) { running = true; draw(); } });
+  }, { threshold: 0.2 }).observe(c);
 })();
 
-// Feedback form
+// ===================== FAQ ANIMATION =====================
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.addEventListener('toggle', () => {
+    if (item.open) {
+      const b = item.querySelector('.faq-body');
+      gsap.from(b, { opacity: 0, y: -8, duration: 0.3, ease: 'power2.out' });
+    }
+  });
+});
+
+// ===================== FEEDBACK FORM =====================
 let feedbackType = 'feature';
 function setFeedbackType(type) {
   feedbackType = type;
   ['feature','bug','general'].forEach(t => {
     const btn = document.getElementById('fb-type-' + t);
-    if (t === type) {
-      btn.style.borderColor = 'var(--amber-dim)';
-      btn.style.background = 'rgba(200,150,62,0.1)';
-      btn.style.color = 'var(--amber)';
-    } else {
-      btn.style.borderColor = 'var(--border)';
-      btn.style.background = 'var(--bg)';
-      btn.style.color = 'var(--text-dim)';
-    }
+    if (t === type) btn.classList.add('active'); else btn.classList.remove('active');
   });
-  const placeholder = {feature: 'What would make Smara better?', bug: 'What went wrong?', general: 'Any thoughts?'};
-  document.getElementById('fb-title').placeholder = placeholder[type] || placeholder.general;
+  const ph = { feature: 'What would make Smara better?', bug: 'What went wrong?', general: 'Any thoughts?' };
+  document.getElementById('fb-title').placeholder = ph[type] || ph.general;
 }
-
-const feedbackForm = document.getElementById('feedback-form');
-if (feedbackForm) {
-  feedbackForm.addEventListener('submit', async (e) => {
+const fbForm = document.getElementById('feedback-form');
+if (fbForm) {
+  fbForm.addEventListener('submit', async e => {
     e.preventDefault();
     const status = document.getElementById('fb-status');
     const title = document.getElementById('fb-title').value.trim();
-    const description = document.getElementById('fb-description').value.trim();
+    const desc = document.getElementById('fb-description').value.trim();
     const email = document.getElementById('fb-email').value.trim();
     if (!title) return;
-
-    status.style.display = 'block';
-    status.style.color = 'var(--text-faint)';
-    status.textContent = 'Sending...';
-
+    status.style.display = 'block'; status.style.color = 'var(--text-faint)'; status.textContent = 'Sending...';
     try {
-      const API = window.location.hostname === 'localhost' ? '' : 'https://api.smara.io';
+      const API = location.hostname === 'localhost' ? '' : 'https://api.smara.io';
       const res = await fetch(API + '/v1/feedback', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({type: feedbackType, title, description: description || undefined, email: email || undefined})
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ type: feedbackType, title, description: desc || undefined, email: email || undefined })
       });
       if (res.ok) {
-        status.style.color = 'var(--green)';
-        status.textContent = 'Thank you! We read every submission.';
-        feedbackForm.reset();
+        status.style.color = 'var(--green)'; status.textContent = 'Thank you! We read every submission.'; fbForm.reset();
       } else {
         const err = await res.json().catch(() => ({}));
-        status.style.color = '#f87171';
-        status.textContent = err.error || 'Something went wrong. Try emailing sri@smara.io instead.';
+        status.style.color = 'var(--red)'; status.textContent = err.error || 'Something went wrong. Try emailing sri@smara.io instead.';
       }
-    } catch {
-      status.style.color = '#f87171';
-      status.textContent = 'Network error. Try emailing sri@smara.io instead.';
-    }
+    } catch { status.style.color = 'var(--red)'; status.textContent = 'Network error. Try emailing sri@smara.io instead.'; }
   });
 }
 
-// GitHub stars
+// ===================== GITHUB STARS =====================
 fetch('https://api.github.com/repos/smara-io/smara')
   .then(r => r.ok ? r.json() : null)
-  .then(data => {
-    if (data && data.stargazers_count) {
-      document.getElementById('gh-stars').textContent = data.stargazers_count;
-    }
-  })
+  .then(d => { if (d && d.stargazers_count) document.getElementById('gh-stars').textContent = d.stargazers_count; })
   .catch(() => {});
 
-// Signup form
+// ===================== SIGNUP =====================
 document.getElementById('signup-form').addEventListener('submit', async function(e) {
   e.preventDefault();
   const email = this.email.value;
   const btn = this.querySelector('button');
   const input = this.email;
   const note = document.getElementById('signup-note');
-
-  btn.textContent = 'Creating...';
-  btn.disabled = true;
-  input.disabled = true;
-
+  btn.textContent = 'Creating...'; btn.disabled = true; input.disabled = true;
   try {
     const res = await fetch('https://api.smara.io/v1/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ email }),
     });
     const data = await res.json();
-
     if (res.ok) {
       document.getElementById('api-key-display').textContent = data.api_key;
       document.getElementById('mcp-key-slot').textContent = '"' + data.api_key + '"';
       document.getElementById('signup-success').style.display = 'block';
-      this.style.display = 'none';
-      note.style.display = 'none';
+      this.style.display = 'none'; note.style.display = 'none';
     } else if (data.error === 'already_registered') {
-      btn.textContent = 'Already registered';
-      btn.style.background = 'var(--heading)';
-      note.textContent = 'Check your email or contact support for your key.';
-      note.style.color = 'var(--text)';
-      setTimeout(() => {
-        btn.textContent = 'Get API key';
-        btn.style.background = '';
-        input.disabled = false;
-        btn.disabled = false;
-      }, 4000);
+      btn.textContent = 'Already registered'; btn.style.background = 'var(--heading)';
+      note.textContent = 'Check your email or contact sri@smara.io for your key.'; note.style.color = 'var(--text)';
+      setTimeout(() => { btn.textContent = 'Get API key'; btn.style.background = ''; input.disabled = false; btn.disabled = false; }, 4000);
     } else {
-      btn.textContent = 'Try again';
-      btn.style.background = '#c0392b';
-      setTimeout(() => {
-        btn.textContent = 'Get API key';
-        btn.style.background = '';
-        input.disabled = false;
-        btn.disabled = false;
-      }, 3000);
+      btn.textContent = 'Try again'; btn.style.background = '#c0392b';
+      setTimeout(() => { btn.textContent = 'Get API key'; btn.style.background = ''; input.disabled = false; btn.disabled = false; }, 3000);
     }
   } catch {
-    btn.textContent = 'Try again';
-    btn.style.background = '#c0392b';
-    setTimeout(() => {
-      btn.textContent = 'Get API key';
-      btn.style.background = '';
-      input.disabled = false;
-      btn.disabled = false;
-    }, 3000);
+    btn.textContent = 'Try again'; btn.style.background = '#c0392b';
+    setTimeout(() => { btn.textContent = 'Get API key'; btn.style.background = ''; input.disabled = false; btn.disabled = false; }, 3000);
   }
 });
 </script>
