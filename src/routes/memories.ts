@@ -119,6 +119,125 @@ export async function memoriesRoutes(app: FastifyInstance): Promise<void> {
     return reply.send({ results });
   });
 
+  // PATCH /v1/memories/:id — update a memory's visibility or importance
+  app.patch<{
+    Params: { id: string };
+    Body: { visibility?: string; importance?: number };
+  }>('/v1/memories/:id', {
+    preHandler: authenticate,
+    schema: {
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties: { id: { type: 'string', format: 'uuid' } },
+      },
+      body: {
+        type: 'object',
+        properties: {
+          visibility: { type: 'string', enum: ['private', 'team'] },
+          importance: { type: 'number', minimum: 0, maximum: 1 },
+        },
+      },
+    },
+  }, async (request, reply) => {
+    const { visibility, importance } = request.body;
+    const updates: string[] = [];
+    const values: unknown[] = [];
+    let paramIdx = 3;
+
+    if (visibility !== undefined) {
+      updates.push(`visibility = $${paramIdx}`);
+      // When switching to private, remove team_id; when switching to team, keep existing team_id
+      if (visibility === 'private') {
+        updates.push(`team_id = NULL`);
+      }
+      values.push(visibility);
+      paramIdx++;
+    }
+    if (importance !== undefined) {
+      updates.push(`importance = $${paramIdx}`);
+      values.push(importance);
+      paramIdx++;
+    }
+
+    if (updates.length === 0) {
+      return reply.code(400).send({ error: 'Nothing to update. Provide visibility or importance.' });
+    }
+
+    const { rowCount, rows } = await pool.query<{ id: string; visibility: string; importance: number; team_id: string | null }>(
+      `UPDATE memories SET ${updates.join(', ')}
+       WHERE id = $1 AND tenant_id = $2 AND valid_until IS NULL
+       RETURNING id, visibility, importance, team_id`,
+      [request.params.id, request.tenantId, ...values]
+    );
+
+    if (!rowCount) {
+      return reply.code(404).send({ error: 'Memory not found or already deleted' });
+    }
+
+    return reply.send(rows[0]);
+  });
+
+  // GET /v1/memories — list memories for a user (with visibility info)
+  app.get<{
+    Querystring: { user_id: string; limit?: string; offset?: string; namespace?: string; visibility?: string; team_id?: string };
+  }>('/v1/memories', {
+    preHandler: authenticate,
+    schema: {
+      querystring: {
+        type: 'object',
+        required: ['user_id'],
+        properties: {
+          user_id: { type: 'string' },
+          limit: { type: 'string' },
+          offset: { type: 'string' },
+          namespace: { type: 'string' },
+          visibility: { type: 'string', enum: ['private', 'team'] },
+          team_id: { type: 'string' },
+        },
+      },
+    },
+  }, async (request, reply) => {
+    const { user_id, limit, offset, namespace = 'default', visibility, team_id } = request.query;
+    const lim = Math.min(parseInt(limit ?? '20', 10), 100);
+    const off = parseInt(offset ?? '0', 10);
+
+    let where = `tenant_id = $1 AND valid_until IS NULL`;
+    const values: unknown[] = [request.tenantId];
+    let paramIdx = 2;
+
+    // Filter by user's own memories + optionally team
+    if (team_id) {
+      where += ` AND ((user_id = $${paramIdx} AND team_id IS NULL) OR (team_id = $${paramIdx + 1} AND visibility = 'team'))`;
+      values.push(user_id, team_id);
+      paramIdx += 2;
+    } else {
+      where += ` AND user_id = $${paramIdx}`;
+      values.push(user_id);
+      paramIdx++;
+    }
+
+    where += ` AND namespace = $${paramIdx}`;
+    values.push(namespace);
+    paramIdx++;
+
+    if (visibility) {
+      where += ` AND visibility = $${paramIdx}`;
+      values.push(visibility);
+      paramIdx++;
+    }
+
+    const { rows } = await pool.query(
+      `SELECT id, fact, visibility, team_id, importance, source, namespace, created_at
+       FROM memories WHERE ${where}
+       ORDER BY created_at DESC
+       LIMIT $${paramIdx} OFFSET $${paramIdx + 1}`,
+      [...values, lim, off]
+    );
+
+    return reply.send({ memories: rows, limit: lim, offset: off });
+  });
+
   // DELETE /v1/memories/:id — expire a memory
   app.delete<{
     Params: { id: string };
