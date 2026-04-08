@@ -46,11 +46,11 @@
     "description": "Persistent memory layer for AI tools. Gives Claude Code, Cursor, Windsurf, and Codex shared context that survives across sessions using Ebbinghaus forgetting curves.",
     "url": "https://smara.io",
     "offers": [
-      {"@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free", "description": "10,000 memories, 1 project"},
-      {"@type": "Offer", "price": "9", "priceCurrency": "USD", "name": "Developer", "description": "100,000 memories, 10 projects, priority search"},
-      {"@type": "Offer", "price": "29", "priceCurrency": "USD", "name": "Pro", "description": "Unlimited memories, unlimited projects, team sharing, analytics"}
+      {"@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free", "description": "10,000 memories, 1 team, 2 AI agents"},
+      {"@type": "Offer", "price": "19", "priceCurrency": "USD", "name": "Developer", "description": "200,000 memories, 3 teams, 10 AI agents, custom skills"},
+      {"@type": "Offer", "price": "99", "priceCurrency": "USD", "name": "Pro", "description": "2M memories, unlimited teams, unlimited agents and skills"}
     ],
-    "featureList": ["MCP protocol support", "REST API", "Ebbinghaus decay scoring", "Semantic search", "Source tagging", "Zero-config auto-memory"]
+    "featureList": ["MCP protocol support", "REST API", "Ebbinghaus decay scoring", "Semantic search", "Source tagging", "Zero-config auto-memory", "Team collaboration", "Role-based access", "AI agents"]
   },
   {
     "@context": "https://schema.org",
@@ -86,12 +86,17 @@
       {
         "@type": "Question",
         "name": "How much does Smara cost?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Smara has a free tier with 10,000 memories and 1 project. The Developer plan is $9/month for 100,000 memories and 10 projects. The Pro plan is $29/month for unlimited memories, projects, team sharing, and analytics."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Smara has a free tier with 10,000 memories, 1 team, and 2 AI agents. The Developer plan is $19/month for 200,000 memories, 3 teams, and 10 AI agents. The Pro plan is $99/month for 2M memories, unlimited teams, and unlimited agents."}
       },
       {
         "@type": "Question",
         "name": "How is Smara different from Mem0 or Zep?",
         "acceptedAnswer": {"@type": "Answer", "text": "Smara is the only AI memory tool that uses Ebbinghaus forgetting curves for temporal relevance scoring. Unlike Mem0 or Zep, memories naturally decay over time — important facts persist while outdated context fades. Smara is also MCP-native, meaning it integrates directly with AI coding tools via the Model Context Protocol."}
+      },
+      {
+        "@type": "Question",
+        "name": "How do Smara teams work?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Create a team, invite members by email, and share memories. Each member keeps private memories separate. Only memories marked as team visibility are shared. Combined search returns both private and team results. Role-based access controls who can store, search, and manage team memories."}
       }
     ]
   }
@@ -849,6 +854,124 @@ pre{
   color:var(--text-dim);
 }
 
+/* --- Teams Section --- */
+.teams-section{background:var(--bg)}
+
+.teams-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:64px;
+  align-items:center;
+  margin-top:64px;
+}
+
+.teams-visual{
+  position:relative;
+}
+
+.team-flow{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.team-flow-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.team-node{
+  padding:10px 16px;
+  background:var(--bg-code);
+  border:1px solid var(--border);
+  border-radius:6px;
+  font-size:12px;
+  color:var(--text);
+  white-space:nowrap;
+}
+.team-node.shared{
+  border-color:var(--amber-dim);
+  color:var(--amber);
+  background:rgba(200,150,62,0.05);
+}
+.team-node .role{
+  font-size:10px;
+  color:var(--text-faint);
+  display:block;
+  margin-top:2px;
+}
+
+.team-arrow{
+  color:var(--text-faint);
+  font-size:14px;
+}
+
+.teams-features{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.teams-feature-item{
+  display:flex;
+  gap:16px;
+  align-items:flex-start;
+}
+
+.teams-feature-icon{
+  width:36px;
+  height:36px;
+  min-width:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--border);
+  border-radius:6px;
+  color:var(--amber);
+  font-size:16px;
+}
+
+.teams-feature-item h4{
+  font-family:var(--mono);
+  font-size:13px;
+  font-weight:500;
+  color:var(--heading);
+  margin-bottom:4px;
+}
+
+.teams-feature-item p{
+  font-size:12px;
+  line-height:1.7;
+  color:var(--text-dim);
+}
+
+.badge-coming-soon{
+  display:inline-block;
+  padding:3px 10px;
+  border:1px solid #63b3ed;
+  border-radius:100px;
+  font-size:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:#63b3ed;
+  margin-left:8px;
+  vertical-align:middle;
+}
+
+.badge-new{
+  display:inline-block;
+  padding:3px 10px;
+  border:1px solid var(--green);
+  border-radius:100px;
+  font-size:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--green);
+  margin-left:8px;
+  vertical-align:middle;
+}
+
 /* --- Pricing --- */
 .pricing{background:var(--bg)}
 
@@ -1083,6 +1206,7 @@ footer .container{
   section{padding:80px 0}
   .hero{padding:140px 0 80px}
   .features-grid{grid-template-columns:1fr}
+  .teams-grid{grid-template-columns:1fr;gap:40px}
   .pricing-grid{grid-template-columns:1fr}
   .nav-center{display:none}
   .logos-grid{gap:24px}
@@ -1107,6 +1231,7 @@ footer .container{
     <div class="nav-center">
       <a href="#how">How it works</a>
       <a href="#code">API</a>
+      <a href="#teams">Teams</a>
       <a href="#pricing">Pricing</a>
       <a href="https://api.smara.io/docs/" target="_blank">Docs</a>
     </div>
@@ -1548,6 +1673,108 @@ footer .container{
         <h3>Source tagging</h3>
         <p>Every memory knows its origin &mdash; Claude Code, Cursor, Codex, or your API. Filter by source or see everything.</p>
       </div>
+      <div class="feature reveal reveal-d4">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M22 21v-2a4 4 0 0 0-4-4h-4a4 4 0 0 0-4 4v2" stroke-linecap="round"/>
+          <circle cx="16" cy="8" r="3"/>
+          <path d="M28 21v-1.5a3 3 0 0 0-2.5-2.96" stroke-linecap="round" opacity="0.6"/>
+          <circle cx="25" cy="10" r="2.5" opacity="0.6"/>
+        </svg>
+        <h3>Team collaboration <span class="badge-new" style="font-size:9px;padding:2px 7px;margin-left:4px">New</span></h3>
+        <p>Shared memory pools for your team. Private stays private. Team memories are visible to all members.</p>
+      </div>
+      <div class="feature reveal reveal-d5">
+        <svg class="feature-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" style="color:#63b3ed">
+          <rect x="6" y="4" width="20" height="24" rx="3"/>
+          <circle cx="16" cy="14" r="4"/>
+          <path d="M11 24c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5" stroke-linecap="round"/>
+        </svg>
+        <h3>AI Agents <span class="badge-coming-soon" style="font-size:9px;padding:2px 7px;margin-left:4px">Soon</span></h3>
+        <p>Persistent agents with memory, skills, and team context. Create once, use across any LLM or MCP client.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Teams -->
+<section class="teams-section" id="teams">
+  <div class="container">
+    <div class="section-label reveal" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:12px"><span style="width:24px;height:1px;background:var(--amber-dim);display:inline-block"></span> Team collaboration <span class="badge-new">New</span></div>
+    <h2 class="reveal reveal-d1" style="font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--heading);letter-spacing:-0.01em">Shared memory<br>for your whole team.</h2>
+    <p class="reveal reveal-d2" style="font-size:15px;color:var(--text-dim);max-width:600px;line-height:1.8;margin-top:16px">Private memories stay private. Team memories are shared. Everyone gets full context without repeating themselves.</p>
+
+    <div class="teams-grid">
+      <div class="teams-visual reveal reveal-d2">
+        <div class="team-flow">
+          <div class="team-flow-row">
+            <div class="team-node">Alice<span class="role">admin</span></div>
+            <span class="team-arrow">&rarr;</span>
+            <div class="team-node shared">Team Memory Pool</div>
+            <span class="team-arrow">&larr;</span>
+            <div class="team-node">Bob<span class="role">member</span></div>
+          </div>
+          <div style="padding-left:48px">
+            <div class="terminal-window" style="margin-top:16px">
+              <div class="terminal-header">
+                <span class="terminal-dot r"></span>
+                <span class="terminal-dot y"></span>
+                <span class="terminal-dot g"></span>
+                <span class="terminal-title">team memory</span>
+              </div>
+              <div class="terminal-body" style="font-size:11px;line-height:1.9;padding:16px">
+                <div class="line"><span class="comment"># Alice stores a team memory</span></div>
+                <div class="line"><span class="highlight">POST</span> <span class="output">/v1/memories</span></div>
+                <div class="line"><span class="output">{ team_id: "eng-team", visibility: "team",</span></div>
+                <div class="line"><span class="output">&nbsp; fact: "Auth service uses JWT with RS256" }</span></div>
+                <div class="line" style="margin-top:8px"><span class="comment"># Bob searches &mdash; sees private + team</span></div>
+                <div class="line"><span class="highlight">GET</span> <span class="output">/v1/memories/search?include_team=true</span></div>
+                <div class="line"><span class="output">&raquo; "Auth service uses JWT with RS256"</span> <span class="highlight">0.94</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="teams-features reveal reveal-d3">
+        <div class="teams-feature-item">
+          <div class="teams-feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div>
+            <h4>Role-based access</h4>
+            <p>Admin, member, or read-only. Control who can store, search, and manage team memories.</p>
+          </div>
+        </div>
+        <div class="teams-feature-item">
+          <div class="teams-feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div>
+            <h4>Private + team memory</h4>
+            <p>Your personal memories stay yours. Team memories are shared with all members. Combined search gives you both.</p>
+          </div>
+        </div>
+        <div class="teams-feature-item">
+          <div class="teams-feature-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <h4>Email invitations</h4>
+            <p>Invite teammates with a link. They accept, join the team, and immediately see shared context.</p>
+          </div>
+        </div>
+        <div class="teams-feature-item">
+          <div class="teams-feature-icon" style="color:#63b3ed;border-color:rgba(99,179,237,0.3)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div>
+            <h4>AI Agents <span class="badge-coming-soon">Coming soon</span></h4>
+            <p>Create AI agents with persistent memory, skills, and shared team context. Plug into any LLM.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1576,6 +1803,10 @@ footer .container{
         <p style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">Smara is the only AI memory tool with Ebbinghaus forgetting curves for temporal relevance. Unlike Mem0 or Zep, memories naturally decay over time &mdash; important facts persist while outdated context fades. Smara is also MCP-native, integrating directly with AI coding tools via the Model Context Protocol.</p>
       </details>
       <details class="reveal reveal-d4" style="border:1px solid var(--border);border-radius:8px;padding:0">
+        <summary style="padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center">How do teams work?<span style="color:var(--text-faint);font-size:18px;transition:transform 0.2s">+</span></summary>
+        <p style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">Create a team, invite members by email, and share memories across your group. Each team member keeps their private memories separate &mdash; only memories marked with <code style="color:var(--amber)">visibility: "team"</code> are shared. Combined search returns both private and team results, so everyone has full context without duplicating work.</p>
+      </details>
+      <details class="reveal reveal-d5" style="border:1px solid var(--border);border-radius:8px;padding:0">
         <summary style="padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center">Is my data private?<span style="color:var(--text-faint);font-size:18px;transition:transform 0.2s">+</span></summary>
         <p style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">Yes. Each API key isolates your data completely. Memories are encrypted in transit (TLS) and stored in isolated PostgreSQL schemas. We never use your data for training. You can delete all memories at any time via the API.</p>
       </details>
@@ -1598,9 +1829,10 @@ footer .container{
         <div class="price-desc">For trying it out and side projects</div>
         <ul class="price-features">
           <li>10,000 memories</li>
+          <li>1 team / 3 members</li>
+          <li>2 AI agents</li>
           <li>Full API + MCP access</li>
-          <li>Decay scoring</li>
-          <li>Community support</li>
+          <li>Ebbinghaus decay</li>
         </ul>
         <a href="#signup" class="price-btn">Get started free</a>
       </div>
@@ -1611,8 +1843,9 @@ footer .container{
         <div class="price-desc">For production agents and daily use</div>
         <ul class="price-features">
           <li>200,000 memories</li>
+          <li>3 teams / 10 members each</li>
+          <li>10 AI agents + 5 custom skills</li>
           <li>Priority embedding pipeline</li>
-          <li>Webhook notifications</li>
           <li>Email support</li>
         </ul>
         <a href="https://buy.stripe.com/9B6dR2gpngbo3Ew3tAcEw00" target="_blank" class="price-btn">Subscribe</a>
@@ -1624,7 +1857,8 @@ footer .container{
         <div class="price-desc">For teams shipping at scale</div>
         <ul class="price-features">
           <li>2,000,000 memories</li>
-          <li>$0.50 per 10K after</li>
+          <li>Unlimited teams / 50 members</li>
+          <li>Unlimited agents + skills</li>
           <li>Dedicated embedding queue</li>
           <li>Slack support + SLA</li>
         </ul>
