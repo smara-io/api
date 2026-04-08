@@ -8,6 +8,7 @@ import { setupRoutes } from './routes/setup.js';
 import { stripeWebhookRoutes } from './routes/stripe-webhook.js';
 import { openaiProxyRoutes } from './routes/openai-proxy.js';
 import { feedbackRoutes } from './routes/feedback.js';
+import { teamsRoutes } from './routes/teams.js';
 import { pool } from './db/pool.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -125,6 +126,76 @@ async function migrate(): Promise<void> {
   `);
   await pool.query(`CREATE INDEX IF NOT EXISTS feedback_status_idx ON feedback(status, type)`);
 
+  // v1.2: Teams
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS teams (
+      id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      tenant_id    UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+      name         TEXT NOT NULL,
+      slug         TEXT NOT NULL,
+      created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE(tenant_id, slug)
+    )
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS team_members (
+      id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      team_id      UUID NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
+      user_id      TEXT NOT NULL,
+      email        TEXT,
+      role         TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('admin', 'member', 'read_only')),
+      invited_by   TEXT,
+      joined_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE(team_id, user_id)
+    )
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS team_invitations (
+      id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      team_id      UUID NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
+      email        TEXT NOT NULL,
+      role         TEXT NOT NULL DEFAULT 'member',
+      token        TEXT NOT NULL UNIQUE,
+      expires_at   TIMESTAMPTZ NOT NULL DEFAULT NOW() + INTERVAL '7 days',
+      accepted_at  TIMESTAMPTZ,
+      created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  // Add team columns to memories
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE memories ADD COLUMN IF NOT EXISTS team_id UUID REFERENCES teams(id) ON DELETE SET NULL;
+      ALTER TABLE memories ADD COLUMN IF NOT EXISTS visibility TEXT NOT NULL DEFAULT 'private';
+    EXCEPTION WHEN others THEN NULL; END $$
+  `);
+  // Add check constraint for visibility (idempotent via exception handler)
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE memories ADD CONSTRAINT memories_visibility_check CHECK (visibility IN ('private', 'team'));
+    EXCEPTION WHEN others THEN NULL; END $$
+  `);
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS memories_team_active_idx
+      ON memories(team_id, namespace, valid_until) WHERE team_id IS NOT NULL AND valid_until IS NULL
+  `);
+
+  // Plan limits on tenants
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE tenants ADD COLUMN IF NOT EXISTS team_limit INTEGER NOT NULL DEFAULT 1;
+      ALTER TABLE tenants ADD COLUMN IF NOT EXISTS members_per_team_limit INTEGER NOT NULL DEFAULT 3;
+      ALTER TABLE tenants ADD COLUMN IF NOT EXISTS agent_limit INTEGER NOT NULL DEFAULT 2;
+      ALTER TABLE tenants ADD COLUMN IF NOT EXISTS custom_skill_limit INTEGER NOT NULL DEFAULT 0;
+    EXCEPTION WHEN others THEN NULL; END $$
+  `);
+
+  // Team member indexes
+  await pool.query(`CREATE INDEX IF NOT EXISTS team_members_user_idx ON team_members(user_id)`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS team_members_email_idx ON team_members(email) WHERE email IS NOT NULL`);
+
   console.log('Database migration complete');
 }
 
@@ -132,7 +203,7 @@ const app = Fastify({ logger: true });
 
 await app.register(cors, {
   origin: true,
-  methods: ['GET', 'POST', 'DELETE'],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
 });
 
 // Health check — no auth required
@@ -157,6 +228,7 @@ await app.register(setupRoutes);
 await app.register(stripeWebhookRoutes);
 await app.register(openaiProxyRoutes);
 await app.register(feedbackRoutes);
+await app.register(teamsRoutes);
 
 const PORT = parseInt(process.env.PORT ?? '3010', 10);
 

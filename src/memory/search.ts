@@ -20,19 +20,39 @@ export async function searchMemories(
   query: string,
   limit: number = 10,
   source?: string,
-  namespace: string = 'default'
+  namespace: string = 'default',
+  teamId?: string,
+  includeTeam: boolean = false
 ): Promise<MemoryResult[]> {
   const embedding = await embed(query);
   const vec = `[${embedding.join(',')}]`;
 
-  let sql = `SELECT id, fact, importance, created_at, source, namespace,
-                    1 - (embedding <=> $1::vector) AS similarity
-             FROM memories
-             WHERE tenant_id = $2
-               AND user_id = $3
-               AND namespace = $4
-               AND valid_until IS NULL`;
-  const params: unknown[] = [vec, tenantId, userId, namespace];
+  let sql: string;
+  const params: unknown[] = [vec, tenantId];
+
+  if (includeTeam && teamId) {
+    // UNION private memories with team memories
+    params.push(userId, namespace, teamId);
+    sql = `SELECT id, fact, importance, created_at, source, namespace,
+                  1 - (embedding <=> $1::vector) AS similarity
+           FROM memories
+           WHERE tenant_id = $2
+             AND namespace = $4
+             AND valid_until IS NULL
+             AND (
+               (user_id = $3 AND team_id IS NULL)
+               OR (team_id = $5 AND visibility = 'team')
+             )`;
+  } else {
+    params.push(userId, namespace);
+    sql = `SELECT id, fact, importance, created_at, source, namespace,
+                  1 - (embedding <=> $1::vector) AS similarity
+           FROM memories
+           WHERE tenant_id = $2
+             AND user_id = $3
+             AND namespace = $4
+             AND valid_until IS NULL`;
+  }
 
   if (source) {
     params.push(source);
@@ -92,8 +112,38 @@ export async function getRecentMemories(
   tenantId: string,
   userId: string,
   limit: number = 5,
-  namespace: string = 'default'
+  namespace: string = 'default',
+  teamId?: string,
+  includeTeam: boolean = false
 ): Promise<MemoryResult[]> {
+  let sql: string;
+  let params: unknown[];
+
+  if (includeTeam && teamId) {
+    sql = `SELECT id, fact, importance, created_at, source, namespace
+       FROM memories
+       WHERE tenant_id = $1
+         AND namespace = $3
+         AND valid_until IS NULL
+         AND (
+           (user_id = $2 AND team_id IS NULL)
+           OR (team_id = $4 AND visibility = 'team')
+         )
+       ORDER BY created_at DESC
+       LIMIT $5`;
+    params = [tenantId, userId, namespace, teamId, limit * 2];
+  } else {
+    sql = `SELECT id, fact, importance, created_at, source, namespace
+       FROM memories
+       WHERE tenant_id = $1
+         AND user_id = $2
+         AND namespace = $3
+         AND valid_until IS NULL
+       ORDER BY created_at DESC
+       LIMIT $4`;
+    params = [tenantId, userId, namespace, limit * 2];
+  }
+
   const { rows } = await pool.query<{
     id: string;
     fact: string;
@@ -101,17 +151,7 @@ export async function getRecentMemories(
     created_at: Date;
     source: string;
     namespace: string;
-  }>(
-    `SELECT id, fact, importance, created_at, source, namespace
-     FROM memories
-     WHERE tenant_id = $1
-       AND user_id = $2
-       AND namespace = $3
-       AND valid_until IS NULL
-     ORDER BY created_at DESC
-     LIMIT $4`,
-    [tenantId, userId, namespace, limit * 2]
-  );
+  }>(sql, params);
 
   return rows
     .map(row => {
@@ -137,11 +177,13 @@ export async function getContext(
   userId: string,
   query: string | undefined,
   topN: number = 5,
-  namespace: string = 'default'
+  namespace: string = 'default',
+  teamId?: string,
+  includeTeam: boolean = false
 ): Promise<{ memories: MemoryResult[]; context: string }> {
   const memories = query
-    ? await searchMemories(tenantId, userId, query, topN, undefined, namespace)
-    : await getRecentMemories(tenantId, userId, topN, namespace);
+    ? await searchMemories(tenantId, userId, query, topN, undefined, namespace, teamId, includeTeam)
+    : await getRecentMemories(tenantId, userId, topN, namespace, teamId, includeTeam);
 
   const context = memories.length === 0
     ? 'No relevant memories found.'

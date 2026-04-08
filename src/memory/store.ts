@@ -20,23 +20,43 @@ export async function storeMemory(
   fact: string,
   importance: number = 0.5,
   source: string = 'api',
-  namespace: string = 'default'
+  namespace: string = 'default',
+  teamId?: string,
+  visibility?: string
 ): Promise<StoreResult> {
   const embedding = await embed(fact);
   const vec = `[${embedding.join(',')}]`;
 
+  // When teamId is set, automatically use team visibility and scope dedup to team
+  const effectiveVisibility = teamId ? 'team' : (visibility ?? 'private');
+
   // Check for near-duplicate or contradiction in active memories (scoped by namespace)
-  const { rows } = await pool.query<{ id: string; similarity: number }>(
-    `SELECT id, 1 - (embedding <=> $1::vector) AS similarity
-     FROM memories
-     WHERE tenant_id = $2
-       AND user_id = $3
-       AND namespace = $4
-       AND valid_until IS NULL
-     ORDER BY embedding <=> $1::vector
-     LIMIT 1`,
-    [vec, tenantId, userId, namespace]
-  );
+  // For team memories, scope dedup to (team_id, namespace) instead of (user_id, namespace)
+  let dedupSql: string;
+  let dedupParams: unknown[];
+  if (teamId) {
+    dedupSql = `SELECT id, 1 - (embedding <=> $1::vector) AS similarity
+       FROM memories
+       WHERE tenant_id = $2
+         AND team_id = $3
+         AND namespace = $4
+         AND valid_until IS NULL
+       ORDER BY embedding <=> $1::vector
+       LIMIT 1`;
+    dedupParams = [vec, tenantId, teamId, namespace];
+  } else {
+    dedupSql = `SELECT id, 1 - (embedding <=> $1::vector) AS similarity
+       FROM memories
+       WHERE tenant_id = $2
+         AND user_id = $3
+         AND namespace = $4
+         AND valid_until IS NULL
+       ORDER BY embedding <=> $1::vector
+       LIMIT 1`;
+    dedupParams = [vec, tenantId, userId, namespace];
+  }
+
+  const { rows } = await pool.query<{ id: string; similarity: number }>(dedupSql, dedupParams);
 
   const nearest = rows[0];
 
@@ -56,10 +76,10 @@ export async function storeMemory(
   }
 
   const insertResult = await pool.query<{ id: string }>(
-    `INSERT INTO memories (tenant_id, user_id, fact, embedding, importance, decay_score, source, namespace)
-     VALUES ($1, $2, $3, $4::vector, $5, 1.0, $6, $7)
+    `INSERT INTO memories (tenant_id, user_id, fact, embedding, importance, decay_score, source, namespace, team_id, visibility)
+     VALUES ($1, $2, $3, $4::vector, $5, 1.0, $6, $7, $8, $9)
      RETURNING id`,
-    [tenantId, userId, fact, vec, importance, source, namespace]
+    [tenantId, userId, fact, vec, importance, source, namespace, teamId ?? null, effectiveVisibility]
   );
 
   return {

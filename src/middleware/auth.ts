@@ -55,3 +55,25 @@ export async function authenticate(
     [rows[0].key_id]
   ).catch(() => {/* non-critical */});
 }
+
+/**
+ * Check if a user is a member of a team that belongs to the given tenant.
+ * Returns their role or null if not a member / team doesn't belong to tenant.
+ */
+export async function resolveTeamAccess(
+  tenantId: string,
+  userId: string,
+  teamId: string
+): Promise<{ role: 'admin' | 'member' | 'read_only' } | null> {
+  const { rows } = await pool.query<{ role: 'admin' | 'member' | 'read_only' }>(
+    `SELECT tm.role
+     FROM team_members tm
+     JOIN teams t ON t.id = tm.team_id
+     WHERE tm.team_id = $1
+       AND tm.user_id = $2
+       AND t.tenant_id = $3`,
+    [teamId, userId, tenantId]
+  );
+  if (rows.length === 0) return null;
+  return { role: rows[0].role };
+}
