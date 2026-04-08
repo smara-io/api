@@ -95,8 +95,8 @@
       },
       {
         "@type": "Question",
-        "name": "How do Smara teams work?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Create a team, invite members by email, and share memories. Each member keeps private memories separate. Only memories marked as team visibility are shared. Combined search returns both private and team results. Role-based access controls who can store, search, and manage team memories."}
+        "name": "How do Smara teams work? What stays private?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Create a team and invite members by email. Memories are automatically classified: project decisions and conventions become team memories visible to all members, while personal preferences stay private. Your AI tool handles this automatically via the MCP server — no manual tagging needed. You can always override visibility per memory. Combined search returns both your private and team memories together."}
       }
     ]
   }
@@ -1703,7 +1703,7 @@ footer .container{
   <div class="container">
     <div class="section-label reveal" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:12px"><span style="width:24px;height:1px;background:var(--amber-dim);display:inline-block"></span> Team collaboration <span class="badge-new">New</span></div>
     <h2 class="reveal reveal-d1" style="font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--heading);letter-spacing:-0.01em">Shared memory<br>for your whole team.</h2>
-    <p class="reveal reveal-d2" style="font-size:15px;color:var(--text-dim);max-width:600px;line-height:1.8;margin-top:16px">Private memories stay private. Team memories are shared. Everyone gets full context without repeating themselves.</p>
+    <p class="reveal reveal-d2" style="font-size:15px;color:var(--text-dim);max-width:600px;line-height:1.8;margin-top:16px">Your AI automatically sorts memories &mdash; project decisions go to the team, personal preferences stay private. Override anytime. Search returns both.</p>
 
     <div class="teams-grid">
       <div class="teams-visual reveal reveal-d2">
@@ -1753,7 +1753,7 @@ footer .container{
           </div>
           <div>
             <h4>Private + team memory</h4>
-            <p>Your personal memories stay yours. Team memories are shared with all members. Combined search gives you both.</p>
+            <p>Your AI classifies automatically &mdash; &ldquo;uses RS256&rdquo; goes to the team, &ldquo;prefers dark mode&rdquo; stays private. You can always override per memory.</p>
           </div>
         </div>
         <div class="teams-feature-item">
@@ -1803,8 +1803,15 @@ footer .container{
         <p style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">Smara is the only AI memory tool with Ebbinghaus forgetting curves for temporal relevance. Unlike Mem0 or Zep, memories naturally decay over time &mdash; important facts persist while outdated context fades. Smara is also MCP-native, integrating directly with AI coding tools via the Model Context Protocol.</p>
       </details>
       <details class="reveal reveal-d4" style="border:1px solid var(--border);border-radius:8px;padding:0">
-        <summary style="padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center">How do teams work?<span style="color:var(--text-faint);font-size:18px;transition:transform 0.2s">+</span></summary>
-        <p style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">Create a team, invite members by email, and share memories across your group. Each team member keeps their private memories separate &mdash; only memories marked with <code style="color:var(--amber)">visibility: "team"</code> are shared. Combined search returns both private and team results, so everyone has full context without duplicating work.</p>
+        <summary style="padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center">How do teams work? What stays private?<span style="color:var(--text-faint);font-size:18px;transition:transform 0.2s">+</span></summary>
+        <div style="padding:0 24px 20px;font-size:14px;line-height:1.8;color:var(--text)">
+          <p>Create a team, invite members by email, and memories are automatically sorted into <strong style="color:var(--heading)">private</strong> or <strong style="color:var(--heading)">team</strong>:</p>
+          <ul style="margin:12px 0;padding-left:20px;color:var(--text-dim)">
+            <li><strong style="color:var(--heading)">Team memories</strong> &mdash; project decisions, architecture choices, conventions. Visible to all members. <em>Example: &ldquo;Auth service uses JWT with RS256&rdquo;</em></li>
+            <li><strong style="color:var(--heading)">Private memories</strong> &mdash; personal preferences, individual notes. Only you can see them. <em>Example: &ldquo;I prefer dark mode and tabs over spaces&rdquo;</em></li>
+          </ul>
+          <p>With the MCP server, your AI tool makes this decision automatically based on content &mdash; no manual tagging. You can always override by explicitly setting <code style="color:var(--amber)">visibility: "private"</code> or <code style="color:var(--amber)">"team"</code>. When you search, combined mode returns both your private memories and your team&rsquo;s shared context together.</p>
+        </div>
       </details>
       <details class="reveal reveal-d5" style="border:1px solid var(--border);border-radius:8px;padding:0">
         <summary style="padding:20px 24px;cursor:pointer;font-size:15px;color:var(--heading);list-style:none;display:flex;justify-content:space-between;align-items:center">Is my data private?<span style="color:var(--text-faint);font-size:18px;transition:transform 0.2s">+</span></summary>
