@@ -18,8 +18,8 @@ import { pool } from '../db/pool.js';
 
 // ── Telegram Notifications ─────────────────────────────────────────────────
 
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN ?? 'REDACTED_TELEGRAM_TOKEN';
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID ?? 'REDACTED_CHAT_ID';
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN ?? '';
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID ?? '';
 
 async function sendTelegramNotification(message: string): Promise<void> {
   try {
