@@ -16,6 +16,41 @@ import Stripe from 'stripe';
 import { stripe, WEBHOOK_SECRET, planFromPriceId, planFromSubscription, FREE_PLAN } from '../billing/stripe.js';
 import { pool } from '../db/pool.js';
 
+// ── Telegram Notifications ─────────────────────────────────────────────────
+
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN ?? 'REDACTED_TELEGRAM_TOKEN';
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID ?? 'REDACTED_CHAT_ID';
+
+async function sendTelegramNotification(message: string): Promise<void> {
+  try {
+    const res = await fetch(
+      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: message,
+          parse_mode: 'HTML',
+        }),
+      }
+    );
+    if (!res.ok) {
+      const body = await res.text();
+      console.warn(`[telegram] Send failed (${res.status}): ${body}`);
+    }
+  } catch (err) {
+    console.warn('[telegram] Send error:', err);
+  }
+}
+
+function formatAmount(amountInCents: number | null | undefined, currency?: string): string {
+  if (!amountInCents) return '$0.00';
+  const dollars = (amountInCents / 100).toFixed(2);
+  const cur = (currency ?? 'usd').toUpperCase();
+  return `$${dollars} ${cur}`;
+}
+
 async function upsertTenantPlan(
   tenantId: string,
   plan: string,
@@ -120,6 +155,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
   );
 
   console.log(`[stripe-webhook] checkout complete: tenant=${resolvedTenantId} plan=${planInfo.plan}`);
+
+  // Telegram notification
+  const customerEmail = session.customer_details?.email ?? session.customer_email ?? 'unknown';
+  const amount = formatAmount(session.amount_total, session.currency ?? undefined);
+  await sendTelegramNotification(
+    `🎉 <b>New Customer!</b>\n\n` +
+    `📧 ${customerEmail}\n` +
+    `💳 ${amount}\n` +
+    `📦 Plan: <b>${planInfo.plan}</b>\n` +
+    `🔔 Event: checkout.session.completed`
+  );
 }
 
 async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
@@ -165,6 +211,17 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice): Promise<v
 
   await upsertTenantPlan(tenantId, planInfo.plan, planInfo.memoryLimit);
   console.log(`[stripe-webhook] invoice paid: tenant=${tenantId} plan=${planInfo.plan}`);
+
+  // Telegram notification
+  const customerEmail = invoice.customer_email ?? 'unknown';
+  const amount = formatAmount(invoice.amount_paid, invoice.currency ?? undefined);
+  await sendTelegramNotification(
+    `💰 <b>Invoice Paid</b>\n\n` +
+    `📧 ${customerEmail}\n` +
+    `💳 ${amount}\n` +
+    `📦 Plan: <b>${planInfo.plan}</b>\n` +
+    `🔔 Event: invoice.payment_succeeded`
+  );
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription): Promise<void> {
@@ -179,6 +236,31 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription): Pro
 
   await upsertTenantPlan(tenantId, FREE_PLAN.plan, FREE_PLAN.memoryLimit);
   console.log(`[stripe-webhook] subscription cancelled: tenant=${tenantId} downgraded to free`);
+
+  // Telegram notification
+  await sendTelegramNotification(
+    `⚠️ <b>Subscription Cancelled</b>\n\n` +
+    `🆔 Tenant: ${tenantId}\n` +
+    `👤 Customer: ${customerId}\n` +
+    `📦 Downgraded to: <b>free</b>\n` +
+    `🔔 Event: customer.subscription.deleted`
+  );
+}
+
+async function handleSubscriptionCreated(subscription: Stripe.Subscription): Promise<void> {
+  const customerId = typeof subscription.customer === 'string'
+    ? subscription.customer
+    : subscription.customer?.id;
+
+  const planInfo = planFromSubscription(subscription);
+  const planName = planInfo?.plan ?? 'unknown';
+
+  await sendTelegramNotification(
+    `🎉 <b>New Subscription Created!</b>\n\n` +
+    `👤 Customer: ${customerId ?? 'unknown'}\n` +
+    `📦 Plan: <b>${planName}</b>\n` +
+    `🔔 Event: customer.subscription.created`
+  );
 }
 
 // ── Route ───────────────────────────────────────────────────────────────────
@@ -231,6 +313,10 @@ export async function webhookRoutes(app: FastifyInstance): Promise<void> {
 
         case 'invoice.payment_succeeded':
           await handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice);
+          break;
+
+        case 'customer.subscription.created':
+          await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
           break;
 
         case 'customer.subscription.deleted':

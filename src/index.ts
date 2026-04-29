@@ -5,10 +5,15 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { memoriesRoutes } from './routes/memories.js';
 import { setupRoutes } from './routes/setup.js';
-import { stripeWebhookRoutes } from './routes/stripe-webhook.js';
+import { signupRoutes } from './routes/signup.js';
+import { webhookRoutes } from './routes/webhooks.js';
 import { openaiProxyRoutes } from './routes/openai-proxy.js';
 import { feedbackRoutes } from './routes/feedback.js';
 import { teamsRoutes } from './routes/teams.js';
+import { graphRoutes } from './routes/graph.js';
+import { agentsRoutes } from './routes/agents.js';
+import { billingRoutes } from './routes/billing.js';
+import { emailRoutes } from './routes/email.js';
 import { pool } from './db/pool.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -196,6 +201,61 @@ async function migrate(): Promise<void> {
   await pool.query(`CREATE INDEX IF NOT EXISTS team_members_user_idx ON team_members(user_id)`);
   await pool.query(`CREATE INDEX IF NOT EXISTS team_members_email_idx ON team_members(email) WHERE email IS NOT NULL`);
 
+  // v1.2: Graph edges
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS memory_edges (
+      id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      from_memory_id    UUID NOT NULL REFERENCES memories(id) ON DELETE CASCADE,
+      to_memory_id      UUID NOT NULL REFERENCES memories(id) ON DELETE CASCADE,
+      relationship_type TEXT NOT NULL,
+      weight            FLOAT NOT NULL DEFAULT 1.0,
+      metadata          JSONB DEFAULT '{}',
+      created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE(from_memory_id, to_memory_id, relationship_type)
+    )
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS memory_edges_from_idx ON memory_edges(from_memory_id)`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS memory_edges_to_idx ON memory_edges(to_memory_id)`);
+
+  // v1.2: Agents
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS agents (
+      id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      tenant_id     UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+      name          TEXT NOT NULL,
+      description   TEXT,
+      owner_id      TEXT NOT NULL,
+      model         TEXT,
+      system_prompt TEXT,
+      created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS agents_tenant_idx ON agents(tenant_id)`);
+
+  // v1.2: Skills
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS skills (
+      id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      tenant_id   UUID REFERENCES tenants(id) ON DELETE CASCADE,
+      name        TEXT NOT NULL,
+      description TEXT,
+      category    TEXT,
+      schema      JSONB,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  // v1.2: Agent-Skill assignments
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS agent_skills (
+      agent_id  UUID NOT NULL REFERENCES agents(id) ON DELETE CASCADE,
+      skill_id  UUID NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
+      config    JSONB DEFAULT '{}',
+      PRIMARY KEY (agent_id, skill_id)
+    )
+  `);
+
   console.log('Database migration complete');
 }
 
@@ -223,17 +283,23 @@ if (existsSync(docsDir)) {
   });
 }
 
-await app.register(memoriesRoutes);
-await app.register(setupRoutes);
-await app.register(stripeWebhookRoutes);
-await app.register(openaiProxyRoutes);
-await app.register(feedbackRoutes);
-await app.register(teamsRoutes);
-
 const PORT = parseInt(process.env.PORT ?? '3010', 10);
 
 try {
   await migrate();
+
+  await app.register(memoriesRoutes);
+  await app.register(setupRoutes);
+  await app.register(signupRoutes);
+  await app.register(webhookRoutes);
+  await app.register(openaiProxyRoutes);
+  await app.register(feedbackRoutes);
+  await app.register(teamsRoutes);
+  await app.register(graphRoutes);
+  await app.register(agentsRoutes);
+  await app.register(billingRoutes);
+  await app.register(emailRoutes);
+
   await app.listen({ port: PORT, host: '0.0.0.0' });
   console.log(`Smara API listening on port ${PORT}`);
 } catch (err) {
