@@ -35,13 +35,14 @@ CREATE TABLE IF NOT EXISTS memories (
   tenant_id        UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
   user_id          TEXT NOT NULL,
   fact             TEXT NOT NULL,
-  embedding        VECTOR(1536),        -- OpenAI text-embedding-3-small
+  embedding        VECTOR(1024),        -- Voyage AI voyage-3
   importance       FLOAT NOT NULL DEFAULT 0.5,   -- 0.0 – 1.0
   decay_score      FLOAT NOT NULL DEFAULT 1.0,   -- recomputed on retrieval
   access_count     INTEGER NOT NULL DEFAULT 0,
   last_accessed_at TIMESTAMPTZ,
   valid_until      TIMESTAMPTZ,         -- NULL = active; set = soft-deleted
-  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  fact_tsv         TSVECTOR GENERATED ALWAYS AS (to_tsvector('english', fact)) STORED
 );
 
 -- Vector similarity search (cosine)
@@ -53,6 +54,10 @@ CREATE INDEX IF NOT EXISTS memories_embedding_idx
 CREATE INDEX IF NOT EXISTS memories_tenant_user_active_idx
   ON memories(tenant_id, user_id, valid_until)
   WHERE valid_until IS NULL;
+
+-- GIN index for BM25 full-text search
+CREATE INDEX IF NOT EXISTS memories_fact_tsv_idx
+  ON memories USING gin(fact_tsv);
 
 -- ── Retrieval Log (optional, for usage metering) ─────────────────────────────
 CREATE TABLE IF NOT EXISTS retrieval_logs (

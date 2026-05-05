@@ -15,5 +15,10 @@ export function ebbinghaus(createdAt: Date, importance: number): number {
 }
 
 export function blendScore(similarity: number, decayScore: number): number {
-  return similarity * 0.7 + decayScore * 0.3;
+  // When decay is high (fresh memories), similarity should dominate.
+  // When decay is low (old memories), even moderate similarity matters more.
+  // Adaptive blend: fresh memories get 90% similarity weight, old get 70%.
+  const similarityWeight = 0.7 + (decayScore * 0.2); // 0.7–0.9
+  const decayWeight = 1 - similarityWeight;           // 0.1–0.3
+  return similarity * similarityWeight + decayScore * decayWeight;
 }

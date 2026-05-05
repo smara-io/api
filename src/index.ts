@@ -256,6 +256,15 @@ async function migrate(): Promise<void> {
     )
   `);
 
+  // v1.3: BM25 full-text search
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE memories ADD COLUMN IF NOT EXISTS fact_tsv tsvector
+        GENERATED ALWAYS AS (to_tsvector('english', fact)) STORED;
+    EXCEPTION WHEN others THEN NULL; END $$
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS memories_fact_tsv_idx ON memories USING gin(fact_tsv)`);
+
   console.log('Database migration complete');
 }
 
