@@ -183,33 +183,33 @@ export const DRIP_TEMPLATES: Record<string, (ctx: TemplateContext) => EmailTempl
 
   /* Day 14 — Upgrade CTA */
   upgrade: (ctx) => ({
-    subject: 'Upgrade to Developer — unlock graph memory',
+    subject: 'Upgrade to Pro — unlock 100K memories',
     html: layout(`
       <h1 style="color:#1e293b;font-size:22px;margin:0 0 12px;">Ready for more?</h1>
       <p style="color:#475569;font-size:15px;line-height:1.6;">
-        Hi ${ctx.name}, you've been using Smara for two weeks. Here's what you unlock on the Developer plan:
+        Hi ${ctx.name}, you've been using Smara for two weeks. Here's what you unlock on the Pro plan:
       </p>
 
       <table style="width:100%;border-collapse:collapse;margin:24px 0;">
         <tr>
           <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#64748b;font-size:14px;">Memories</td>
-          <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#94a3b8;font-size:14px;">100</td>
-          <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#6366f1;font-size:14px;font-weight:600;">10,000</td>
+          <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#94a3b8;font-size:14px;">10,000</td>
+          <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#6366f1;font-size:14px;font-weight:600;">100,000</td>
         </tr>
         <tr>
           <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#64748b;font-size:14px;">AI Agents</td>
-          <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#94a3b8;font-size:14px;">1</td>
-          <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#6366f1;font-size:14px;font-weight:600;">5</td>
+          <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#94a3b8;font-size:14px;">2</td>
+          <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#6366f1;font-size:14px;font-weight:600;">10</td>
         </tr>
         <tr>
           <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#64748b;font-size:14px;">Teams</td>
           <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#94a3b8;font-size:14px;">None</td>
-          <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#6366f1;font-size:14px;font-weight:600;">1 team (5 members)</td>
+          <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;color:#6366f1;font-size:14px;font-weight:600;">3 teams (3 members each)</td>
         </tr>
         <tr>
-          <td style="padding:12px 16px;color:#64748b;font-size:14px;">Graph memory</td>
-          <td style="padding:12px 16px;color:#94a3b8;font-size:14px;">No</td>
-          <td style="padding:12px 16px;color:#6366f1;font-size:14px;font-weight:600;">Yes</td>
+          <td style="padding:12px 16px;color:#64748b;font-size:14px;">Rate limit</td>
+          <td style="padding:12px 16px;color:#94a3b8;font-size:14px;">100/day</td>
+          <td style="padding:12px 16px;color:#6366f1;font-size:14px;font-weight:600;">1,000/day</td>
         </tr>
       </table>
 

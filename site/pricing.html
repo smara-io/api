@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pricing &mdash; Smara</title>
-<meta name="description" content="Smara is open source under MIT license. Self-host for free with unlimited memories, or use the hosted API with 10,000 free memories.">
+<meta name="description" content="Smara pricing: Free hosted API (10K memories), Pro $19/mo (100K), Team $89/mo (500K). Or self-host free with unlimited memories under MIT license.">
 <meta name="keywords" content="Smara pricing, AI memory pricing, open source memory API, free AI memory">
 <meta name="theme-color" content="#f8f9fc">
 <link rel="canonical" href="https://smara.io/pricing">
@@ -33,9 +33,11 @@
     "@type": "Product",
     "name": "Smara",
     "offers": [
-      {"@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Self-Host", "description": "Unlimited memories, MIT license, run anywhere"},
-      {"@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Hosted API", "description": "10,000 memories, managed infrastructure"},
-      {"@type": "Offer", "name": "Enterprise", "description": "Custom SLA, priority support, dedicated infrastructure"}
+      {"@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free", "description": "10,000 memories, 100 req/day, 2 AI agents"},
+      {"@type": "Offer", "price": "19", "priceCurrency": "USD", "name": "Pro", "description": "100,000 memories, 1,000 req/day, 10 AI agents, 3 teams"},
+      {"@type": "Offer", "price": "89", "priceCurrency": "USD", "name": "Team", "description": "500,000 memories, 5,000 req/day, 50 AI agents, 10 teams"},
+      {"@type": "Offer", "name": "Enterprise", "description": "Unlimited everything, SLA, dedicated infrastructure"},
+      {"@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Self-Host", "description": "Unlimited memories, MIT license, run anywhere"}
     ]
   }
 }
@@ -486,7 +488,72 @@
   /* ANIMATIONS */
   .reveal { opacity: 0; transform: translateY(20px); }
 
+  .self-host-banner {
+    max-width: 1080px;
+    margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  .self-host-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 2px solid var(--green);
+    border-radius: 20px;
+    padding: 36px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    box-shadow: var(--shadow-md), 0 0 0 1px rgba(52,199,89,0.1);
+  }
+  .self-host-card .sh-left { flex: 1; }
+  .self-host-card .sh-badge {
+    display: inline-block;
+    background: var(--green-light);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 12px;
+    border-radius: 980px;
+    margin-bottom: 12px;
+  }
+  .self-host-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .self-host-card p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .self-host-card .sh-cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--text); color: #fff;
+    font-size: 14px; font-weight: 500; font-family: var(--font);
+    padding: 11px 24px; border-radius: 980px;
+    text-decoration: none; white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .self-host-card .sh-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    align-items: start;
+  }
+
   /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (max-width: 768px) {
     .nav-links { display: none; }
     .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
@@ -496,6 +563,7 @@
     .comparison-table thead th,
     .comparison-table tbody td { padding: 10px 12px; }
     .footer-inner { flex-direction: column; gap: 16px; align-items: flex-start; }
+    .self-host-card { flex-direction: column; text-align: center; }
   }
 </style>
 </head>
@@ -524,64 +592,90 @@
 <!-- HERO -->
 <section class="pricing-hero">
   <div class="badge reveal">Open Source &middot; MIT License</div>
-  <h1 class="reveal">Free forever</h1>
-  <p class="reveal">Self-host with unlimited memories, or use our hosted API with 10,000 free memories. No credit card required.</p>
+  <h1 class="reveal">Simple, transparent pricing</h1>
+  <p class="reveal">Start free with 10,000 memories. Self-host for unlimited. Scale when you're ready.</p>
 </section>
 
-<!-- PRICING CARDS -->
+<!-- SELF-HOST BANNER -->
+<div class="self-host-banner reveal">
+  <div class="self-host-card">
+    <div class="sh-left">
+      <div class="sh-badge">MIT License</div>
+      <h3>Self-Host &mdash; Free Forever</h3>
+      <p>Run Smara on your own infrastructure with unlimited memories, teams, agents, and no restrictions. One <code>docker compose up</code> to get started.</p>
+    </div>
+    <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener" class="sh-cta">Clone on GitHub &rarr;</a>
+  </div>
+</div>
+
+<!-- HOSTED PRICING CARDS -->
 <div class="pricing-grid">
 
-  <!-- SELF-HOST -->
-  <div class="pricing-card featured reveal">
-    <div class="popular-badge">Most Popular</div>
-    <div class="plan-name">Self-Host</div>
-    <div class="plan-price">$0</div>
-    <div class="plan-desc">Run on your own infrastructure</div>
-    <ul>
-      <li>Unlimited memories</li>
-      <li>Unlimited teams &amp; members</li>
-      <li>Unlimited AI agents</li>
-      <li>Full MCP + REST API</li>
-      <li>Semantic search + Ebbinghaus decay</li>
-      <li>Graph memory</li>
-      <li>Docker one-liner setup</li>
-      <li>MIT license &mdash; use anywhere</li>
-    </ul>
-    <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener" class="plan-cta primary">Clone on GitHub</a>
-  </div>
-
-  <!-- HOSTED API -->
+  <!-- FREE -->
   <div class="pricing-card reveal">
-    <div class="plan-name">Hosted API</div>
-    <div class="plan-price">$0</div>
-    <div class="plan-desc">We manage the infrastructure</div>
+    <div class="plan-name">Free</div>
+    <div class="plan-price">$0<span>/mo</span></div>
+    <div class="plan-desc">For getting started</div>
     <ul>
       <li>10,000 memories</li>
-      <li>3 teams, 10 members each</li>
-      <li>5 AI agents</li>
+      <li>100 requests/day</li>
+      <li>2 AI agents</li>
       <li>Full MCP + REST API</li>
-      <li>Semantic search + Ebbinghaus decay</li>
-      <li>Graph memory</li>
-      <li>No setup required</li>
+      <li>Semantic search</li>
+      <li>Ebbinghaus decay</li>
       <li>Community support</li>
     </ul>
-    <a href="/#signup" class="plan-cta secondary">Get API Key</a>
+    <a href="/#signup" class="plan-cta secondary">Get Started Free</a>
+  </div>
+
+  <!-- PRO -->
+  <div class="pricing-card featured reveal">
+    <div class="popular-badge">Most Popular</div>
+    <div class="plan-name">Pro</div>
+    <div class="plan-price">$19<span>/mo</span></div>
+    <div class="plan-desc">For professional use</div>
+    <ul>
+      <li>100,000 memories</li>
+      <li>1,000 requests/day</li>
+      <li>10 AI agents</li>
+      <li>3 teams, 3 members each</li>
+      <li>Graph memory</li>
+      <li>Source tagging</li>
+      <li>Email support</li>
+    </ul>
+    <a href="/#signup" class="plan-cta primary">Start Pro</a>
+  </div>
+
+  <!-- TEAM -->
+  <div class="pricing-card reveal">
+    <div class="plan-name">Team</div>
+    <div class="plan-price">$89<span>/mo</span></div>
+    <div class="plan-desc">For teams building with AI</div>
+    <ul>
+      <li>500,000 memories</li>
+      <li>5,000 requests/day</li>
+      <li>50 AI agents</li>
+      <li>10 teams, 10 members each</li>
+      <li>Custom decay curves</li>
+      <li>Advanced analytics</li>
+      <li>Priority support</li>
+    </ul>
+    <a href="/#signup" class="plan-cta secondary">Start Team</a>
   </div>
 
   <!-- ENTERPRISE -->
   <div class="pricing-card reveal">
     <div class="plan-name">Enterprise</div>
     <div class="plan-price">Custom</div>
-    <div class="plan-desc">For production workloads at scale</div>
+    <div class="plan-desc">For production at scale</div>
     <ul>
       <li>Unlimited memories</li>
+      <li>Unlimited requests</li>
+      <li>Unlimited agents</li>
       <li>Unlimited teams &amp; members</li>
-      <li>Unlimited AI agents</li>
       <li>Dedicated infrastructure</li>
-      <li>Custom decay curves</li>
       <li>SLA guarantee</li>
-      <li>Priority support</li>
-      <li>On-premises deployment option</li>
+      <li>On-premises option</li>
     </ul>
     <a href="mailto:sri@smara.io" class="plan-cta secondary">Contact Us</a>
   </div>
@@ -595,119 +689,142 @@
     <thead>
       <tr>
         <th>Feature</th>
-        <th class="highlight">Self-Host</th>
-        <th>Hosted API</th>
+        <th>Free</th>
+        <th class="highlight">Pro</th>
+        <th>Team</th>
         <th>Enterprise</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="category-row"><td colspan="4">Storage &amp; Limits</td></tr>
+      <tr class="category-row"><td colspan="5">Storage &amp; Limits</td></tr>
       <tr>
         <td>Memories</td>
-        <td class="highlight">Unlimited</td>
         <td>10,000</td>
+        <td class="highlight">100,000</td>
+        <td>500,000</td>
         <td>Unlimited</td>
       </tr>
       <tr>
-        <td>Teams</td>
-        <td class="highlight">Unlimited</td>
-        <td>3</td>
-        <td>Unlimited</td>
-      </tr>
-      <tr>
-        <td>Members per team</td>
-        <td class="highlight">Unlimited</td>
-        <td>10</td>
+        <td>Requests/day</td>
+        <td>100</td>
+        <td class="highlight">1,000</td>
+        <td>5,000</td>
         <td>Unlimited</td>
       </tr>
       <tr>
         <td>AI agents</td>
-        <td class="highlight">Unlimited</td>
-        <td>5</td>
+        <td>2</td>
+        <td class="highlight">10</td>
+        <td>50</td>
+        <td>Unlimited</td>
+      </tr>
+      <tr>
+        <td>Teams</td>
+        <td><span class="dash"></span></td>
+        <td class="highlight">3</td>
+        <td>10</td>
+        <td>Unlimited</td>
+      </tr>
+      <tr>
+        <td>Members per team</td>
+        <td>1</td>
+        <td class="highlight">3</td>
+        <td>10</td>
         <td>Unlimited</td>
       </tr>
 
-      <tr class="category-row"><td colspan="4">Core Features</td></tr>
+      <tr class="category-row"><td colspan="5">Core Features</td></tr>
       <tr>
         <td>MCP protocol</td>
+        <td><span class="check"></span></td>
         <td class="highlight"><span class="check"></span></td>
         <td><span class="check"></span></td>
         <td><span class="check"></span></td>
       </tr>
       <tr>
         <td>REST API</td>
+        <td><span class="check"></span></td>
         <td class="highlight"><span class="check"></span></td>
         <td><span class="check"></span></td>
         <td><span class="check"></span></td>
       </tr>
       <tr>
         <td>Semantic search</td>
+        <td><span class="check"></span></td>
         <td class="highlight"><span class="check"></span></td>
         <td><span class="check"></span></td>
         <td><span class="check"></span></td>
       </tr>
       <tr>
         <td>Ebbinghaus decay</td>
+        <td><span class="check"></span></td>
         <td class="highlight"><span class="check"></span></td>
         <td><span class="check"></span></td>
         <td><span class="check"></span></td>
       </tr>
       <tr>
         <td>Graph memory</td>
+        <td><span class="dash"></span></td>
         <td class="highlight"><span class="check"></span></td>
         <td><span class="check"></span></td>
         <td><span class="check"></span></td>
       </tr>
       <tr>
         <td>Source tagging</td>
+        <td><span class="dash"></span></td>
         <td class="highlight"><span class="check"></span></td>
         <td><span class="check"></span></td>
         <td><span class="check"></span></td>
       </tr>
       <tr>
         <td>Custom decay curves</td>
-        <td class="highlight"><span class="check"></span></td>
         <td><span class="dash"></span></td>
+        <td class="highlight"><span class="dash"></span></td>
+        <td><span class="check"></span></td>
         <td><span class="check"></span></td>
       </tr>
 
-      <tr class="category-row"><td colspan="4">Infrastructure</td></tr>
+      <tr class="category-row"><td colspan="5">Infrastructure &amp; Support</td></tr>
       <tr>
         <td>Managed hosting</td>
-        <td class="highlight"><span class="dash"></span></td>
+        <td><span class="check"></span></td>
+        <td class="highlight"><span class="check"></span></td>
         <td><span class="check"></span></td>
         <td><span class="check"></span></td>
       </tr>
       <tr>
         <td>Dedicated infrastructure</td>
+        <td><span class="dash"></span></td>
         <td class="highlight"><span class="dash"></span></td>
         <td><span class="dash"></span></td>
         <td><span class="check"></span></td>
       </tr>
       <tr>
         <td>SLA</td>
+        <td><span class="dash"></span></td>
         <td class="highlight"><span class="dash"></span></td>
         <td><span class="dash"></span></td>
         <td><span class="check"></span></td>
       </tr>
-
-      <tr class="category-row"><td colspan="4">Support</td></tr>
       <tr>
-        <td>Community (GitHub)</td>
+        <td>Community support</td>
+        <td><span class="check"></span></td>
         <td class="highlight"><span class="check"></span></td>
         <td><span class="check"></span></td>
         <td><span class="check"></span></td>
       </tr>
       <tr>
         <td>Email support</td>
-        <td class="highlight"><span class="dash"></span></td>
         <td><span class="dash"></span></td>
+        <td class="highlight"><span class="check"></span></td>
+        <td><span class="check"></span></td>
         <td><span class="check"></span></td>
       </tr>
       <tr>
         <td>Priority support</td>
-        <td class="highlight"><span class="dash"></span></td>
         <td><span class="dash"></span></td>
+        <td class="highlight"><span class="dash"></span></td>
+        <td><span class="check"></span></td>
         <td><span class="check"></span></td>
       </tr>
     </tbody>
@@ -720,31 +837,31 @@
 
   <div class="faq-item reveal">
     <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      Is Smara really free?
+      Can I start free and upgrade later?
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="faq-a"><div class="faq-a-inner">
-      Yes. Smara is MIT licensed and open source. Self-host with unlimited memories at no cost. The hosted API gives you 10,000 memories free &mdash; no credit card needed.
+      Yes. The free tier gives you 10,000 memories with full API access &mdash; no credit card required. Upgrade to Pro or Team anytime. Changes are prorated.
     </div></div>
   </div>
 
   <div class="faq-item reveal">
     <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      What happens if I exceed 10,000 memories on the hosted API?
+      What happens if I hit my memory or rate limit?
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="faq-a"><div class="faq-a-inner">
-      You'll get a warning at 90% usage. Existing memories remain fully searchable. You can self-host for unlimited capacity, or contact us about Enterprise for managed unlimited.
+      You'll get a warning at 90% usage. Existing memories remain fully searchable. New writes will be queued. Upgrade to lift limits instantly, or self-host for unlimited capacity.
     </div></div>
   </div>
 
   <div class="faq-item reveal">
     <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      What do I need to self-host?
+      What's the difference between hosted and self-hosted?
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="faq-a"><div class="faq-a-inner">
-      A server with Docker and PostgreSQL with pgvector. One <code>docker compose up</code> gets you running. Works on any cloud provider, VPS, or local machine. Full instructions in the GitHub repo.
+      Hosted: we manage the infrastructure, you get an API key and go. Self-hosted: you run Smara on your own server with Docker &mdash; unlimited everything, MIT license, full data sovereignty.
     </div></div>
   </div>
 
@@ -760,11 +877,11 @@
 
   <div class="faq-item reveal">
     <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      Can I migrate from the hosted API to self-hosted?
+      Can I switch between plans or migrate to self-hosted?
       <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="faq-a"><div class="faq-a-inner">
-      Yes. Export your memories via the REST API and import them into your self-hosted instance. The API is identical, so your code doesn't change &mdash; just point to your own server.
+      Yes to both. Upgrade or downgrade at any time. To self-host, export your memories via the REST API and import them &mdash; your code doesn't change, just point to your own server.
     </div></div>
   </div>
 </section>

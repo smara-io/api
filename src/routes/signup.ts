@@ -154,7 +154,7 @@ export async function signupRoutes(app: FastifyInstance): Promise<void> {
         // Create new free-tier tenant
         const { rows: newTenant } = await client.query<{ id: string }>(
           `INSERT INTO tenants (name, email, plan, memory_limit, agent_limit, team_limit, members_per_team_limit)
-           VALUES ($1, $2, 'free', 100, 1, 0, 0) RETURNING id`,
+           VALUES ($1, $2, 'free', 10000, 2, 0, 1) RETURNING id`,
           [email.split('@')[0], email],
         );
         tenantId = newTenant[0].id;

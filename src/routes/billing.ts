@@ -4,9 +4,8 @@
  * Env vars:
  *   STRIPE_SECRET_KEY       — sk_live_... or sk_test_...
  *   STRIPE_WEBHOOK_SECRET   — whsec_...
- *   STRIPE_PRICE_DEV        — price ID for Developer $19/mo
- *   STRIPE_PRICE_TEAM       — price ID for Team $79/mo
- *   STRIPE_PRICE_BIZ        — price ID for Business $199/mo
+ *   STRIPE_PRICE_PRO        — price ID for Pro $19/mo
+ *   STRIPE_PRICE_TEAM       — price ID for Team $89/mo
  */
 
 import Stripe from 'stripe';
@@ -27,17 +26,15 @@ interface PlanConfig {
 }
 
 const PLAN_CONFIGS: Record<string, PlanConfig> = {
-  free:      { plan: 'free',      memoryLimit: 100,        agentLimit: 1,  teamLimit: 0,  membersPerTeamLimit: 0 },
-  developer: { plan: 'developer', memoryLimit: 10_000,     agentLimit: 5,  teamLimit: 1,  membersPerTeamLimit: 5 },
-  team:      { plan: 'team',      memoryLimit: 100_000,    agentLimit: 25, teamLimit: 5,  membersPerTeamLimit: 25 },
-  business:  { plan: 'business',  memoryLimit: 999_999_999, agentLimit: 999_999, teamLimit: 999_999, membersPerTeamLimit: 999_999 },
+  free: { plan: 'free', memoryLimit: 10_000,  agentLimit: 2,  teamLimit: 0,  membersPerTeamLimit: 1 },
+  pro:  { plan: 'pro',  memoryLimit: 100_000, agentLimit: 10, teamLimit: 3,  membersPerTeamLimit: 3 },
+  team: { plan: 'team', memoryLimit: 500_000, agentLimit: 50, teamLimit: 10, membersPerTeamLimit: 10 },
 };
 
 function getPriceMap(): Record<string, PlanConfig> {
   const map: Record<string, PlanConfig> = {};
-  if (process.env.STRIPE_PRICE_DEV)  map[process.env.STRIPE_PRICE_DEV]  = PLAN_CONFIGS.developer;
+  if (process.env.STRIPE_PRICE_PRO)  map[process.env.STRIPE_PRICE_PRO]  = PLAN_CONFIGS.pro;
   if (process.env.STRIPE_PRICE_TEAM) map[process.env.STRIPE_PRICE_TEAM] = PLAN_CONFIGS.team;
-  if (process.env.STRIPE_PRICE_BIZ)  map[process.env.STRIPE_PRICE_BIZ]  = PLAN_CONFIGS.business;
   return map;
 }
 
@@ -61,14 +58,14 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
 
   /* ─── POST /v1/billing/checkout ──────────────────────────────── */
   app.post<{
-    Body: { plan: 'developer' | 'team' | 'business'; email: string; success_url?: string; cancel_url?: string };
+    Body: { plan: 'pro' | 'team'; email: string; success_url?: string; cancel_url?: string };
   }>('/v1/billing/checkout', {
     schema: {
       body: {
         type: 'object',
         required: ['plan', 'email'],
         properties: {
-          plan:        { type: 'string', enum: ['developer', 'team', 'business'] },
+          plan:        { type: 'string', enum: ['pro', 'team'] },
           email:       { type: 'string', format: 'email' },
           success_url: { type: 'string' },
           cancel_url:  { type: 'string' },
@@ -79,9 +76,8 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
     const { plan, email, success_url, cancel_url } = request.body;
 
     const priceEnvMap: Record<string, string | undefined> = {
-      developer: process.env.STRIPE_PRICE_DEV,
-      team:      process.env.STRIPE_PRICE_TEAM,
-      business:  process.env.STRIPE_PRICE_BIZ,
+      pro:  process.env.STRIPE_PRICE_PRO,
+      team: process.env.STRIPE_PRICE_TEAM,
     };
 
     const priceId = priceEnvMap[plan];
@@ -132,7 +128,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         const email = session.metadata?.email ?? session.customer_email ?? '';
-        const planName = session.metadata?.plan ?? 'developer';
+        const planName = session.metadata?.plan ?? 'pro';
         const customerId = session.customer as string;
 
         if (!email) {
@@ -140,7 +136,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
           break;
         }
 
-        const planConfig = PLAN_CONFIGS[planName] ?? PLAN_CONFIGS.developer;
+        const planConfig = PLAN_CONFIGS[planName] ?? PLAN_CONFIGS.pro;
 
         // Check if tenant already exists for this email
         const { rows: existing } = await pool.query(

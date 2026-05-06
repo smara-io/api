@@ -2,9 +2,9 @@
  * Stripe billing helpers for Smara.
  *
  * Plan mapping:
- *   free       → 10,000 memories
- *   developer  → 200,000 memories   ($19/mo)
- *   pro        → 999,999,999 (unlimited) ($99/mo)
+ *   free  → 10,000 memories
+ *   pro   → 100,000 memories  ($19/mo)
+ *   team  → 500,000 memories  ($89/mo)
  */
 
 import Stripe from 'stripe';
@@ -26,15 +26,15 @@ const PRICE_TO_PLAN: Record<string, { plan: string; memoryLimit: number }> = {};
  * Populate PRICE_TO_PLAN from env vars so price IDs are not hard-coded.
  *
  * Expected env vars:
- *   STRIPE_PRICE_DEVELOPER=price_xxx
- *   STRIPE_PRICE_PRO=price_yyy
+ *   STRIPE_PRICE_PRO=price_xxx   ($19/mo)
+ *   STRIPE_PRICE_TEAM=price_yyy  ($89/mo)
  */
 function loadPriceMap(): void {
-  const dev = process.env.STRIPE_PRICE_DEVELOPER;
   const pro = process.env.STRIPE_PRICE_PRO;
+  const team = process.env.STRIPE_PRICE_TEAM;
 
-  if (dev) PRICE_TO_PLAN[dev] = { plan: 'developer', memoryLimit: 200_000 };
-  if (pro) PRICE_TO_PLAN[pro] = { plan: 'pro', memoryLimit: 999_999_999 };
+  if (pro) PRICE_TO_PLAN[pro] = { plan: 'pro', memoryLimit: 100_000 };
+  if (team) PRICE_TO_PLAN[team] = { plan: 'team', memoryLimit: 500_000 };
 }
 
 loadPriceMap();

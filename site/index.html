@@ -26,9 +26,9 @@
 <script type="application/ld+json">
 [
   {"@context":"https://schema.org","@type":"Organization","name":"Smara","url":"https://smara.io","logo":"https://smara.io/og-image.png","email":"parallelromb@gmail.com","sameAs":["https://github.com/smara-io/smara","https://twitter.com/SmaraMemo"]},
-  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Smara","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Persistent memory layer for AI tools. Gives Claude Code, Cursor, Windsurf, and Codex shared context using Ebbinghaus forgetting curves.","url":"https://smara.io","offers":[{"@type":"Offer","price":"0","priceCurrency":"USD","name":"Self-Host","description":"Unlimited memories, MIT license, run anywhere with Docker"},{"@type":"Offer","price":"0","priceCurrency":"USD","name":"Hosted API","description":"10,000 memories, 5 agents, 3 teams, managed infrastructure"},{"@type":"Offer","name":"Enterprise","description":"Unlimited memories, dedicated infrastructure, SLA, priority support"}],"featureList":["MCP protocol support","REST API","Ebbinghaus decay scoring","Semantic search","Source tagging","Zero-config auto-memory","Team collaboration","Role-based access","AI agents"]},
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Smara","applicationCategory":"DeveloperApplication","operatingSystem":"Any","description":"Persistent memory layer for AI tools. Gives Claude Code, Cursor, Windsurf, and Codex shared context using Ebbinghaus forgetting curves.","url":"https://smara.io","offers":[{"@type":"Offer","price":"0","priceCurrency":"USD","name":"Free","description":"10,000 memories, 100 req/day, 2 AI agents"},{"@type":"Offer","price":"19","priceCurrency":"USD","name":"Pro","description":"100,000 memories, 1,000 req/day, 10 AI agents, 3 teams"},{"@type":"Offer","price":"89","priceCurrency":"USD","name":"Team","description":"500,000 memories, 5,000 req/day, 50 AI agents, 10 teams"},{"@type":"Offer","price":"0","priceCurrency":"USD","name":"Self-Host","description":"Unlimited memories, MIT license, run anywhere"}],"featureList":["MCP protocol support","REST API","Ebbinghaus decay scoring","Semantic search","Source tagging","Zero-config auto-memory","Team collaboration","Role-based access","AI agents"]},
   {"@context":"https://schema.org","@type":"HowTo","name":"How to add persistent memory to your AI tools with Smara","description":"Install Smara in 30 seconds to give Claude Code, Cursor, and Codex shared memory across sessions.","totalTime":"PT30S","step":[{"@type":"HowToStep","position":1,"name":"Install","text":"Add Smara to your MCP config with one JSON block."},{"@type":"HowToStep","position":2,"name":"Code normally","text":"Smara auto-captures decisions and context as you work. No manual tagging needed."},{"@type":"HowToStep","position":3,"name":"Context follows you","text":"Switch tools, start new sessions — your context is always there. Ebbinghaus decay keeps it fresh."}]},
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Smara?","acceptedAnswer":{"@type":"Answer","text":"Smara is a persistent memory layer for AI coding tools. It gives Claude Code, Cursor, Windsurf, Codex, and any MCP-compatible client shared context that survives across sessions. Install with: npx @smara/mcp-server --init"}},{"@type":"Question","name":"How does Smara's Ebbinghaus decay work?","acceptedAnswer":{"@type":"Answer","text":"Smara uses Ebbinghaus forgetting curves to score memory relevance over time. The formula is R = e^(-t/S) where t is time elapsed and S is memory strength based on importance and access frequency."}},{"@type":"Question","name":"What AI tools does Smara work with?","acceptedAnswer":{"@type":"Answer","text":"Any MCP-compatible tool: Claude Code, Cursor, Windsurf, Codex, VS Code with Copilot, and any custom MCP client. Plus a REST API for direct integration."}},{"@type":"Question","name":"How do Smara teams work? What stays private?","acceptedAnswer":{"@type":"Answer","text":"Project decisions become team memories visible to all members. Personal preferences stay private. Your AI classifies automatically via MCP. Override anytime. Combined search returns both private and team memories."}},{"@type":"Question","name":"Is my data private?","acceptedAnswer":{"@type":"Answer","text":"Yes. Each API key isolates your data. Memories are encrypted in transit (TLS) and stored in isolated PostgreSQL schemas. We never use your data for training."}},{"@type":"Question","name":"How much does Smara cost?","acceptedAnswer":{"@type":"Answer","text":"Smara is open source under the MIT license. Self-host for free with unlimited memories. The hosted API gives you 10,000 memories at no cost. Enterprise plans with SLA and dedicated support are available on request."}}]}
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Smara?","acceptedAnswer":{"@type":"Answer","text":"Smara is a persistent memory layer for AI coding tools. It gives Claude Code, Cursor, Windsurf, Codex, and any MCP-compatible client shared context that survives across sessions. Install with: npx @smara/mcp-server --init"}},{"@type":"Question","name":"How does Smara's Ebbinghaus decay work?","acceptedAnswer":{"@type":"Answer","text":"Smara uses Ebbinghaus forgetting curves to score memory relevance over time. The formula is R = e^(-t/S) where t is time elapsed and S is memory strength based on importance and access frequency."}},{"@type":"Question","name":"What AI tools does Smara work with?","acceptedAnswer":{"@type":"Answer","text":"Any MCP-compatible tool: Claude Code, Cursor, Windsurf, Codex, VS Code with Copilot, and any custom MCP client. Plus a REST API for direct integration."}},{"@type":"Question","name":"How do Smara teams work? What stays private?","acceptedAnswer":{"@type":"Answer","text":"Project decisions become team memories visible to all members. Personal preferences stay private. Your AI classifies automatically via MCP. Override anytime. Combined search returns both private and team memories."}},{"@type":"Question","name":"Is my data private?","acceptedAnswer":{"@type":"Answer","text":"Yes. Each API key isolates your data. Memories are encrypted in transit (TLS) and stored in isolated PostgreSQL schemas. We never use your data for training."}},{"@type":"Question","name":"How much does Smara cost?","acceptedAnswer":{"@type":"Answer","text":"Free: 10,000 memories (no credit card). Pro: $19/mo for 100K memories. Team: $89/mo for 500K memories. Or self-host free under MIT license with unlimited memories."}}]}
 ]
 </script>
 
@@ -564,7 +564,7 @@
   .faq-body strong { color: var(--text); }
 
   /* ─── PRICING ─── */
-  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
   .price-card {
     background: rgba(255,255,255,0.65);
     backdrop-filter: blur(16px);
@@ -730,7 +730,7 @@
     .steps-grid { grid-template-columns: 1fr; gap: 20px; max-width: 400px; margin: 0 auto; }
     .steps-grid::before { display: none; }
     .mcp-grid { grid-template-columns: repeat(2, 1fr); }
-    .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+    .pricing-grid { grid-template-columns: repeat(2, 1fr); max-width: 600px; margin: 0 auto; }
     .blog-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
@@ -1342,12 +1342,14 @@
       <details class="faq-item reveal">
         <summary class="faq-summary">How much does Smara cost?<span class="faq-plus">+</span></summary>
         <div class="faq-body">
-          <p>Smara is free and open source (MIT licensed). Two ways to use it:</p>
+          <p>Smara is open source (MIT licensed). Multiple options:</p>
           <ul>
-            <li><strong>Self-host</strong> &mdash; $0. Unlimited memories, unlimited agents, unlimited teams. Deploy with Docker.</li>
-            <li><strong>Hosted API</strong> &mdash; $0. 10,000 memories, full API + MCP access, Ebbinghaus decay. No credit card required.</li>
+            <li><strong>Self-host</strong> &mdash; $0. Unlimited everything. Deploy with Docker on your own infra.</li>
+            <li><strong>Hosted Free</strong> &mdash; $0. 10,000 memories, 100 req/day. No credit card required.</li>
+            <li><strong>Pro</strong> &mdash; $19/mo. 100K memories, 1,000 req/day, 3 teams.</li>
+            <li><strong>Team</strong> &mdash; $89/mo. 500K memories, 5,000 req/day, 10 teams of 10 members.</li>
           </ul>
-          <p>Need more than 10K memories on the hosted API? Self-host for free or contact us for enterprise hosting.</p>
+          <p>Need more? Self-host for unlimited, or <a href="mailto:sri@smara.io">contact us</a> for enterprise.</p>
         </div>
       </details>
     </div>
@@ -1358,48 +1360,61 @@
 <section id="pricing">
   <div class="container">
     <div class="section-header center">
-      <p class="section-eyebrow reveal">Open Source</p>
-      <h2 class="section-title reveal">Free forever. MIT licensed.</h2>
+      <p class="section-eyebrow reveal">Pricing</p>
+      <h2 class="section-title reveal">Start free. Scale when you're ready.</h2>
     </div>
     <div class="pricing-grid">
-      <div class="price-card featured reveal">
-        <div class="price-name">Self-host</div>
-        <div class="price-amount">$0</div>
-        <div class="price-desc">Deploy with Docker. Full control.</div>
-        <ul class="price-features">
-          <li>Unlimited memories</li>
-          <li>Unlimited teams &amp; agents</li>
-          <li>Full API + MCP access</li>
-          <li>Ebbinghaus decay scoring</li>
-          <li>MIT licensed</li>
-        </ul>
-        <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener" class="price-cta">View on GitHub</a>
-      </div>
       <div class="price-card reveal">
-        <div class="price-name">Hosted API</div>
+        <div class="price-name">Free</div>
         <div class="price-amount">$0</div>
-        <div class="price-desc">We run it. You build.</div>
+        <div class="price-desc">Get started in 30 seconds.</div>
         <ul class="price-features">
           <li>10,000 memories</li>
-          <li>Full API + MCP access</li>
-          <li>Ebbinghaus decay scoring</li>
-          <li>No credit card required</li>
-          <li>30-second setup</li>
+          <li>100 requests/day</li>
+          <li>2 AI agents</li>
+          <li>Full API + MCP</li>
+          <li>Ebbinghaus decay</li>
         </ul>
         <a href="#signup" class="price-cta">Get free API key</a>
       </div>
-      <div class="price-card reveal">
-        <div class="price-name">Enterprise</div>
-        <div class="price-amount">Custom</div>
-        <div class="price-desc">Dedicated hosting &amp; support</div>
+      <div class="price-card featured reveal">
+        <div class="price-name">Pro</div>
+        <div class="price-amount">$19<span style="font-size:16px;font-weight:400;color:var(--text-muted)">/mo</span></div>
+        <div class="price-desc">For professional use.</div>
         <ul class="price-features">
-          <li>Unlimited memories</li>
-          <li>Dedicated infrastructure</li>
-          <li>SLA &amp; priority support</li>
-          <li>SSO / SAML</li>
-          <li>Custom integrations</li>
+          <li>100,000 memories</li>
+          <li>1,000 requests/day</li>
+          <li>10 AI agents</li>
+          <li>3 teams (3 members)</li>
+          <li>Graph memory</li>
         </ul>
-        <a href="mailto:sri@smara.io" class="price-cta">Contact us</a>
+        <a href="#signup" class="price-cta">Start Pro</a>
+      </div>
+      <div class="price-card reveal">
+        <div class="price-name">Team</div>
+        <div class="price-amount">$89<span style="font-size:16px;font-weight:400;color:var(--text-muted)">/mo</span></div>
+        <div class="price-desc">For teams building with AI.</div>
+        <ul class="price-features">
+          <li>500,000 memories</li>
+          <li>5,000 requests/day</li>
+          <li>50 AI agents</li>
+          <li>10 teams (10 members)</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#signup" class="price-cta">Start Team</a>
+      </div>
+      <div class="price-card reveal">
+        <div class="price-name">Self-Host</div>
+        <div class="price-amount">$0</div>
+        <div class="price-desc">MIT license. Your infra.</div>
+        <ul class="price-features">
+          <li>Unlimited everything</li>
+          <li>Docker one-liner</li>
+          <li>Full data sovereignty</li>
+          <li>Community support</li>
+          <li>No restrictions</li>
+        </ul>
+        <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener" class="price-cta">View on GitHub</a>
       </div>
     </div>
   </div>

@@ -5,8 +5,8 @@ import crypto from 'crypto';
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET ?? '';
 
 const PLAN_MAP: Record<string, { plan: string; memoryLimit: number }> = {
-  ...(process.env.STRIPE_PRICE_DEVELOPER ? { [process.env.STRIPE_PRICE_DEVELOPER]: { plan: 'developer', memoryLimit: 200_000 } } : {}),
-  ...(process.env.STRIPE_PRICE_PRO ? { [process.env.STRIPE_PRICE_PRO]: { plan: 'pro', memoryLimit: 2_000_000 } } : {}),
+  ...(process.env.STRIPE_PRICE_PRO ? { [process.env.STRIPE_PRICE_PRO]: { plan: 'pro', memoryLimit: 100_000 } } : {}),
+  ...(process.env.STRIPE_PRICE_TEAM ? { [process.env.STRIPE_PRICE_TEAM]: { plan: 'team', memoryLimit: 500_000 } } : {}),
 };
 
 function verifyStripeSignature(payload: string, signature: string, secret: string): boolean {
