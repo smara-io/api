@@ -1237,49 +1237,23 @@ const API = [
     ],
   },
 
-  // ── Billing ──
+  // ── Usage ──
   {
-    section: 'Billing',
-    sectionDesc: 'Manage subscriptions, check usage, and access the Stripe billing portal.',
+    section: 'Usage',
+    sectionDesc: 'Check resource usage for your API key.',
     endpoints: [
-      {
-        id: 'billing-checkout',
-        method: 'POST',
-        path: '/v1/billing/checkout',
-        desc: 'Create a Stripe Checkout session to subscribe to a paid plan.',
-        auth: false,
-        body: {
-          plan: { type: 'string', required: true, desc: '"developer" ($19/mo), "team" ($79/mo), or "business" ($199/mo)' },
-          email: { type: 'string', required: true, desc: 'Email for the subscription' },
-          success_url: { type: 'string', required: false, desc: 'Redirect URL after success' },
-          cancel_url: { type: 'string', required: false, desc: 'Redirect URL on cancel' },
-        },
-        response: `{
-  "checkout_url": "https://checkout.stripe.com/c/pay/..."
-}`,
-      },
-      {
-        id: 'billing-portal',
-        method: 'GET',
-        path: '/v1/billing/portal',
-        desc: 'Get a link to the Stripe billing portal to manage your subscription.',
-        auth: true,
-        response: `{
-  "portal_url": "https://billing.stripe.com/p/session/..."
-}`,
-      },
       {
         id: 'billing-usage',
         method: 'GET',
-        path: '/v1/billing/usage',
-        desc: 'Check detailed usage across memories, agents, and teams.',
+        path: '/v1/usage',
+        desc: 'Check current usage across memories, agents, and teams.',
         auth: true,
         response: `{
-  "plan": "developer",
+  "plan": "hosted",
   "usage": {
     "memories": { "used": 4521, "limit": 10000 },
     "agents": { "used": 2, "limit": 5 },
-    "teams": { "used": 1, "limit": 1 }
+    "teams": { "used": 1, "limit": 3 }
   }
 }`,
       },

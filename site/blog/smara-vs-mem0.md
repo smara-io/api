@@ -91,12 +91,12 @@ This is where the gap is most visible.
 
 | Plan | Smara | Mem0 |
 |------|-------|------|
-| Free | 100 memories, 1 agent | 1,000 memories |
-| Developer | $19/mo --- 10K memories, 5 agents, 1 team | $99/mo --- 10K memories |
-| Team | $79/mo --- 100K memories, 25 agents, 5 teams | $499/mo --- 100K memories |
-| Enterprise | $199/mo --- unlimited | Custom (typically $1,000+/mo) |
+| Free / Hosted | 10,000 memories, 5 agents | 1,000 memories |
+| Self-Host | $0 (MIT) --- unlimited memories, agents, teams | $99/mo --- 10K memories |
+| Scale | $0 (MIT) --- unlimited on your infra | $499/mo --- 100K memories |
+| Enterprise | Custom --- managed + SLA | Custom (typically $1,000+/mo) |
 
-At the Developer tier, Smara is **80% cheaper** than Mem0 for the same memory count, and you get agents, teams, and graph memory included. At the Team tier, it's **84% cheaper**.
+Smara is **open source and free** to self-host with unlimited memories. Mem0's comparable tiers start at $99/mo. Both offer self-hosting, but only Smara's is MIT licensed.
 
 Both offer self-hosting. Smara runs on Postgres with pgvector --- one database, no additional infrastructure. Mem0 supports multiple vector backends (Pinecone, Qdrant, etc.) which gives more flexibility but adds operational complexity.
 
@@ -196,4 +196,4 @@ For most new projects in 2026, Smara gives you more for less. The Ebbinghaus dec
 
 ---
 
-*Ready to try Smara? [Get started free](https://smara.io) --- 100 memories, no credit card required.*
+*Ready to try Smara? [Get started free](https://smara.io) --- 10,000 memories, no credit card required.*

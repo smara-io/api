@@ -15,7 +15,7 @@ Here are the five best Mem0 alternatives, with honest pros and cons for each.
 | | Smara | Zep | Letta (MemGPT) | agentmemory | Custom (Postgres + pgvector) |
 |---|---|---|---|---|---|
 | **Type** | Managed API + self-host | Managed + self-host | Open-source framework | Open-source library | DIY |
-| **Pricing** | Free-$199/mo | Free-$499/mo | Free (self-host) | Free (MIT) | Infrastructure cost only |
+| **Pricing** | Free (MIT, open source) | Free-$499/mo | Free (self-host) | Free (MIT) | Infrastructure cost only |
 | **Decay scoring** | Yes (Ebbinghaus) | No | No | No | Build it yourself |
 | **Graph memory** | Yes | No | Partial | No | Build it yourself |
 | **Agent-scoped memory** | Yes (first-class) | Yes | Yes | No | Build it yourself |
@@ -51,15 +51,14 @@ It also detects duplicates (cosine >= 0.985) and contradictions (cosine 0.94-0.9
 ### Pricing
 | Plan | Price | Memories | Agents | Teams |
 |------|-------|----------|--------|-------|
-| Free | $0/mo | 100 | 1 | 0 |
-| Developer | $19/mo | 10,000 | 5 | 1 |
-| Team | $79/mo | 100,000 | 25 | 5 |
-| Business | $199/mo | Unlimited | Unlimited | Unlimited |
+| Hosted API | $0 | 10,000 | 5 | 3 |
+| Self-Host (MIT) | $0 | Unlimited | Unlimited | Unlimited |
+| Enterprise | Custom | Unlimited | Unlimited | Unlimited |
 
 ### Pros
 - Decay scoring provides significantly better retrieval quality over time
 - Graph memory enables relationship-based reasoning
-- 80-84% cheaper than Mem0 at equivalent tiers
+- Free and open source vs Mem0's paid tiers
 - Simple architecture: one server + Postgres
 - MCP native for AI IDE integration
 
@@ -270,4 +269,4 @@ Mem0 proved the category. But in 2026, you have options that are cheaper, more f
 
 ---
 
-*Try Smara free at [smara.io](https://smara.io). 100 memories, 1 agent, no credit card.*
+*Try Smara free at [smara.io](https://smara.io). 10,000 memories, 1 agent, no credit card.*

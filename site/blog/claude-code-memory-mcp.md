@@ -22,7 +22,7 @@ All of this happens through the Model Context Protocol (MCP), so it works native
 
 ### Step 1: Get a Smara API Key
 
-Sign up at [smara.io](https://smara.io) (free tier: 100 memories, no credit card).
+Sign up at [smara.io](https://smara.io) (free tier: 10,000 memories, no credit card).
 
 ### Step 2: Add to Claude Code Settings
 
@@ -148,13 +148,12 @@ The best setup is both: `CLAUDE.md` for static project docs, Smara MCP for dynam
 
 ## Pricing
 
-The free tier gives you 100 memories --- enough for personal coding workflows. If you're using Claude Code professionally and accumulate more context, the Developer plan ($19/mo) gives you 10,000 memories and 5 agents.
+Smara is open source under the MIT license. The hosted API gives you 10,000 free memories --- enough for personal coding workflows. For unlimited capacity, self-host with Docker.
 
-| Plan | Memories | Price |
-|------|----------|-------|
-| Free | 100 | $0/mo |
-| Developer | 10,000 | $19/mo |
-| Team | 100,000 | $79/mo |
+| Option | Memories | Price |
+|--------|----------|-------|
+| Self-Host (MIT) | Unlimited | $0 |
+| Hosted API | 10,000 | $0 |
 
 ## Troubleshooting
 

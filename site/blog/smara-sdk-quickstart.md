@@ -25,7 +25,7 @@ All endpoints live under `https://api.smara.io/v1`. Authenticate with a Bearer t
 
 ### 1. Get Your API Key
 
-Sign up at [smara.io](https://smara.io) and grab your key from the dashboard. Free tier gives you 100 memories, no credit card required.
+Sign up at [smara.io](https://smara.io) and grab your key from the dashboard. Free tier gives you 10,000 memories, no credit card required.
 
 ### 2. Set Your Environment Variable
 
@@ -352,7 +352,7 @@ Store one fact per memory, not paragraphs. This improves search precision:
 
 - [Full API Documentation](https://smara.io/docs) -- complete reference for all endpoints, parameters, and response shapes
 - [Interactive Playground](https://smara.io/playground) -- test the API live in your browser
-- [Pricing](https://smara.io/pricing) -- free tier (100 memories), Developer ($19/mo), Team ($79/mo)
+- [Pricing](https://smara.io/pricing) -- open source (MIT), self-host unlimited or hosted API with 10,000 free memories
 - [Claude Code MCP Tutorial](https://smara.io/blog/claude-code-memory-mcp.html) -- detailed walkthrough of the MCP integration
 - [Building AI Agents with Memory](https://smara.io/blog/ai-agents-persistent-memory.html) -- full agent loop with memory patterns
 - [GitHub](https://github.com/smara-io/smara) -- open-source MCP server and examples

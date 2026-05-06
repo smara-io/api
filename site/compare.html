@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smara vs Mem0 vs Zep vs Letta — AI Memory API Comparison 2026</title>
-<meta name="description" content="Compare Smara to Mem0, Zep, Letta, and agentmemory. The best mem0 alternative with Ebbinghaus decay, knowledge graphs, MCP native, and team memory — starting at $19/mo.">
-<meta name="keywords" content="mem0 alternative, best AI memory API, zep alternative, letta alternative, AI agent memory, semantic memory API">
+<meta name="description" content="Compare Smara to Mem0, Zep, Letta, and agentmemory. Open-source memory API with 92.2% LoCoMo benchmark accuracy, MIT licensed.">
+<meta name="keywords" content="mem0 alternative, best AI memory API, zep alternative, letta alternative, AI agent memory, semantic memory API, locomo benchmark">
 <meta name="theme-color" content="#ffffff">
-<meta property="og:title" content="Smara vs Mem0 vs Zep vs Letta — AI Memory API Comparison 2026">
-<meta property="og:description" content="Side-by-side comparison of AI memory APIs. Smara offers Ebbinghaus decay, graph memory, MCP native support, and contradiction detection from $19/mo.">
+<meta property="og:title" content="Smara vs Mem0 vs Zep vs Letta — Open Source AI Memory API Comparison">
+<meta property="og:description" content="92.2% accuracy on LoCoMo benchmark. Open source, MIT licensed. Compare features with Mem0, Zep, Letta, and agentmemory.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://smara.io/compare">
 <meta property="og:site_name" content="Smara">
@@ -17,12 +17,11 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@SmaraMemo">
-<meta name="twitter:title" content="Smara vs Mem0 vs Zep vs Letta — AI Memory API Comparison 2026">
-<meta name="twitter:description" content="Side-by-side comparison of AI memory APIs. Smara offers Ebbinghaus decay, graph memory, and MCP native support.">
+<meta name="twitter:title" content="Smara vs Mem0 vs Zep vs Letta — Open Source AI Memory API">
+<meta name="twitter:description" content="92.2% LoCoMo benchmark accuracy. Open source, MIT licensed. Feature comparison with Mem0, Zep, Letta.">
 <meta name="twitter:image" content="https://smara.io/og-image.png">
 <link rel="canonical" href="https://smara.io/compare">
 
-<!-- Schema.org FAQPage -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -30,18 +29,18 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "What is the best alternative to Mem0 for AI agent memory?",
+      "name": "What is the best open-source alternative to Mem0?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Smara is the best Mem0 alternative. It offers Ebbinghaus memory decay, contradiction detection, knowledge graph traversal via PostgreSQL CTEs, and MCP native support — all starting at $19/mo compared to Mem0 Pro at $249/mo."
+        "text": "Smara is the best open-source Mem0 alternative. It scored 92.2% on the LoCoMo benchmark, offers Ebbinghaus memory decay, knowledge graphs, MCP native support, and is fully MIT licensed. Self-host with Docker or use the free hosted API."
       }
     },
     {
       "@type": "Question",
-      "name": "How does Smara compare to Zep for AI memory?",
+      "name": "How accurate is Smara compared to other memory APIs?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Smara provides comparable semantic search to Zep but adds Ebbinghaus forgetting curves, automatic contradiction detection, and a full knowledge graph API. Smara starts at $19/mo while Zep Flex+ costs $475/mo for similar functionality."
+        "text": "Smara scored 92.2% on the LoCoMo benchmark (1,420 out of 1,540 questions correct), covering single-hop recall (90.4%), multi-hop reasoning (92.8%), temporal queries (78.1%), and open-domain questions (94.2%). Naive RAG typically scores 40-60%."
       }
     },
     {
@@ -54,18 +53,10 @@
     },
     {
       "@type": "Question",
-      "name": "What is Ebbinghaus memory decay and why does it matter for AI?",
+      "name": "Is Smara really free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Ebbinghaus decay models how memories naturally fade over time unless reinforced. Smara applies this to AI memory retrieval, blending semantic similarity (70%) with temporal decay (30%) so recent, important memories rank higher than stale ones. This improves recall accuracy by approximately 16% over flat retrieval."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I migrate from Mem0 or Zep to Smara?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Smara's REST API is designed for easy migration. Most developers complete the switch in under 5 minutes — just replace the client initialization and adjust the store/search calls. Smara provides migration guides for Mem0, Zep, and Letta."
+        "text": "Yes. Smara is MIT licensed and fully open source. Self-host with Docker for unlimited usage at zero cost, or use the free hosted API at api.smara.io with 10,000 memories included."
       }
     }
   ]
@@ -95,7 +86,6 @@
   --radius:16px;
   --radius-sm:10px;
   --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 24px rgba(0,0,0,0.06);
-  --shadow-lg:0 2px 8px rgba(0,0,0,0.04),0 8px 48px rgba(0,0,0,0.08);
 }
 html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 body{font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.6;overflow-x:hidden}
@@ -124,12 +114,11 @@ nav .container{display:flex;align-items:center;justify-content:space-between;hei
 .nav-cta:hover{opacity:0.85}
 
 /* Hero */
-.hero{padding:100px 0 60px;text-align:center}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:var(--accent-light);color:var(--accent);border-radius:980px;font-size:13px;font-weight:600;margin-bottom:24px}
-.hero-badge::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%}
-.hero h1{font-size:clamp(36px,5vw,56px);font-weight:700;letter-spacing:-0.035em;line-height:1.1;margin-bottom:16px}
+.hero{padding:80px 0 48px;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:var(--green-light);color:var(--green);border-radius:980px;font-size:13px;font-weight:600;margin-bottom:24px;border:1px solid var(--green-border)}
+.hero h1{font-size:clamp(32px,5vw,52px);font-weight:700;letter-spacing:-0.035em;line-height:1.1;margin-bottom:16px}
 .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero p{font-size:18px;color:var(--text-secondary);max-width:600px;margin:0 auto 0;line-height:1.5}
+.hero p{font-size:17px;color:var(--text-secondary);max-width:620px;margin:0 auto;line-height:1.5}
 
 /* Buttons */
 .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--white);padding:14px 32px;border-radius:980px;font-size:16px;font-weight:600;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer}
@@ -139,30 +128,29 @@ nav .container{display:flex;align-items:center;justify-content:space-between;hei
 .btn-secondary:hover{border-color:rgba(0,0,0,0.15);box-shadow:var(--shadow)}
 
 /* Section */
-section{padding:80px 0}
-section h2{font-size:clamp(28px,4vw,40px);font-weight:700;letter-spacing:-0.03em;line-height:1.15;margin-bottom:12px}
-section .section-sub{font-size:17px;color:var(--text-secondary);max-width:560px;margin:0 auto 40px;text-align:center;line-height:1.5}
+section{padding:64px 0}
+section h2{font-size:clamp(26px,3.5vw,36px);font-weight:700;letter-spacing:-0.03em;line-height:1.15;margin-bottom:12px}
+section .section-sub{font-size:16px;color:var(--text-secondary);max-width:560px;margin:0 auto 36px;text-align:center;line-height:1.5}
 .text-center{text-align:center}
 
 /* Tabs */
-.tab-bar{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;background:var(--white);border:1px solid var(--card-border);border-radius:var(--radius);padding:6px;max-width:720px;margin-left:auto;margin-right:auto}
-.tab-btn{padding:10px 20px;border-radius:12px;border:none;background:transparent;font-family:var(--font);font-size:14px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.tab-bar{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;background:var(--white);border:1px solid var(--card-border);border-radius:var(--radius);padding:6px;max-width:560px;margin-left:auto;margin-right:auto}
+.tab-btn{padding:9px 18px;border-radius:12px;border:none;background:transparent;font-family:var(--font);font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all 0.2s;white-space:nowrap}
 .tab-btn:hover{color:var(--text);background:var(--bg)}
 .tab-btn.active{background:var(--text);color:var(--white)}
 .tab-content{display:none}
 .tab-content.active{display:block}
 
 /* Card */
-.card{background:var(--white);border:1px solid var(--card-border);border-radius:var(--radius);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);overflow:hidden}
+.card{background:var(--white);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden}
 
-/* Comparison table */
-.compare-table{width:100%;border-collapse:collapse;font-size:14px}
-.compare-table thead{position:sticky;top:56px;z-index:10}
-.compare-table th{padding:16px 20px;text-align:left;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);border-bottom:1px solid var(--card-border)}
-.compare-table th:first-child{width:40%}
-.compare-table th.smara-col{background:var(--green-light);color:var(--green);border-bottom-color:var(--green-border)}
-.compare-table th.comp-col{background:rgba(0,0,0,0.02)}
-.compare-table td{padding:14px 20px;border-bottom:1px solid var(--card-border);vertical-align:middle}
+/* Comparison table — 3 columns only */
+.compare-table{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
+.compare-table th{padding:14px 20px;text-align:left;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);border-bottom:1px solid var(--card-border)}
+.compare-table th:first-child{width:44%}
+.compare-table th.smara-col{background:var(--green-light);color:var(--green);border-bottom-color:var(--green-border);width:28%}
+.compare-table th.comp-col{background:rgba(0,0,0,0.02);width:28%}
+.compare-table td{padding:13px 20px;border-bottom:1px solid var(--card-border);vertical-align:middle;word-wrap:break-word}
 .compare-table tr:last-child td{border-bottom:none}
 .compare-table td:first-child{font-weight:500;color:var(--text)}
 .compare-table td.smara-val{background:rgba(52,199,89,0.03);font-weight:600}
@@ -173,68 +161,65 @@ section .section-sub{font-size:17px;color:var(--text-secondary);max-width:560px;
 .compare-table tr:hover td{background:rgba(99,102,241,0.03)}
 .compare-table tr:hover td.smara-val{background:rgba(52,199,89,0.06)}
 
-/* Pricing bars */
-.pricing-bars{max-width:640px;margin:0 auto 40px}
-.price-row{display:flex;align-items:center;gap:16px;margin-bottom:16px}
-.price-label{width:140px;text-align:right;font-size:14px;font-weight:500;color:var(--text-secondary);flex-shrink:0}
-.price-bar-wrap{flex:1;position:relative}
-.price-bar{height:36px;border-radius:8px;display:flex;align-items:center;padding:0 14px;font-size:13px;font-weight:700;color:var(--white);transition:width 0.8s ease-out;min-width:60px}
-.price-bar.smara{background:linear-gradient(135deg,var(--green),#2dd4bf);width:8%}
-.price-bar.mem0{background:rgba(0,0,0,0.12);color:var(--text);width:52%}
-.price-bar.zep{background:rgba(0,0,0,0.12);color:var(--text);width:100%}
-.price-bar.letta{background:rgba(0,0,0,0.12);color:var(--text);width:42%}
-.price-bar.agent{background:rgba(0,0,0,0.06);color:var(--text-secondary);width:3%;min-width:80px}
-.save-callout{text-align:center;margin-top:32px}
-.save-badge{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:var(--green-light);border:1px solid var(--green-border);border-radius:980px;font-size:18px;font-weight:700;color:var(--green)}
+/* Benchmark cards */
+.bench-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:32px}
+.bench-card{background:var(--white);border:1px solid var(--card-border);border-radius:var(--radius);padding:28px 20px;text-align:center}
+.bench-card .bench-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);margin-bottom:12px}
+.bench-card .bench-value{font-size:40px;font-weight:700;letter-spacing:-0.04em;color:var(--green);line-height:1}
+.bench-card .bench-unit{font-size:13px;color:var(--text-secondary);margin-top:6px}
+
+/* Progress bar */
+.version-progress{margin-top:32px}
+.version-row{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.version-label{width:48px;font-size:13px;font-weight:600;color:var(--text-secondary);text-align:right;flex-shrink:0}
+.version-bar-wrap{flex:1;background:var(--bg);border-radius:8px;height:32px;position:relative;overflow:hidden}
+.version-bar{height:100%;border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:12px;font-weight:700;color:var(--white);transition:width 1s ease-out}
+.version-bar.v2{background:rgba(0,0,0,0.12);color:var(--text);width:67%}
+.version-bar.v6{background:rgba(0,0,0,0.15);color:var(--text);width:85%}
+.version-bar.v7{background:rgba(0,0,0,0.18);color:var(--text);width:88%}
+.version-bar.v9{background:linear-gradient(135deg,var(--green),#2dd4bf);width:100%}
+.version-pct{margin-left:auto;font-size:13px;font-weight:700;color:var(--text-secondary);flex-shrink:0;width:52px}
 
 /* Migration */
-.migration-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.migration-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
 .migration-card{border-radius:var(--radius);overflow:hidden}
-.migration-card .card-header{padding:14px 20px;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em}
+.migration-card .card-header{padding:12px 20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em}
 .migration-card .card-header.old{background:rgba(255,59,48,0.06);color:var(--red)}
 .migration-card .card-header.new{background:var(--green-light);color:var(--green)}
-.migration-card pre{padding:20px;font-family:var(--mono);font-size:13px;line-height:1.7;overflow-x:auto;background:var(--white);margin:0;border:1px solid var(--card-border);border-top:none;border-radius:0 0 var(--radius) var(--radius)}
+.migration-card pre{padding:16px;font-family:var(--mono);font-size:12px;line-height:1.65;overflow-x:auto;background:var(--white);margin:0;border:1px solid var(--card-border);border-top:none;border-radius:0 0 var(--radius) var(--radius)}
 .migration-card pre code{color:var(--text)}
-.migration-section{margin-bottom:60px}
-.migration-section h3{font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:20px}
-
-/* Benchmarks */
-.bench-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
-.bench-card{background:var(--white);border:1px solid var(--card-border);border-radius:var(--radius);padding:32px;text-align:center}
-.bench-card .bench-label{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);margin-bottom:16px}
-.bench-card .bench-value{font-size:48px;font-weight:700;letter-spacing:-0.04em;color:var(--green);line-height:1}
-.bench-card .bench-unit{font-size:14px;color:var(--text-secondary);margin-top:6px}
-.bench-card .bench-compare{font-size:13px;color:var(--text-tertiary);margin-top:12px}
-.bench-mini{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
-.bench-mini-item{font-size:12px;padding:4px 10px;border-radius:6px;background:var(--bg);color:var(--text-secondary)}
+.migration-section{margin-bottom:48px}
+.migration-section h3{font-size:20px;font-weight:700;letter-spacing:-0.02em;margin-bottom:16px}
 
 /* CTA banner */
-.cta-banner{text-align:center;padding:60px 40px;background:var(--white);border:1px solid var(--card-border);border-radius:var(--radius);margin-top:40px}
-.cta-banner h3{font-size:28px;font-weight:700;letter-spacing:-0.03em;margin-bottom:8px}
-.cta-banner p{font-size:16px;color:var(--text-secondary);margin-bottom:24px}
+.cta-banner{text-align:center;padding:48px 32px;background:var(--white);border:1px solid var(--card-border);border-radius:var(--radius);margin-top:32px}
+.cta-banner h3{font-size:26px;font-weight:700;letter-spacing:-0.03em;margin-bottom:8px}
+.cta-banner p{font-size:15px;color:var(--text-secondary);margin-bottom:20px}
 .cta-banner .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
 /* Inline CTA */
-.inline-cta{display:flex;align-items:center;justify-content:center;gap:16px;padding:24px 0;margin-top:32px;flex-wrap:wrap}
+.inline-cta{display:flex;align-items:center;justify-content:center;gap:16px;padding:20px 0;margin-top:24px;flex-wrap:wrap}
 
 /* Footer */
-footer{padding:40px 0;text-align:center;font-size:13px;color:var(--text-tertiary);border-top:1px solid var(--card-border)}
+footer{padding:32px 0;text-align:center;font-size:13px;color:var(--text-tertiary);border-top:1px solid var(--card-border)}
 footer a{color:var(--accent);text-decoration:none}
 
 /* Responsive */
 @media(max-width:768px){
   .migration-grid{grid-template-columns:1fr}
-  .bench-grid{grid-template-columns:1fr}
-  .tab-bar{flex-direction:column;align-items:stretch}
-  .tab-btn{text-align:center}
-  .price-row{flex-direction:column;align-items:flex-start;gap:4px}
-  .price-label{width:auto;text-align:left}
+  .bench-grid{grid-template-columns:1fr 1fr}
+  .tab-bar{max-width:100%}
   .nav-links{gap:16px}
   .compare-table{font-size:13px}
   .compare-table th,.compare-table td{padding:10px 12px}
+  .version-row{gap:10px}
+  .version-label{width:36px;font-size:12px}
+}
+@media(max-width:480px){
+  .bench-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
 }
 
-/* Keyword-targeted h2 visibility classes */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 </style>
 </head>
@@ -259,251 +244,193 @@ footer a{color:var(--accent);text-decoration:none}
 <!-- Hero -->
 <section class="hero">
   <div class="container">
-    <div class="hero-badge">2026 Comparison</div>
+    <div class="hero-badge">92.2% LoCoMo Benchmark</div>
     <h1>AI Memory API <em>Comparison</em></h1>
-    <p>See how Smara stacks up against Mem0, Zep, Letta, and agentmemory. Spoiler: you can save up to 96% on your memory API bill.</p>
+    <p>Smara is the only open-source memory API that scores above 90% on the LoCoMo benchmark. MIT licensed, self-hostable, and free.</p>
   </div>
 </section>
 
-<!-- Interactive Comparison Matrix -->
-<section id="compare">
+<!-- Feature Comparison — one competitor per tab -->
+<section id="compare" style="padding-top:0">
   <div class="container">
     <h2 class="text-center">Feature-by-feature breakdown</h2>
-    <p class="section-sub">Click a tab to see a detailed head-to-head, or view all five providers side by side.</p>
+    <p class="section-sub">Click a tab to see how Smara compares head-to-head with each competitor.</p>
 
     <div class="tab-bar" role="tablist">
-      <button class="tab-btn active" data-tab="all" role="tab" aria-selected="true">All compared</button>
-      <button class="tab-btn" data-tab="mem0" role="tab" aria-selected="false">Smara vs Mem0</button>
-      <button class="tab-btn" data-tab="zep" role="tab" aria-selected="false">Smara vs Zep</button>
-      <button class="tab-btn" data-tab="letta" role="tab" aria-selected="false">Smara vs Letta</button>
-      <button class="tab-btn" data-tab="agent" role="tab" aria-selected="false">Smara vs agentmemory</button>
-    </div>
-
-    <!-- All compared -->
-    <div class="tab-content active" id="tab-all">
-      <div class="card" style="overflow-x:auto">
-        <table class="compare-table">
-          <thead>
-            <tr>
-              <th>Feature</th>
-              <th class="smara-col">Smara</th>
-              <th class="comp-col">Mem0</th>
-              <th class="comp-col">Zep</th>
-              <th class="comp-col">Letta</th>
-              <th class="comp-col">agentmemory</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Starting price</td><td class="smara-val">$19/mo</td><td class="comp-val">$249/mo</td><td class="comp-val">$475/mo</td><td class="comp-val">$200/mo</td><td class="comp-val">Free (OSS only)</td></tr>
-            <tr><td>Free tier</td><td class="smara-val"><span class="check">Yes</span> (100 memories)</td><td class="comp-val"><span class="check">Yes</span> (1K memories)</td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="check">Yes</span> (limited)</td><td class="comp-val"><span class="check">Yes</span></td></tr>
-            <tr><td>Semantic search (vector)</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span></td></tr>
-            <tr><td>Memory decay (Ebbinghaus)</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Contradiction detection</td><td class="smara-val"><span class="check">Yes</span> (auto)</td><td class="comp-val"><span class="partial">Partial</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Knowledge graph</td><td class="smara-val"><span class="check">Yes</span> (PG CTEs)</td><td class="comp-val"><span class="check">Yes</span> (Neo4j)</td><td class="comp-val"><span class="partial">Partial</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Graph traversal API</td><td class="smara-val"><span class="check">Yes</span> (recursive)</td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Multi-agent (scoped)</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span></td><td class="comp-val"><span class="partial">Partial</span></td><td class="comp-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Agent skills system</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>MCP native</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Team / org memory</td><td class="smara-val"><span class="check">Yes</span> (RBAC)</td><td class="comp-val"><span class="partial">Org only</span></td><td class="comp-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Namespace support</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Self-hostable</td><td class="smara-val"><span class="check">Yes</span> (Docker)</td><td class="comp-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span></td></tr>
-            <tr><td>LLM context endpoint</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Stripe billing built-in</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-          </tbody>
-        </table>
-      </div>
+      <button class="tab-btn active" data-tab="mem0" role="tab" aria-selected="true">vs Mem0</button>
+      <button class="tab-btn" data-tab="zep" role="tab" aria-selected="false">vs Zep</button>
+      <button class="tab-btn" data-tab="letta" role="tab" aria-selected="false">vs Letta</button>
+      <button class="tab-btn" data-tab="agent" role="tab" aria-selected="false">vs agentmemory</button>
     </div>
 
     <!-- Smara vs Mem0 -->
-    <div class="tab-content" id="tab-mem0">
+    <div class="tab-content active" id="tab-mem0">
       <h2 class="sr-only">Smara vs Mem0</h2>
-      <div class="card" style="overflow-x:auto">
+      <div class="card">
         <table class="compare-table">
           <thead><tr><th>Feature</th><th class="smara-col">Smara</th><th class="comp-col">Mem0</th></tr></thead>
           <tbody>
-            <tr><td>Starting price (paid)</td><td class="smara-val">$19/mo</td><td class="comp-val">$249/mo</td></tr>
-            <tr><td>Free tier</td><td class="smara-val"><span class="check">Yes</span> (100 memories)</td><td class="comp-val"><span class="check">Yes</span> (1K memories)</td></tr>
+            <tr><td>License</td><td class="smara-val"><span class="check">MIT</span> (open source)</td><td class="comp-val">Proprietary</td></tr>
+            <tr><td>Price</td><td class="smara-val"><span class="check">Free</span> (self-host or hosted)</td><td class="comp-val">$249/mo (Pro)</td></tr>
+            <tr><td>LoCoMo benchmark</td><td class="smara-val"><span class="check">92.2%</span></td><td class="comp-val">Not published</td></tr>
             <tr><td>Semantic search</td><td class="smara-val"><span class="check">Yes</span> (Voyage AI)</td><td class="comp-val"><span class="check">Yes</span> (OpenAI)</td></tr>
-            <tr><td>Memory decay (Ebbinghaus)</td><td class="smara-val"><span class="check">Yes</span> &mdash; importance-weighted</td><td class="comp-val"><span class="cross">No</span> &mdash; flat retrieval</td></tr>
-            <tr><td>Contradiction detection</td><td class="smara-val"><span class="check">Yes</span> (cosine band 0.94-0.985)</td><td class="comp-val"><span class="partial">Partial</span> (LLM-based)</td></tr>
-            <tr><td>Deduplication</td><td class="smara-val"><span class="check">Yes</span> (cosine >= 0.985)</td><td class="comp-val"><span class="check">Yes</span></td></tr>
-            <tr><td>Knowledge graph</td><td class="smara-val"><span class="check">Yes</span> (PostgreSQL recursive CTEs)</td><td class="comp-val"><span class="check">Yes</span> (Neo4j dependency)</td></tr>
-            <tr><td>Graph traversal depth</td><td class="smara-val">Up to 5 hops, bidirectional</td><td class="comp-val">No traversal API</td></tr>
-            <tr><td>Multi-agent scoping</td><td class="smara-val"><span class="check">Yes</span> (agent CRUD + scoped memories)</td><td class="comp-val"><span class="check">Yes</span> (agent_id param)</td></tr>
-            <tr><td>Agent skills system</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Hybrid search (BM25)</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Memory decay (Ebbinghaus)</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Contradiction detection</td><td class="smara-val"><span class="check">Yes</span> (cosine-based)</td><td class="comp-val"><span class="partial">Partial</span> (LLM-based)</td></tr>
+            <tr><td>Knowledge graph</td><td class="smara-val"><span class="check">Yes</span> (PostgreSQL CTEs)</td><td class="comp-val"><span class="check">Yes</span> (Neo4j)</td></tr>
+            <tr><td>Graph traversal API</td><td class="smara-val"><span class="check">Yes</span> (5-hop recursive)</td><td class="comp-val"><span class="cross">No</span></td></tr>
             <tr><td>MCP server</td><td class="smara-val"><span class="check">Yes</span> (npm package)</td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Team memory (RBAC)</td><td class="smara-val"><span class="check">Yes</span> (admin/member/read_only)</td><td class="comp-val"><span class="partial">Org-level only</span></td></tr>
-            <tr><td>Invitations system</td><td class="smara-val"><span class="check">Yes</span> (email + token)</td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Namespace isolation</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>LLM context endpoint</td><td class="smara-val"><span class="check">Yes</span> (/v1/users/:id/context)</td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Multi-agent scoping</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span></td></tr>
+            <tr><td>Team memory (RBAC)</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="partial">Org-level only</span></td></tr>
             <tr><td>Self-hostable</td><td class="smara-val"><span class="check">Yes</span> (Docker, no Neo4j)</td><td class="comp-val"><span class="check">Yes</span> (requires Neo4j)</td></tr>
-            <tr><td>Database requirement</td><td class="smara-val">PostgreSQL only</td><td class="comp-val">PostgreSQL + Neo4j</td></tr>
+            <tr><td>Database</td><td class="smara-val">PostgreSQL only</td><td class="comp-val">PostgreSQL + Neo4j</td></tr>
           </tbody>
         </table>
       </div>
       <div class="inline-cta">
-        <span style="font-size:15px;color:var(--text-secondary)">Smara is 92% cheaper than Mem0 Pro.</span>
-        <a href="/#pricing" class="btn-primary btn-sm">Start free</a>
+        <span style="font-size:14px;color:var(--text-secondary)">Smara is open source. Mem0 Pro costs $249/mo.</span>
+        <a href="https://github.com/smara-io/smara" class="btn-primary btn-sm" target="_blank" rel="noopener">Star on GitHub</a>
       </div>
     </div>
 
     <!-- Smara vs Zep -->
     <div class="tab-content" id="tab-zep">
       <h2 class="sr-only">Smara vs Zep</h2>
-      <div class="card" style="overflow-x:auto">
+      <div class="card">
         <table class="compare-table">
           <thead><tr><th>Feature</th><th class="smara-col">Smara</th><th class="comp-col">Zep</th></tr></thead>
           <tbody>
-            <tr><td>Starting price</td><td class="smara-val">$19/mo</td><td class="comp-val">$475/mo (Flex+)</td></tr>
-            <tr><td>Free tier</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>License</td><td class="smara-val"><span class="check">MIT</span> (open source)</td><td class="comp-val">Proprietary</td></tr>
+            <tr><td>Price</td><td class="smara-val"><span class="check">Free</span></td><td class="comp-val">$475/mo (Flex+)</td></tr>
+            <tr><td>LoCoMo benchmark</td><td class="smara-val"><span class="check">92.2%</span></td><td class="comp-val">Not published</td></tr>
             <tr><td>Semantic search</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span></td></tr>
+            <tr><td>Hybrid search (BM25)</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
             <tr><td>Memory decay (Ebbinghaus)</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Contradiction detection</td><td class="smara-val"><span class="check">Yes</span> (automatic, cosine-based)</td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Knowledge graph</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="partial">Partial</span> (entity extraction)</td></tr>
-            <tr><td>Multi-agent support</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="partial">Session-based</span></td></tr>
+            <tr><td>Contradiction detection</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Knowledge graph</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="partial">Partial</span></td></tr>
             <tr><td>MCP native</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Multi-agent support</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="partial">Session-based</span></td></tr>
             <tr><td>Team memory</td><td class="smara-val"><span class="check">Yes</span> (RBAC)</td><td class="comp-val"><span class="check">Yes</span></td></tr>
-            <tr><td>Namespace support</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span> (collections)</td></tr>
-            <tr><td>Self-hostable</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span> (cloud only)</td></tr>
-            <tr><td>LLM context endpoint</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Conversation history</td><td class="smara-val"><span class="cross">No</span> (fact-based)</td><td class="comp-val"><span class="check">Yes</span></td></tr>
+            <tr><td>Self-hostable</td><td class="smara-val"><span class="check">Yes</span> (Docker)</td><td class="comp-val"><span class="cross">No</span> (cloud only)</td></tr>
           </tbody>
         </table>
       </div>
       <div class="inline-cta">
-        <span style="font-size:15px;color:var(--text-secondary)">Smara is 96% cheaper than Zep Flex+.</span>
-        <a href="/#pricing" class="btn-primary btn-sm">Start free</a>
+        <span style="font-size:14px;color:var(--text-secondary)">Smara is open source. Zep Flex+ costs $475/mo.</span>
+        <a href="https://github.com/smara-io/smara" class="btn-primary btn-sm" target="_blank" rel="noopener">Star on GitHub</a>
       </div>
     </div>
 
     <!-- Smara vs Letta -->
     <div class="tab-content" id="tab-letta">
       <h2 class="sr-only">Smara vs Letta</h2>
-      <div class="card" style="overflow-x:auto">
+      <div class="card">
         <table class="compare-table">
           <thead><tr><th>Feature</th><th class="smara-col">Smara</th><th class="comp-col">Letta</th></tr></thead>
           <tbody>
-            <tr><td>Starting price</td><td class="smara-val">$19/mo</td><td class="comp-val">$200/mo (Max)</td></tr>
-            <tr><td>Free tier</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span> (limited)</td></tr>
-            <tr><td>Focus</td><td class="smara-val">Memory API</td><td class="comp-val">Full agent framework</td></tr>
+            <tr><td>License</td><td class="smara-val"><span class="check">MIT</span></td><td class="comp-val">Apache 2.0 (partial)</td></tr>
+            <tr><td>Price (hosted)</td><td class="smara-val"><span class="check">Free</span></td><td class="comp-val">$200/mo (Max)</td></tr>
+            <tr><td>LoCoMo benchmark</td><td class="smara-val"><span class="check">92.2%</span></td><td class="comp-val">Not published</td></tr>
+            <tr><td>Focus</td><td class="smara-val">Memory API</td><td class="comp-val">Agent framework</td></tr>
             <tr><td>Semantic search</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span></td></tr>
-            <tr><td>Memory decay (Ebbinghaus)</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Hybrid search (BM25)</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Memory decay</td><td class="smara-val"><span class="check">Yes</span> (Ebbinghaus)</td><td class="comp-val"><span class="cross">No</span></td></tr>
             <tr><td>Contradiction detection</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
             <tr><td>Knowledge graph</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Multi-agent support</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span></td></tr>
             <tr><td>MCP native</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Team memory</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
             <tr><td>Self-hostable</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="check">Yes</span></td></tr>
-            <tr><td>Vendor lock-in</td><td class="smara-val">None (REST API)</td><td class="comp-val">High (agent framework)</td></tr>
-            <tr><td>LLM context endpoint</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Vendor lock-in</td><td class="smara-val">None (REST API)</td><td class="comp-val">High (framework)</td></tr>
           </tbody>
         </table>
       </div>
       <div class="inline-cta">
-        <span style="font-size:15px;color:var(--text-secondary)">Smara is 90% cheaper than Letta Max.</span>
-        <a href="/#pricing" class="btn-primary btn-sm">Start free</a>
+        <span style="font-size:14px;color:var(--text-secondary)">Smara is a standalone memory API. Letta is a full agent framework.</span>
+        <a href="https://github.com/smara-io/smara" class="btn-primary btn-sm" target="_blank" rel="noopener">Star on GitHub</a>
       </div>
     </div>
 
     <!-- Smara vs agentmemory -->
     <div class="tab-content" id="tab-agent">
       <h2 class="sr-only">Smara vs agentmemory</h2>
-      <div class="card" style="overflow-x:auto">
+      <div class="card">
         <table class="compare-table">
           <thead><tr><th>Feature</th><th class="smara-col">Smara</th><th class="comp-col">agentmemory</th></tr></thead>
           <tbody>
-            <tr><td>Hosted service</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span> (library only)</td></tr>
-            <tr><td>Price</td><td class="smara-val">$19/mo (free tier)</td><td class="comp-val">Free (self-host)</td></tr>
-            <tr><td>Semantic search</td><td class="smara-val"><span class="check">Yes</span> (1024-dim Voyage)</td><td class="comp-val"><span class="check">Yes</span> (local embeddings)</td></tr>
-            <tr><td>Memory decay</td><td class="smara-val"><span class="check">Yes</span> (Ebbinghaus)</td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Contradiction detection</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>License</td><td class="smara-val"><span class="check">MIT</span></td><td class="comp-val">MIT</td></tr>
+            <tr><td>Hosted service</td><td class="smara-val"><span class="check">Yes</span> (free)</td><td class="comp-val"><span class="cross">No</span> (library only)</td></tr>
+            <tr><td>LoCoMo benchmark</td><td class="smara-val"><span class="check">92.2%</span></td><td class="comp-val">Not published</td></tr>
+            <tr><td>Semantic search</td><td class="smara-val"><span class="check">Yes</span> (1024-dim Voyage)</td><td class="comp-val"><span class="check">Yes</span> (local)</td></tr>
+            <tr><td>Hybrid search (BM25)</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Memory decay</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
             <tr><td>Knowledge graph</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Multi-agent</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
             <tr><td>MCP native</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
-            <tr><td>Team/org support</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Multi-agent</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
             <tr><td>REST API</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span> (Python only)</td></tr>
-            <tr><td>Production-ready</td><td class="smara-val"><span class="check">Yes</span> (Stripe, RBAC, limits)</td><td class="comp-val"><span class="cross">No</span> (prototype-grade)</td></tr>
             <tr><td>Auth / API keys</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
+            <tr><td>Production-ready</td><td class="smara-val"><span class="check">Yes</span></td><td class="comp-val"><span class="cross">No</span></td></tr>
           </tbody>
         </table>
       </div>
       <div class="inline-cta">
-        <span style="font-size:15px;color:var(--text-secondary)">agentmemory is free but lacks production features. Smara gives you both.</span>
-        <a href="/#pricing" class="btn-primary btn-sm">Start free</a>
+        <span style="font-size:14px;color:var(--text-secondary)">Both are open source. Smara adds production features, hosted API, and MCP.</span>
+        <a href="https://github.com/smara-io/smara" class="btn-primary btn-sm" target="_blank" rel="noopener">Star on GitHub</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Pricing Comparison -->
-<section id="pricing-compare" style="padding-top:0">
+<!-- LoCoMo Benchmark -->
+<section id="benchmark">
   <div class="container">
-    <h2 class="text-center">Monthly cost comparison</h2>
-    <p class="section-sub">Lowest paid tier for each provider. Smara Developer includes 10K memories, 5 agents, team support, and graph memory.</p>
-
-    <div class="pricing-bars">
-      <div class="price-row">
-        <div class="price-label">Zep Flex+</div>
-        <div class="price-bar-wrap"><div class="price-bar zep">$475/mo</div></div>
-      </div>
-      <div class="price-row">
-        <div class="price-label">Mem0 Pro</div>
-        <div class="price-bar-wrap"><div class="price-bar mem0">$249/mo</div></div>
-      </div>
-      <div class="price-row">
-        <div class="price-label">Letta Max</div>
-        <div class="price-bar-wrap"><div class="price-bar letta">$200/mo</div></div>
-      </div>
-      <div class="price-row">
-        <div class="price-label" style="font-weight:700;color:var(--green)">Smara Dev</div>
-        <div class="price-bar-wrap"><div class="price-bar smara">$19/mo</div></div>
-      </div>
-      <div class="price-row">
-        <div class="price-label">agentmemory</div>
-        <div class="price-bar-wrap"><div class="price-bar agent">$0 (no hosted)</div></div>
-      </div>
-    </div>
-
-    <div class="save-callout">
-      <div class="save-badge">Save up to 96% vs Zep</div>
-    </div>
-  </div>
-</section>
-
-<!-- Benchmarks -->
-<section id="benchmarks">
-  <div class="container">
-    <h2 class="text-center">Performance benchmarks</h2>
-    <p class="section-sub">Measured on 10K-memory tenants with production workloads. Smara runs on PostgreSQL with pgvector and IVFFlat indexing.</p>
+    <h2 class="text-center">92.2% on the LoCoMo benchmark</h2>
+    <p class="section-sub">1,420 out of 1,540 questions correct across 10 long conversations. The only open-source memory API to publish benchmark results.</p>
 
     <div class="bench-grid">
       <div class="bench-card">
-        <div class="bench-label">P95 Search Latency</div>
-        <div class="bench-value">45</div>
-        <div class="bench-unit">milliseconds</div>
-        <div class="bench-mini">
-          <span class="bench-mini-item">Mem0: ~120ms</span>
-          <span class="bench-mini-item">Zep: ~85ms</span>
-          <span class="bench-mini-item">Letta: ~150ms</span>
-        </div>
+        <div class="bench-label">Single-hop</div>
+        <div class="bench-value">90.4%</div>
+        <div class="bench-unit">direct fact recall</div>
       </div>
       <div class="bench-card">
-        <div class="bench-label">Recall Accuracy (with decay)</div>
-        <div class="bench-value">94%</div>
-        <div class="bench-unit">relevant memories in top-5</div>
-        <div class="bench-mini">
-          <span class="bench-mini-item">Flat retrieval: ~78%</span>
-          <span class="bench-mini-item">+16% from Ebbinghaus</span>
-        </div>
+        <div class="bench-label">Multi-hop</div>
+        <div class="bench-value">92.8%</div>
+        <div class="bench-unit">cross-reference reasoning</div>
       </div>
       <div class="bench-card">
-        <div class="bench-label">Cost per 10K operations</div>
-        <div class="bench-value">$0.04</div>
-        <div class="bench-unit">store + search combined</div>
-        <div class="bench-mini">
-          <span class="bench-mini-item">Mem0: ~$0.50</span>
-          <span class="bench-mini-item">Zep: ~$0.95</span>
-        </div>
+        <div class="bench-label">Temporal</div>
+        <div class="bench-value">78.1%</div>
+        <div class="bench-unit">time-based queries</div>
+      </div>
+      <div class="bench-card">
+        <div class="bench-label">Open-domain</div>
+        <div class="bench-value">94.2%</div>
+        <div class="bench-unit">general knowledge</div>
+      </div>
+    </div>
+
+    <h3 class="text-center" style="margin-top:48px;margin-bottom:8px;font-size:20px;">Score progression across 9 versions</h3>
+    <p class="section-sub" style="margin-bottom:24px">Each jump came from a specific architectural insight.</p>
+
+    <div class="version-progress" style="max-width:640px;margin:0 auto">
+      <div class="version-row">
+        <div class="version-label">v2</div>
+        <div class="version-bar-wrap"><div class="version-bar v2">Vector search only</div></div>
+        <div class="version-pct">62.3%</div>
+      </div>
+      <div class="version-row">
+        <div class="version-label">v6</div>
+        <div class="version-bar-wrap"><div class="version-bar v6">+ Hybrid BM25</div></div>
+        <div class="version-pct">78.6%</div>
+      </div>
+      <div class="version-row">
+        <div class="version-label">v7</div>
+        <div class="version-bar-wrap"><div class="version-bar v7">+ Retrieval tuning</div></div>
+        <div class="version-pct">81.0%</div>
+      </div>
+      <div class="version-row">
+        <div class="version-label">v9</div>
+        <div class="version-bar-wrap"><div class="version-bar v9">+ Query decomposition</div></div>
+        <div class="version-pct">92.2%</div>
       </div>
     </div>
   </div>
@@ -591,7 +518,7 @@ results = client.memory.search(
 API = "https://api.smara.io/v1"
 H = {"Authorization": "Bearer smara_..."}
 
-# Store (extracted fact, not raw messages)
+# Store
 requests.post(f"{API}/memories", json={
   "user_id": "session-123",
   "fact": "User loves hiking",
@@ -608,73 +535,12 @@ r = requests.get(f"{API}/memories/search",
       </div>
     </div>
 
-    <div class="migration-section">
-      <h3>Migrate from Letta</h3>
-      <div class="migration-grid">
-        <div class="migration-card">
-          <div class="card-header old">Before (Letta)</div>
-          <pre><code>from letta import create_client
-
-client = create_client()
-
-agent = client.create_agent(
-  name="my-agent",
-  memory=ChatMemory(
-    human="User is Alice",
-    persona="Helpful assistant"
-  )
-)
-
-# Send message (memory is implicit)
-response = client.send_message(
-  agent_id=agent.id,
-  message="Remember I like tea"
-)</code></pre>
-        </div>
-        <div class="migration-card">
-          <div class="card-header new">After (Smara)</div>
-          <pre><code>import requests
-
-API = "https://api.smara.io/v1"
-H = {"Authorization": "Bearer smara_..."}
-
-# Create agent
-agent = requests.post(f"{API}/agents",
-  json={"name": "my-agent",
-    "owner_id": "me",
-    "system_prompt": "Helpful assistant"},
-  headers=H).json()
-
-# Store scoped memory
-requests.post(
-  f"{API}/agents/{agent['id']}/memories",
-  json={"user_id": "alice",
-    "fact": "User likes tea"},
-  headers=H)</code></pre>
-        </div>
-      </div>
-    </div>
-
     <div class="cta-banner">
-      <h3>Ready to switch?</h3>
-      <p>Start with 100 free memories. No credit card required.</p>
+      <h3>Ready to try Smara?</h3>
+      <p>Open source, MIT licensed. Self-host with Docker or use the free hosted API.</p>
       <div class="btn-row">
-        <a href="/#pricing" class="btn-primary">Start free</a>
-        <a href="/calculator.html" class="btn-secondary">Try the calculator</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Final CTA -->
-<section style="padding-bottom:100px">
-  <div class="container">
-    <div class="cta-banner" style="background:linear-gradient(135deg,rgba(99,102,241,0.04),rgba(52,199,89,0.04));border-color:rgba(99,102,241,0.12)">
-      <h3>The best AI memory API doesn't have to be the most expensive</h3>
-      <p>Ebbinghaus decay. Graph memory. Contradiction detection. MCP native. Teams. From $19/mo.</p>
-      <div class="btn-row">
-        <a href="/#pricing" class="btn-primary">Start free</a>
-        <a href="/docs" class="btn-secondary">Read the docs</a>
+        <a href="https://github.com/smara-io/smara" class="btn-primary" target="_blank" rel="noopener">Star on GitHub</a>
+        <a href="/#signup" class="btn-secondary">Get free API key</a>
       </div>
     </div>
   </div>
@@ -682,12 +548,11 @@ requests.post(
 
 <footer>
   <div class="container">
-    <p>&copy; 2026 Smara. <a href="/">Home</a> &middot; <a href="/docs">Docs</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="/pricing">Pricing</a> &middot; <a href="/compare">Compare</a> &middot; <a href="/changelog">Changelog</a> &middot; <a href="/playground">Playground</a> &middot; <a href="/status">Status</a> &middot; <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener">GitHub</a></p>
+    <p>&copy; 2026 Smara. <a href="/">Home</a> &middot; <a href="/docs">Docs</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="/compare">Compare</a> &middot; <a href="/changelog">Changelog</a> &middot; <a href="/playground">Playground</a> &middot; <a href="/status">Status</a> &middot; <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener">GitHub</a></p>
   </div>
 </footer>
 
 <script>
-// Tab switching
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => {
@@ -701,23 +566,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// Animate pricing bars on scroll
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.querySelectorAll('.price-bar').forEach(bar => {
-        bar.style.transition = 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-      });
-    }
-  });
-}, { threshold: 0.3 });
-
-const pricingSection = document.getElementById('pricing-compare');
-if (pricingSection) observer.observe(pricingSection);
-
-// Deep-link tab from URL hash
 const hash = window.location.hash.replace('#', '');
-if (['mem0', 'zep', 'letta', 'agent', 'all'].includes(hash)) {
+if (['mem0', 'zep', 'letta', 'agent'].includes(hash)) {
   document.querySelector(`.tab-btn[data-tab="${hash}"]`)?.click();
 }
 </script>

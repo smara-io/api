@@ -205,4 +205,4 @@ Smara implements this as a core primitive, not a plugin or post-processing step.
 
 ---
 
-*Try Smara free at [smara.io](https://smara.io) --- see decay scoring in action with your first 100 memories.*
+*Try Smara free at [smara.io](https://smara.io) --- see decay scoring in action with your first 10,000 memories.*

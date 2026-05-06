@@ -486,4 +486,4 @@ When you detect that two facts are related (same project, same topic, cause-and-
 
 ---
 
-*Start building agents with persistent memory at [smara.io](https://smara.io). Free tier includes 100 memories and 1 agent --- enough to prototype and prove the concept.*
+*Start building agents with persistent memory at [smara.io](https://smara.io). Free tier includes 10,000 memories and 1 agent --- enough to prototype and prove the concept.*
