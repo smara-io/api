@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Changelog &amp; Roadmap &mdash; Smara</title>
+<meta name="description" content="See what's new in Smara and what's coming next. Changelog, release notes, and public roadmap for the persistent memory layer for AI tools.">
+<meta name="keywords" content="Smara changelog, Smara roadmap, AI memory updates, MCP server releases, Smara features">
+<meta name="author" content="Smara">
+<meta name="theme-color" content="#f8f9fc">
+<link rel="canonical" href="https://smara.io/changelog">
+<meta property="og:title" content="Changelog & Roadmap — Smara">
+<meta property="og:description" content="See what's new in Smara and what's coming next. Public changelog and roadmap.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://smara.io/changelog">
+<meta property="og:site_name" content="Smara">
+<meta property="og:image" content="https://smara.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@SmaraMemo">
+<meta name="twitter:title" content="Changelog & Roadmap — Smara">
+<meta name="twitter:description" content="See what's new in Smara and what's coming next. Public changelog and roadmap.">
+<meta name="twitter:image" content="https://smara.io/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f9fc;
+    --bg-card: rgba(255,255,255,0.72);
+    --bg-glass: rgba(255,255,255,0.55);
+    --bg-code: #f5f5f7;
+    --bg-dark: #1d1d1f;
+    --text: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #aeaeb2;
+    --border: rgba(0,0,0,0.06);
+    --border-glass: rgba(255,255,255,0.6);
+    --accent: #0071e3;
+    --accent-light: #e8f2ff;
+    --accent-glow: rgba(0,113,227,0.15);
+    --green: #34c759;
+    --green-light: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-light: #fffbeb;
+    --purple: #a855f7;
+    --purple-light: #faf5ff;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  ::selection { background: var(--accent-light); }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,113,227,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(52,199,89,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 20% 80%, rgba(245,158,11,0.04) 0%, transparent 50%);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 56px;
+    background: rgba(248,249,252,0.72);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  }
+  .nav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px;
+    height: 100%; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-weight: 600; font-size: 15px; color: var(--text);
+    text-decoration: none; display: flex; align-items: center; gap: 8px;
+    letter-spacing: -0.02em;
+  }
+  .nav-logo .dot { color: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 24px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; color: var(--text-secondary); text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a.active { color: var(--accent); font-weight: 500; }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-cta {
+    font-size: 13px; font-weight: 500; color: #fff;
+    background: var(--accent); padding: 7px 16px; border-radius: 980px;
+    text-decoration: none; transition: all 0.2s;
+    box-shadow: 0 2px 8px var(--accent-glow);
+  }
+  .nav-cta:hover { box-shadow: 0 4px 16px rgba(0,113,227,0.25); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    padding: 140px 24px 80px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex; justify-content: center; gap: 8px;
+    margin-bottom: 48px;
+  }
+  .tab-btn {
+    font-family: var(--font);
+    font-size: 14px; font-weight: 500;
+    padding: 8px 20px; border-radius: 980px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(12px);
+  }
+  .tab-btn:hover { color: var(--text); border-color: rgba(0,0,0,0.12); }
+  .tab-btn.active {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+    box-shadow: 0 2px 8px var(--accent-glow);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 40px; }
+  .timeline::before {
+    content: '';
+    position: absolute; left: 15px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent) 0%, rgba(0,113,227,0.1) 100%);
+    border-radius: 2px;
+  }
+  .release {
+    position: relative;
+    margin-bottom: 48px;
+  }
+  .release:last-child { margin-bottom: 0; }
+  .release-dot {
+    position: absolute;
+    left: -33px; top: 6px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--accent), 0 2px 8px var(--accent-glow);
+  }
+  .release:not(:first-child) .release-dot {
+    background: var(--bg);
+    box-shadow: 0 0 0 2px var(--text-tertiary);
+  }
+  .release-header {
+    display: flex; align-items: baseline; gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .release-version {
+    font-family: var(--mono);
+    font-size: 18px; font-weight: 500;
+    color: var(--text);
+  }
+  .release-date {
+    font-size: 13px; color: var(--text-secondary);
+  }
+  .release-badge {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 2px 10px; border-radius: 980px;
+  }
+  .badge-current {
+    color: var(--green); border: 1px solid var(--green);
+    background: var(--green-light);
+  }
+  .release-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--border-glass);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+  }
+  .release-card ul {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .release-card li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; line-height: 1.6;
+    color: var(--text);
+  }
+  .release-card li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 6px; height: 6px;
+    margin-top: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .release-card li code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--bg-code);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* ROADMAP KANBAN */
+  .kanban {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .kanban-col {
+    min-width: 0;
+  }
+  .kanban-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 16px;
+    padding: 0 4px;
+  }
+  .kanban-header-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .kanban-header-dot.in-progress { background: var(--accent); }
+  .kanban-header-dot.planned { background: var(--orange); }
+  .kanban-header-dot.considering { background: var(--purple); }
+  .kanban-header h3 {
+    font-size: 13px; font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+  }
+  .kanban-header .count {
+    font-size: 11px; font-weight: 500;
+    background: var(--bg-code);
+    color: var(--text-tertiary);
+    padding: 1px 7px;
+    border-radius: 980px;
+  }
+  .kanban-cards {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .roadmap-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--border-glass);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s;
+  }
+  .roadmap-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    border-color: rgba(0,0,0,0.1);
+  }
+  .roadmap-card h4 {
+    font-size: 14px; font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .roadmap-card p {
+    font-size: 13px; line-height: 1.5;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+  .vote-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--font);
+    font-size: 12px; font-weight: 500;
+    color: var(--text-tertiary);
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 980px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .vote-btn:hover {
+    color: var(--accent);
+    border-color: rgba(0,113,227,0.3);
+    background: var(--accent-light);
+  }
+  .vote-btn.voted {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .vote-btn svg {
+    width: 12px; height: 12px;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: 28px; font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 64px 0;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 80px;
+  }
+  footer a { color: var(--text-secondary); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .kanban {
+      grid-template-columns: 1fr;
+    }
+    .timeline { padding-left: 32px; }
+    .timeline::before { left: 11px; }
+    .release-dot { left: -29px; }
+    .hero { padding: 120px 16px 60px; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-in {
+    opacity: 0;
+    animation: fadeUp 0.5s ease-out forwards;
+  }
+  .animate-in:nth-child(1) { animation-delay: 0.05s; }
+  .animate-in:nth-child(2) { animation-delay: 0.1s; }
+  .animate-in:nth-child(3) { animation-delay: 0.15s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">smara<span class="dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="/docs">Docs</a></li>
+      <li><a href="/playground">Playground</a></li>
+      <li><a href="/compare">Compare</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="/changelog" class="active">Changelog</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener" class="nav-github">GitHub</a>
+      <a href="/#signup" class="nav-cta">Get API key</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>What's <span class="accent">New</span> in Smara</h1>
+  <p>Changelog &amp; Roadmap</p>
+</section>
+
+<!-- TABS -->
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="changelog">Changelog</button>
+    <button class="tab-btn" data-tab="roadmap">Roadmap</button>
+  </div>
+
+  <!-- CHANGELOG TAB -->
+  <div class="tab-content active" id="tab-changelog">
+    <div class="timeline">
+
+      <!-- v1.2.0 -->
+      <div class="release animate-in">
+        <div class="release-dot"></div>
+        <div class="release-header">
+          <span class="release-version">v1.2.0</span>
+          <span class="release-date">April 2026</span>
+          <span class="release-badge badge-current">Current</span>
+        </div>
+        <div class="release-card">
+          <ul>
+            <li>Team collaboration: shared project memories with private preferences that stay personal</li>
+            <li>AI Agents: autonomous memory access with role-based permissions and custom skills</li>
+            <li>Billing integration: Stripe subscriptions for Free, Developer, and Pro tiers</li>
+            <li>Webhook notifications: Stripe to Telegram alerts for new customers and subscription events</li>
+            <li>Blog: 5 SEO-optimized articles published covering AI memory, Ebbinghaus decay, and comparisons</li>
+            <li>Interactive playground at <a href="/playground" style="color:var(--accent);text-decoration:none">smara.io/playground</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- v1.1.0 -->
+      <div class="release animate-in">
+        <div class="release-dot"></div>
+        <div class="release-header">
+          <span class="release-version">v1.1.0</span>
+          <span class="release-date">March 2026</span>
+        </div>
+        <div class="release-card">
+          <ul>
+            <li>Ebbinghaus decay scoring: <code>R = e^(-t/S)</code> formula for memory relevance over time</li>
+            <li>Source tagging: track which tool stored each memory for provenance</li>
+            <li>REST API alongside MCP protocol for direct integration</li>
+            <li>Comparison page vs Mem0, Letta, and Zep with feature-by-feature breakdown</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- v1.0.0 -->
+      <div class="release animate-in">
+        <div class="release-dot"></div>
+        <div class="release-header">
+          <span class="release-version">v1.0.0</span>
+          <span class="release-date">February 2026</span>
+        </div>
+        <div class="release-card">
+          <ul>
+            <li>Initial launch: MCP server for Claude Code with zero-config auto-memory capture</li>
+            <li>PostgreSQL + pgvector backend for scalable vector storage</li>
+            <li>Semantic search with Voyage AI embeddings for high-accuracy recall</li>
+            <li>Auto-memory capture: decisions and context saved without manual tagging</li>
+            <li>Free tier: 10,000 memories to get started</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ROADMAP TAB -->
+  <div class="tab-content" id="tab-roadmap">
+    <div class="kanban">
+
+      <!-- In Progress -->
+      <div class="kanban-col">
+        <div class="kanban-header">
+          <div class="kanban-header-dot in-progress"></div>
+          <h3>In Progress</h3>
+          <span class="count">3</span>
+        </div>
+        <div class="kanban-cards">
+          <div class="roadmap-card animate-in">
+            <h4>Slack Integration</h4>
+            <p>Connect Smara to Slack channels. Memories created from conversations, searchable from any MCP client.</p>
+            <button class="vote-btn" data-item="slack-integration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+          <div class="roadmap-card animate-in">
+            <h4>Memory Analytics Dashboard</h4>
+            <p>Visualize memory usage, decay curves, team activity, and storage trends over time.</p>
+            <button class="vote-btn" data-item="analytics-dashboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+          <div class="roadmap-card animate-in">
+            <h4>SDK for Python and JavaScript</h4>
+            <p>Native client libraries with typed interfaces, retry logic, and streaming support.</p>
+            <button class="vote-btn" data-item="sdk-python-js">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Planned -->
+      <div class="kanban-col">
+        <div class="kanban-header">
+          <div class="kanban-header-dot planned"></div>
+          <h3>Planned</h3>
+          <span class="count">5</span>
+        </div>
+        <div class="kanban-cards">
+          <div class="roadmap-card animate-in">
+            <h4>GitHub Copilot Integration</h4>
+            <p>Bring persistent memory to GitHub Copilot with a dedicated extension.</p>
+            <button class="vote-btn" data-item="github-copilot">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+          <div class="roadmap-card animate-in">
+            <h4>Memory Sharing Between Teams</h4>
+            <p>Share specific memories or collections across teams within an organization.</p>
+            <button class="vote-btn" data-item="memory-sharing">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+          <div class="roadmap-card animate-in">
+            <h4>Custom Decay Curves</h4>
+            <p>Configure your own forgetting curve parameters per project or memory type.</p>
+            <button class="vote-btn" data-item="custom-decay">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+          <div class="roadmap-card animate-in">
+            <h4>Self-Hosted Option</h4>
+            <p>Run Smara on your own infrastructure with a Docker image and Helm chart.</p>
+            <button class="vote-btn" data-item="self-hosted">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+          <div class="roadmap-card animate-in">
+            <h4>Webhooks API</h4>
+            <p>Subscribe to memory events: created, updated, decayed, deleted. Build custom workflows.</p>
+            <button class="vote-btn" data-item="webhooks-api">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Considering -->
+      <div class="kanban-col">
+        <div class="kanban-header">
+          <div class="kanban-header-dot considering"></div>
+          <h3>Considering</h3>
+          <span class="count">4</span>
+        </div>
+        <div class="kanban-cards">
+          <div class="roadmap-card animate-in">
+            <h4>VS Code Extension</h4>
+            <p>Browse, search, and manage memories directly in the VS Code sidebar.</p>
+            <button class="vote-btn" data-item="vscode-extension">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+          <div class="roadmap-card animate-in">
+            <h4>Memory Import / Export</h4>
+            <p>Bulk import from markdown, JSON, or CSV. Export your data anytime in standard formats.</p>
+            <button class="vote-btn" data-item="import-export">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+          <div class="roadmap-card animate-in">
+            <h4>GraphQL API</h4>
+            <p>Query memories with GraphQL for flexible, precise data fetching.</p>
+            <button class="vote-btn" data-item="graphql-api">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+          <div class="roadmap-card animate-in">
+            <h4>Mobile App</h4>
+            <p>View and search your AI memories on the go. Quick-capture from mobile.</p>
+            <button class="vote-btn" data-item="mobile-app">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span class="vote-count">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>&copy; 2026 Smara. <a href="/">Home</a> &middot; <a href="/docs">Docs</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="/pricing">Pricing</a> &middot; <a href="/compare">Compare</a> &middot; <a href="/changelog">Changelog</a> &middot; <a href="/playground">Playground</a> &middot; <a href="/status">Status</a> &middot; <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener">GitHub</a></p>
+</footer>
+
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Voting with localStorage
+  const STORAGE_KEY = 'smara_roadmap_votes';
+
+  function getVotes() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch { return {}; }
+  }
+
+  function saveVotes(votes) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+  }
+
+  function initVotes() {
+    const votes = getVotes();
+    document.querySelectorAll('.vote-btn').forEach(btn => {
+      const item = btn.dataset.item;
+      const count = votes[item]?.count || 0;
+      const voted = votes[item]?.voted || false;
+      btn.querySelector('.vote-count').textContent = count;
+      if (voted) btn.classList.add('voted');
+    });
+  }
+
+  document.querySelectorAll('.vote-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const votes = getVotes();
+      const item = btn.dataset.item;
+      if (!votes[item]) votes[item] = { count: 0, voted: false };
+
+      if (votes[item].voted) {
+        votes[item].count = Math.max(0, votes[item].count - 1);
+        votes[item].voted = false;
+        btn.classList.remove('voted');
+      } else {
+        votes[item].count += 1;
+        votes[item].voted = true;
+        btn.classList.add('voted');
+      }
+
+      btn.querySelector('.vote-count').textContent = votes[item].count;
+      saveVotes(votes);
+    });
+  });
+
+  initVotes();
+
+  // Intersection observer for animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.animate-in').forEach(el => {
+    el.style.animationPlayState = 'paused';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>

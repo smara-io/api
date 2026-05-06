@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smara API Docs &mdash; Persistent Memory for AI Tools</title>
+<meta name="description" content="Interactive API documentation for Smara — persistent memory for AI tools. REST endpoints for memories, search, teams, agents, graph, and billing.">
+<meta name="theme-color" content="#f8f9fc">
+<link rel="canonical" href="https://smara.io/docs">
+<meta property="og:title" content="Smara API Docs — Persistent Memory for AI Tools">
+<meta property="og:description" content="Interactive API documentation for Smara. REST endpoints for memories, search, teams, agents, graph, and billing.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://smara.io/docs">
+<meta property="og:site_name" content="Smara">
+<meta property="og:image" content="https://smara.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@SmaraMemo">
+<meta name="twitter:title" content="Smara API Docs — Persistent Memory for AI Tools">
+<meta name="twitter:description" content="Interactive REST API docs for memories, search, teams, agents, graph, and billing.">
+<meta name="twitter:image" content="https://smara.io/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle","name":"Smara API Documentation","description":"Interactive API documentation for Smara — persistent memory for AI tools.","url":"https://smara.io/docs","publisher":{"@type":"Organization","name":"Smara","url":"https://smara.io"}}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f8f9fc;
+  --bg-card: rgba(255,255,255,0.72);
+  --bg-glass: rgba(255,255,255,0.55);
+  --bg-code: #1d1d1f;
+  --bg-code-light: #f5f5f7;
+  --text: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #aeaeb2;
+  --border: rgba(0,0,0,0.06);
+  --accent: #0071e3;
+  --accent-light: #e8f2ff;
+  --green: #34c759;
+  --green-bg: rgba(52,199,89,0.1);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.1);
+  --orange: #f59e0b;
+  --orange-bg: rgba(245,158,11,0.1);
+  --blue: #0071e3;
+  --blue-bg: rgba(0,113,227,0.1);
+  --purple: #a855f7;
+  --purple-bg: rgba(168,85,247,0.1);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --sidebar-w: 280px;
+  --nav-h: 56px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent-light); }
+
+/* ─── TOP NAV ─── */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--nav-h);
+  background: rgba(248,249,252,0.72);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+}
+.top-nav-inner {
+  max-width: 100%; margin: 0 auto; padding: 0 24px;
+  height: 100%; display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-size: 18px; font-weight: 700; color: var(--text);
+  text-decoration: none; letter-spacing: -0.02em;
+}
+.nav-logo .dot { color: var(--accent); }
+.nav-links { display: flex; align-items: center; gap: 24px; list-style: none; }
+.nav-links a {
+  font-size: 13px; color: var(--text-secondary); text-decoration: none;
+  transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a.active { color: var(--accent); font-weight: 500; }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-github {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: color 0.15s;
+}
+.nav-github:hover { color: var(--text); }
+.nav-cta {
+  display: inline-flex; align-items: center; height: 32px; padding: 0 14px;
+  background: var(--accent); color: #fff; border-radius: 980px;
+  font-size: 13px; font-weight: 500; text-decoration: none;
+  transition: background 0.2s;
+}
+.nav-cta:hover { background: #005bb5; }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  position: fixed; top: var(--nav-h); left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: rgba(248,249,252,0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 20px 0;
+  z-index: 100;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 2px; }
+
+.sidebar-section { margin-bottom: 4px; }
+.sidebar-heading {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 20px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--text-tertiary);
+  cursor: pointer; user-select: none;
+  transition: color 0.15s;
+}
+.sidebar-heading:hover { color: var(--text-secondary); }
+.sidebar-heading .chevron {
+  font-size: 10px; transition: transform 0.2s;
+}
+.sidebar-heading.open .chevron { transform: rotate(90deg); }
+.sidebar-items {
+  overflow: hidden; max-height: 0;
+  transition: max-height 0.3s ease;
+}
+.sidebar-items.open { max-height: 600px; }
+.sidebar-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 20px 5px 28px;
+  font-size: 12.5px; color: var(--text-secondary);
+  text-decoration: none; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border-left: 2px solid transparent;
+}
+.sidebar-item:hover {
+  background: rgba(0,113,227,0.04);
+  color: var(--text);
+}
+.sidebar-item.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: rgba(0,113,227,0.06);
+  font-weight: 500;
+}
+.method-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 9px; font-weight: 500;
+  padding: 1px 5px; border-radius: 3px;
+  text-transform: uppercase; letter-spacing: 0.02em;
+  flex-shrink: 0; min-width: 36px; text-align: center;
+}
+.method-GET { background: var(--green-bg); color: var(--green); }
+.method-POST { background: var(--blue-bg); color: var(--blue); }
+.method-PATCH { background: var(--orange-bg); color: var(--orange); }
+.method-DELETE { background: var(--red-bg); color: var(--red); }
+
+/* ─── MAIN CONTENT ─── */
+.main {
+  margin-left: var(--sidebar-w);
+  margin-top: var(--nav-h);
+  padding: 40px 48px 80px;
+  max-width: 920px;
+}
+
+/* ─── GETTING STARTED ─── */
+.hero-section {
+  margin-bottom: 56px;
+}
+.hero-section h1 {
+  font-size: 32px; font-weight: 700; letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+.hero-section .subtitle {
+  font-size: 15px; color: var(--text-secondary); margin-bottom: 24px;
+}
+.info-row {
+  display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.info-card {
+  flex: 1; min-width: 200px;
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.info-card .label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 4px;
+}
+.info-card .value {
+  font-family: var(--mono); font-size: 13px; color: var(--text);
+}
+.info-card .value a { color: var(--accent); text-decoration: none; }
+.info-card .value a:hover { text-decoration: underline; }
+
+/* ─── CODE BLOCK ─── */
+.code-block-wrap {
+  position: relative;
+  border-radius: 10px; overflow: hidden;
+  margin: 16px 0;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.code-block-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px;
+  background: #2d2d2f;
+  font-size: 11px; color: #a1a1a6;
+}
+.code-block-header .lang { font-weight: 500; }
+.copy-btn {
+  background: none; border: none; color: #a1a1a6;
+  cursor: pointer; font-size: 11px; font-family: var(--font);
+  padding: 2px 8px; border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+}
+.copy-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.copy-btn.copied { color: var(--green); }
+pre.code-block {
+  padding: 16px; margin: 0;
+  background: var(--bg-code);
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.65;
+  color: #e5e5ea;
+  overflow-x: auto;
+  white-space: pre;
+}
+pre.code-block::-webkit-scrollbar { height: 4px; }
+pre.code-block::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+/* syntax colors */
+.hl-key { color: #7dc4e4; }
+.hl-str { color: #a6da95; }
+.hl-num { color: #f5a97f; }
+.hl-comment { color: #6e6e73; font-style: italic; }
+.hl-keyword { color: #c6a0f6; }
+.hl-fn { color: #8aadf4; }
+.hl-bool { color: #f5a97f; }
+.hl-url { color: #7dc4e4; text-decoration: underline; text-decoration-color: rgba(125,196,228,0.3); }
+
+/* ─── TABS ─── */
+.tabs {
+  display: flex; gap: 0; margin-bottom: 0;
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+  padding: 8px 16px; background: none; border: none;
+  font-family: var(--mono); font-size: 12px; color: var(--text-tertiary);
+  cursor: pointer; border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+.tab-btn:hover { color: var(--text-secondary); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ─── ENDPOINT CARD ─── */
+.endpoint-section {
+  margin-bottom: 48px;
+  scroll-margin-top: calc(var(--nav-h) + 20px);
+}
+.section-title {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+  margin-bottom: 8px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: calc(var(--nav-h) + 20px);
+}
+.section-desc {
+  font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;
+}
+
+.endpoint-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s;
+  scroll-margin-top: calc(var(--nav-h) + 20px);
+}
+.endpoint-card:hover { box-shadow: var(--shadow-md); }
+
+.endpoint-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px;
+}
+.endpoint-header .method-badge {
+  font-size: 11px; padding: 3px 8px; border-radius: 4px;
+  min-width: 48px;
+}
+.endpoint-header .path {
+  font-family: var(--mono); font-size: 14px; font-weight: 500;
+  color: var(--text);
+}
+.endpoint-desc {
+  font-size: 13.5px; color: var(--text-secondary); margin-bottom: 16px;
+  line-height: 1.55;
+}
+.endpoint-auth {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--text-tertiary);
+  margin-bottom: 16px; padding: 4px 10px;
+  background: var(--bg-code-light); border-radius: 6px;
+}
+.endpoint-auth .lock { font-size: 10px; }
+
+.param-table {
+  width: 100%; border-collapse: collapse; margin: 12px 0 16px;
+  font-size: 13px;
+}
+.param-table th {
+  text-align: left; font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--text-tertiary); padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+.param-table td {
+  padding: 8px 12px 8px 0; vertical-align: top;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+.param-table .param-name {
+  font-family: var(--mono); font-size: 12.5px; font-weight: 500;
+  color: var(--text);
+}
+.param-table .param-type {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--accent); background: var(--accent-light);
+  padding: 1px 6px; border-radius: 3px;
+}
+.param-table .param-required {
+  font-size: 10px; font-weight: 600; color: var(--red);
+  text-transform: uppercase;
+}
+.param-table .param-optional {
+  font-size: 10px; font-weight: 500; color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.detail-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.04em; color: var(--text-tertiary);
+  margin: 16px 0 6px;
+}
+
+.try-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 12px; padding: 6px 14px;
+  background: rgba(0,113,227,0.06); color: var(--accent);
+  border: 1px solid rgba(0,113,227,0.15); border-radius: 8px;
+  font-size: 12px; font-weight: 500; font-family: var(--font);
+  cursor: pointer; transition: all 0.15s;
+}
+.try-btn:hover {
+  background: rgba(0,113,227,0.1);
+  border-color: rgba(0,113,227,0.25);
+}
+.try-panel {
+  display: none; margin-top: 12px;
+}
+.try-panel.open { display: block; }
+
+/* ─── MOBILE ─── */
+.mobile-menu-btn {
+  display: none; background: none; border: none;
+  font-size: 20px; cursor: pointer; padding: 4px;
+  color: var(--text-secondary);
+}
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 150;
+    width: 260px;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; padding: 24px 20px 60px; }
+  .mobile-menu-btn { display: block; }
+  .nav-links { display: none; }
+  .info-row { flex-direction: column; }
+  .mobile-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.3);
+    z-index: 140; display: none;
+  }
+  .mobile-overlay.open { display: block; }
+}
+
+/* ─── SEARCH ─── */
+.search-box {
+  margin: 0 16px 16px; position: relative;
+}
+.search-box input {
+  width: 100%; padding: 8px 12px 8px 32px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: rgba(255,255,255,0.6);
+  font-family: var(--font); font-size: 12.5px;
+  color: var(--text); outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.search-box input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,113,227,0.1);
+}
+.search-box .search-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 12px; color: var(--text-tertiary);
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<header class="top-nav">
+  <div class="top-nav-inner">
+    <div style="display:flex;align-items:center;gap:20px;">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+      <a href="/" class="nav-logo">smara<span class="dot">.</span></a>
+      <ul class="nav-links">
+        <li><a href="/docs" class="active">Docs</a></li>
+        <li><a href="/playground">Playground</a></li>
+        <li><a href="/compare">Compare</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/changelog">Changelog</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener" class="nav-github">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+      <a href="/#signup" class="nav-cta">Get API Key</a>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="search-box">
+    <span class="search-icon">&#128269;</span>
+    <input type="text" placeholder="Search endpoints..." id="searchInput" oninput="filterEndpoints(this.value)">
+  </div>
+  <nav id="sidebarNav"></nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="main" id="mainContent">
+
+<!-- GETTING STARTED -->
+<section class="hero-section" id="getting-started">
+  <h1>Smara API Reference</h1>
+  <p class="subtitle">Persistent memory for AI tools. Store, search, and connect knowledge across sessions.</p>
+
+  <div class="info-row">
+    <div class="info-card">
+      <div class="label">Base URL</div>
+      <div class="value"><a href="https://api.smara.io">https://api.smara.io</a></div>
+    </div>
+    <div class="info-card">
+      <div class="label">Auth</div>
+      <div class="value">Bearer &lt;api_key&gt;</div>
+    </div>
+    <div class="info-card">
+      <div class="label">Format</div>
+      <div class="value">JSON (application/json)</div>
+    </div>
+  </div>
+
+  <div class="detail-label">Quick Start &mdash; MCP Config</div>
+  <div class="code-block-wrap">
+    <div class="code-block-header">
+      <span class="lang">JSON &mdash; claude_desktop_config.json</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre class="code-block">{
+  <span class="hl-key">"mcpServers"</span>: {
+    <span class="hl-key">"smara"</span>: {
+      <span class="hl-key">"command"</span>: <span class="hl-str">"npx"</span>,
+      <span class="hl-key">"args"</span>: [<span class="hl-str">"@smara/mcp-server"</span>],
+      <span class="hl-key">"env"</span>: {
+        <span class="hl-key">"SMARA_API_KEY"</span>: <span class="hl-str">"smara_your_api_key_here"</span>
+      }
+    }
+  }
+}</pre>
+  </div>
+
+  <div class="detail-label">Authentication</div>
+  <p style="font-size:13.5px;color:var(--text-secondary);margin-bottom:12px;">
+    All API endpoints (except signup, feedback, and webhooks) require a Bearer token. Pass your API key in the
+    <code style="font-family:var(--mono);font-size:12px;background:var(--bg-code-light);padding:2px 6px;border-radius:4px;">Authorization</code> header.
+  </p>
+  <div class="code-block-wrap">
+    <div class="code-block-header">
+      <span class="lang">HTTP Header</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre class="code-block">Authorization: Bearer smara_your_api_key_here</pre>
+  </div>
+</section>
+
+<div id="endpointContent"></div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// API ENDPOINT DEFINITIONS
+// ═══════════════════════════════════════════════════════════
+
+const API = [
+  // ── Authentication ──
+  {
+    section: 'Authentication',
+    sectionDesc: 'Create accounts, manage sessions, and rotate API keys.',
+    endpoints: [
+      {
+        id: 'auth-signup',
+        method: 'POST',
+        path: '/v1/auth/signup',
+        desc: 'Create a new account with email and password. Returns a JWT token and API key.',
+        auth: false,
+        body: {
+          email: { type: 'string', required: true, desc: 'Email address' },
+          password: { type: 'string', required: true, desc: 'Password (min 8 characters)' },
+        },
+        response: `{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "api_key": "smara_a1b2c3d4...",
+  "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+  "message": "Save your API key — it cannot be recovered."
+}`,
+      },
+      {
+        id: 'auth-login',
+        method: 'POST',
+        path: '/v1/auth/login',
+        desc: 'Log in with email and password. Returns a JWT for account management.',
+        auth: false,
+        body: {
+          email: { type: 'string', required: true, desc: 'Email address' },
+          password: { type: 'string', required: true, desc: 'Password' },
+        },
+        response: `{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+  "message": "Login successful."
+}`,
+      },
+      {
+        id: 'auth-list-keys',
+        method: 'GET',
+        path: '/v1/auth/api-keys',
+        desc: 'List all API keys for your account. Requires JWT authentication.',
+        auth: 'jwt',
+        response: `{
+  "api_keys": [
+    {
+      "id": "key-uuid",
+      "label": "Signup key",
+      "created_at": "2025-01-15T10:00:00Z",
+      "last_used_at": "2025-04-28T08:30:00Z",
+      "hint": "smara_****0000"
+    }
+  ]
+}`,
+      },
+      {
+        id: 'auth-create-key',
+        method: 'POST',
+        path: '/v1/auth/api-keys',
+        desc: 'Generate a new API key (max 10 per account). Requires JWT authentication.',
+        auth: 'jwt',
+        body: {
+          label: { type: 'string', required: false, desc: 'Optional label for the key' },
+        },
+        response: `{
+  "id": "key-uuid",
+  "api_key": "smara_new_key_here...",
+  "label": "Production key",
+  "created_at": "2025-04-29T12:00:00Z",
+  "message": "Save this API key — it cannot be recovered."
+}`,
+      },
+      {
+        id: 'auth-delete-key',
+        method: 'DELETE',
+        path: '/v1/auth/api-keys/:keyId',
+        desc: 'Revoke an API key. Cannot delete your last remaining key.',
+        auth: 'jwt',
+        params: { keyId: { type: 'uuid', desc: 'API key ID to delete' } },
+        response: '204 No Content',
+      },
+    ],
+  },
+
+  // ── Memories ──
+  {
+    section: 'Memories',
+    sectionDesc: 'Store, list, update, and delete persistent memories with semantic search and Ebbinghaus decay.',
+    endpoints: [
+      {
+        id: 'store-memory',
+        method: 'POST',
+        path: '/v1/memories',
+        desc: 'Store a new memory for a user. Smara deduplicates and auto-replaces outdated facts.',
+        auth: true,
+        body: {
+          user_id: { type: 'string', required: true, desc: 'User identifier' },
+          fact: { type: 'string', required: true, desc: 'The memory text (max 2000 chars)' },
+          importance: { type: 'number', required: false, desc: 'Importance score 0-1 (default 0.5)' },
+          source: { type: 'string', required: false, desc: 'Source tag, e.g. "mcp", "slack" (default "api")' },
+          namespace: { type: 'string', required: false, desc: 'Namespace for grouping (default "default")' },
+          team_id: { type: 'uuid', required: false, desc: 'Team ID for shared memories' },
+          visibility: { type: 'string', required: false, desc: '"private" or "team"' },
+        },
+        response: `{
+  "action": "created",
+  "id": "mem-uuid-here",
+  "source": "api",
+  "namespace": "default"
+}`,
+      },
+      {
+        id: 'list-memories',
+        method: 'GET',
+        path: '/v1/memories',
+        desc: 'List memories for a user with pagination. Filter by namespace, visibility, or team.',
+        auth: true,
+        query: {
+          user_id: { type: 'string', required: true, desc: 'User identifier' },
+          limit: { type: 'number', required: false, desc: 'Results per page (max 100, default 20)' },
+          offset: { type: 'number', required: false, desc: 'Pagination offset (default 0)' },
+          namespace: { type: 'string', required: false, desc: 'Filter by namespace' },
+          visibility: { type: 'string', required: false, desc: '"private" or "team"' },
+          team_id: { type: 'uuid', required: false, desc: 'Include team memories' },
+        },
+        response: `{
+  "memories": [
+    {
+      "id": "mem-uuid",
+      "fact": "User prefers TypeScript over JavaScript",
+      "visibility": "private",
+      "team_id": null,
+      "importance": 0.7,
+      "source": "mcp",
+      "namespace": "default",
+      "created_at": "2025-04-20T15:30:00Z"
+    }
+  ],
+  "limit": 20,
+  "offset": 0
+}`,
+      },
+      {
+        id: 'update-memory',
+        method: 'PATCH',
+        path: '/v1/memories/:id',
+        desc: 'Update a memory\'s visibility or importance score.',
+        auth: true,
+        params: { id: { type: 'uuid', desc: 'Memory ID' } },
+        body: {
+          visibility: { type: 'string', required: false, desc: '"private" or "team"' },
+          importance: { type: 'number', required: false, desc: 'New importance score 0-1' },
+        },
+        response: `{
+  "id": "mem-uuid",
+  "visibility": "team",
+  "importance": 0.9,
+  "team_id": "team-uuid"
+}`,
+      },
+      {
+        id: 'delete-memory',
+        method: 'DELETE',
+        path: '/v1/memories/:id',
+        desc: 'Soft-delete (expire) a memory.',
+        auth: true,
+        params: { id: { type: 'uuid', desc: 'Memory ID' } },
+        response: '204 No Content',
+      },
+      {
+        id: 'get-usage',
+        method: 'GET',
+        path: '/v1/usage',
+        desc: 'Check your current plan and memory usage.',
+        auth: true,
+        response: `{
+  "plan": "developer",
+  "memory_limit": 10000,
+  "memories_used": 4521,
+  "memories_remaining": 5479
+}`,
+      },
+    ],
+  },
+
+  // ── Search ──
+  {
+    section: 'Search',
+    sectionDesc: 'Semantic vector search and context retrieval with Ebbinghaus decay scoring.',
+    endpoints: [
+      {
+        id: 'search-memories',
+        method: 'GET',
+        path: '/v1/memories/search',
+        desc: 'Semantic search across memories using vector embeddings. Supports source, namespace, and team filtering.',
+        auth: true,
+        query: {
+          user_id: { type: 'string', required: true, desc: 'User identifier' },
+          q: { type: 'string', required: true, desc: 'Search query' },
+          limit: { type: 'number', required: false, desc: 'Max results (max 50, default 10)' },
+          source: { type: 'string', required: false, desc: 'Filter by source' },
+          namespace: { type: 'string', required: false, desc: 'Filter by namespace' },
+          team_id: { type: 'uuid', required: false, desc: 'Filter by team' },
+          include_team: { type: 'boolean', required: false, desc: 'Include team memories in results' },
+        },
+        response: `{
+  "results": [
+    {
+      "id": "mem-uuid",
+      "fact": "The project uses PostgreSQL with pgvector",
+      "similarity": 0.89,
+      "importance": 0.8,
+      "decay_score": 0.95,
+      "source": "mcp",
+      "namespace": "default",
+      "created_at": "2025-04-15T10:00:00Z"
+    }
+  ]
+}`,
+      },
+      {
+        id: 'get-context',
+        method: 'GET',
+        path: '/v1/users/:userId/context',
+        desc: 'Get top-N memories formatted as LLM context. Perfect for system prompt injection.',
+        auth: true,
+        params: { userId: { type: 'string', desc: 'User identifier' } },
+        query: {
+          q: { type: 'string', required: false, desc: 'Optional query to focus context' },
+          top_n: { type: 'number', required: false, desc: 'Number of memories (max 20, default 5)' },
+          namespace: { type: 'string', required: false, desc: 'Filter by namespace' },
+          team_id: { type: 'uuid', required: false, desc: 'Include team context' },
+          include_team: { type: 'boolean', required: false, desc: 'Merge team memories into context' },
+        },
+        response: `{
+  "context": "- User prefers TypeScript\\n- Project uses PostgreSQL\\n- Deploy target is Railway",
+  "memories": [
+    { "id": "mem-uuid", "fact": "User prefers TypeScript", "importance": 0.8 }
+  ]
+}`,
+      },
+    ],
+  },
+
+  // ── Teams ──
+  {
+    section: 'Teams',
+    sectionDesc: 'Collaborate with shared team memories. Role-based access control with admin, member, and read-only roles.',
+    endpoints: [
+      {
+        id: 'create-team',
+        method: 'POST',
+        path: '/v1/teams',
+        desc: 'Create a new team. The creator automatically becomes an admin.',
+        auth: true,
+        body: {
+          name: { type: 'string', required: true, desc: 'Team display name' },
+          slug: { type: 'string', required: true, desc: 'URL-safe slug (lowercase, hyphens)' },
+          user_id: { type: 'string', required: true, desc: 'Creator user ID' },
+          email: { type: 'string', required: false, desc: 'Creator email' },
+        },
+        response: `{
+  "id": "team-uuid",
+  "tenant_id": "tenant-uuid",
+  "name": "Backend Team",
+  "slug": "backend-team",
+  "created_at": "2025-04-29T12:00:00Z"
+}`,
+      },
+      {
+        id: 'list-teams',
+        method: 'GET',
+        path: '/v1/teams',
+        desc: 'List all teams in your tenant with member counts.',
+        auth: true,
+        response: `{
+  "teams": [
+    {
+      "id": "team-uuid",
+      "name": "Backend Team",
+      "slug": "backend-team",
+      "created_at": "2025-04-20T10:00:00Z",
+      "member_count": 4
+    }
+  ]
+}`,
+      },
+      {
+        id: 'get-team',
+        method: 'GET',
+        path: '/v1/teams/:teamId',
+        desc: 'Get team details including all members and their roles.',
+        auth: true,
+        params: { teamId: { type: 'uuid', desc: 'Team ID' } },
+        response: `{
+  "id": "team-uuid",
+  "name": "Backend Team",
+  "slug": "backend-team",
+  "created_at": "2025-04-20T10:00:00Z",
+  "members": [
+    { "id": "member-uuid", "user_id": "user1", "email": "sri@example.com", "role": "admin", "joined_at": "2025-04-20T10:00:00Z" }
+  ]
+}`,
+      },
+      {
+        id: 'update-team',
+        method: 'PATCH',
+        path: '/v1/teams/:teamId',
+        desc: 'Update team name or slug. Admin only.',
+        auth: true,
+        params: { teamId: { type: 'uuid', desc: 'Team ID' } },
+        body: {
+          name: { type: 'string', required: false, desc: 'New team name' },
+          slug: { type: 'string', required: false, desc: 'New URL slug' },
+          user_id: { type: 'string', required: true, desc: 'Admin user ID' },
+        },
+        response: `{
+  "id": "team-uuid",
+  "name": "Platform Team",
+  "slug": "platform-team",
+  "created_at": "2025-04-20T10:00:00Z"
+}`,
+      },
+      {
+        id: 'delete-team',
+        method: 'DELETE',
+        path: '/v1/teams/:teamId',
+        desc: 'Delete a team and all its members. Admin only.',
+        auth: true,
+        params: { teamId: { type: 'uuid', desc: 'Team ID' } },
+        query: { user_id: { type: 'string', required: true, desc: 'Admin user ID' } },
+        response: '204 No Content',
+      },
+      {
+        id: 'add-member',
+        method: 'POST',
+        path: '/v1/teams/:teamId/members',
+        desc: 'Add a member to a team. Admin only.',
+        auth: true,
+        params: { teamId: { type: 'uuid', desc: 'Team ID' } },
+        body: {
+          user_id: { type: 'string', required: true, desc: 'New member user ID' },
+          email: { type: 'string', required: false, desc: 'Member email' },
+          role: { type: 'string', required: false, desc: '"admin", "member", or "read_only" (default "member")' },
+          added_by: { type: 'string', required: true, desc: 'Admin user ID' },
+        },
+        response: `{
+  "id": "member-uuid",
+  "user_id": "user2",
+  "email": "dev@example.com",
+  "role": "member",
+  "joined_at": "2025-04-29T12:00:00Z"
+}`,
+      },
+      {
+        id: 'change-role',
+        method: 'PATCH',
+        path: '/v1/teams/:teamId/members/:userId',
+        desc: 'Change a team member\'s role. Admin only.',
+        auth: true,
+        params: {
+          teamId: { type: 'uuid', desc: 'Team ID' },
+          userId: { type: 'string', desc: 'Member user ID' },
+        },
+        body: {
+          role: { type: 'string', required: true, desc: '"admin", "member", or "read_only"' },
+          changed_by: { type: 'string', required: true, desc: 'Admin user ID' },
+        },
+        response: `{
+  "id": "member-uuid",
+  "user_id": "user2",
+  "email": "dev@example.com",
+  "role": "admin",
+  "joined_at": "2025-04-29T12:00:00Z"
+}`,
+      },
+      {
+        id: 'remove-member',
+        method: 'DELETE',
+        path: '/v1/teams/:teamId/members/:userId',
+        desc: 'Remove a member from a team. Admin only (or self-removal).',
+        auth: true,
+        params: {
+          teamId: { type: 'uuid', desc: 'Team ID' },
+          userId: { type: 'string', desc: 'Member user ID to remove' },
+        },
+        query: { removed_by: { type: 'string', required: true, desc: 'User performing the removal' } },
+        response: '204 No Content',
+      },
+      {
+        id: 'create-invitation',
+        method: 'POST',
+        path: '/v1/teams/:teamId/invitations',
+        desc: 'Create an email invitation to join a team. Admin only. Expires in 7 days.',
+        auth: true,
+        params: { teamId: { type: 'uuid', desc: 'Team ID' } },
+        body: {
+          email: { type: 'string', required: true, desc: 'Invitee email address' },
+          role: { type: 'string', required: false, desc: 'Role to assign (default "member")' },
+          invited_by: { type: 'string', required: true, desc: 'Admin user ID' },
+        },
+        response: `{
+  "id": "inv-uuid",
+  "email": "new-dev@example.com",
+  "role": "member",
+  "token": "abc123...",
+  "expires_at": "2025-05-06T12:00:00Z",
+  "created_at": "2025-04-29T12:00:00Z"
+}`,
+      },
+      {
+        id: 'accept-invitation',
+        method: 'POST',
+        path: '/v1/invitations/:token/accept',
+        desc: 'Accept a team invitation using the token from the invite email. No auth required.',
+        auth: false,
+        params: { token: { type: 'string', desc: 'Invitation token' } },
+        body: {
+          user_id: { type: 'string', required: true, desc: 'Your user ID' },
+          email: { type: 'string', required: false, desc: 'Your email' },
+        },
+        response: `{
+  "team_id": "team-uuid",
+  "role": "member",
+  "message": "Invitation accepted"
+}`,
+      },
+    ],
+  },
+
+  // ── Agents ──
+  {
+    section: 'Agents',
+    sectionDesc: 'Create and manage AI agents with scoped memories, custom skills, and tool assignments.',
+    endpoints: [
+      {
+        id: 'create-agent',
+        method: 'POST',
+        path: '/v1/agents',
+        desc: 'Create a new AI agent with optional model and system prompt.',
+        auth: true,
+        body: {
+          name: { type: 'string', required: true, desc: 'Agent name' },
+          owner_id: { type: 'string', required: true, desc: 'Owner user ID' },
+          description: { type: 'string', required: false, desc: 'Agent description' },
+          model: { type: 'string', required: false, desc: 'Model identifier (e.g. "claude-sonnet-4")' },
+          system_prompt: { type: 'string', required: false, desc: 'System prompt (max 10000 chars)' },
+        },
+        response: `{
+  "id": "agent-uuid",
+  "name": "Code Reviewer",
+  "description": "Reviews PRs for style and bugs",
+  "owner_id": "user1",
+  "model": "claude-sonnet-4",
+  "system_prompt": "You are a senior code reviewer...",
+  "created_at": "2025-04-29T12:00:00Z"
+}`,
+      },
+      {
+        id: 'list-agents',
+        method: 'GET',
+        path: '/v1/agents',
+        desc: 'List all agents in your tenant. Optionally filter by owner.',
+        auth: true,
+        query: {
+          owner_id: { type: 'string', required: false, desc: 'Filter by owner user ID' },
+        },
+        response: `{
+  "agents": [
+    {
+      "id": "agent-uuid",
+      "name": "Code Reviewer",
+      "description": "Reviews PRs",
+      "owner_id": "user1",
+      "model": "claude-sonnet-4",
+      "created_at": "2025-04-29T12:00:00Z"
+    }
+  ]
+}`,
+      },
+      {
+        id: 'get-agent',
+        method: 'GET',
+        path: '/v1/agents/:agentId',
+        desc: 'Get agent details including attached skills.',
+        auth: true,
+        params: { agentId: { type: 'uuid', desc: 'Agent ID' } },
+        response: `{
+  "id": "agent-uuid",
+  "name": "Code Reviewer",
+  "skills": [
+    { "id": "skill-uuid", "name": "semantic-search", "category": "memory" }
+  ]
+}`,
+      },
+      {
+        id: 'update-agent',
+        method: 'PATCH',
+        path: '/v1/agents/:agentId',
+        desc: 'Update agent name, description, model, or system prompt.',
+        auth: true,
+        params: { agentId: { type: 'uuid', desc: 'Agent ID' } },
+        body: {
+          name: { type: 'string', required: false, desc: 'New name' },
+          description: { type: 'string', required: false, desc: 'New description' },
+          model: { type: 'string', required: false, desc: 'New model' },
+          system_prompt: { type: 'string', required: false, desc: 'New system prompt' },
+        },
+        response: `{
+  "id": "agent-uuid",
+  "name": "Updated Agent",
+  "updated_at": "2025-04-29T14:00:00Z"
+}`,
+      },
+      {
+        id: 'delete-agent',
+        method: 'DELETE',
+        path: '/v1/agents/:agentId',
+        desc: 'Delete an agent and its skill assignments.',
+        auth: true,
+        params: { agentId: { type: 'uuid', desc: 'Agent ID' } },
+        response: '204 No Content',
+      },
+      {
+        id: 'agent-store-memory',
+        method: 'POST',
+        path: '/v1/agents/:agentId/memories',
+        desc: 'Store a memory scoped to a specific agent.',
+        auth: true,
+        params: { agentId: { type: 'uuid', desc: 'Agent ID' } },
+        body: {
+          user_id: { type: 'string', required: true, desc: 'User identifier' },
+          fact: { type: 'string', required: true, desc: 'Memory text (max 2000 chars)' },
+          importance: { type: 'number', required: false, desc: 'Importance 0-1' },
+          namespace: { type: 'string', required: false, desc: 'Namespace' },
+        },
+        response: `{
+  "action": "created",
+  "id": "mem-uuid",
+  "agent_id": "agent-uuid",
+  "namespace": "default"
+}`,
+      },
+      {
+        id: 'agent-search-memories',
+        method: 'GET',
+        path: '/v1/agents/:agentId/memories',
+        desc: 'Search or list memories scoped to an agent.',
+        auth: true,
+        params: { agentId: { type: 'uuid', desc: 'Agent ID' } },
+        query: {
+          user_id: { type: 'string', required: true, desc: 'User identifier' },
+          q: { type: 'string', required: false, desc: 'Search query (semantic)' },
+          limit: { type: 'number', required: false, desc: 'Max results (default 10)' },
+          namespace: { type: 'string', required: false, desc: 'Filter by namespace' },
+        },
+        response: `{
+  "memories": [
+    { "id": "mem-uuid", "fact": "Agent-scoped memory", "importance": 0.6, "source": "agent:uuid" }
+  ]
+}`,
+      },
+      {
+        id: 'attach-skill',
+        method: 'POST',
+        path: '/v1/agents/:agentId/skills',
+        desc: 'Attach a skill to an agent with optional config.',
+        auth: true,
+        params: { agentId: { type: 'uuid', desc: 'Agent ID' } },
+        body: {
+          skill_id: { type: 'uuid', required: true, desc: 'Skill ID to attach' },
+          config: { type: 'object', required: false, desc: 'Skill-specific configuration' },
+        },
+        response: `{
+  "agent_id": "agent-uuid",
+  "skill_id": "skill-uuid",
+  "config": {}
+}`,
+      },
+      {
+        id: 'list-agent-skills',
+        method: 'GET',
+        path: '/v1/agents/:agentId/skills',
+        desc: 'List all skills attached to an agent.',
+        auth: true,
+        params: { agentId: { type: 'uuid', desc: 'Agent ID' } },
+        response: `{
+  "skills": [
+    { "id": "skill-uuid", "name": "semantic-search", "description": "Search memories", "category": "memory", "config": {} }
+  ]
+}`,
+      },
+      {
+        id: 'detach-skill',
+        method: 'DELETE',
+        path: '/v1/agents/:agentId/skills/:skillId',
+        desc: 'Detach a skill from an agent.',
+        auth: true,
+        params: {
+          agentId: { type: 'uuid', desc: 'Agent ID' },
+          skillId: { type: 'uuid', desc: 'Skill ID' },
+        },
+        response: '204 No Content',
+      },
+    ],
+  },
+
+  // ── Graph ──
+  {
+    section: 'Graph',
+    sectionDesc: 'Connect memories into a knowledge graph. Traverse relationships to discover related context.',
+    endpoints: [
+      {
+        id: 'graph-connect',
+        method: 'POST',
+        path: '/v1/graph/connect',
+        desc: 'Create an edge between two memories with a named relationship.',
+        auth: true,
+        body: {
+          from_memory_id: { type: 'uuid', required: true, desc: 'Source memory ID' },
+          to_memory_id: { type: 'uuid', required: true, desc: 'Target memory ID' },
+          relationship_type: { type: 'string', required: true, desc: 'Relationship name (e.g. "related_to", "depends_on")' },
+          weight: { type: 'number', required: false, desc: 'Edge weight 0-1 (default 1.0)' },
+          metadata: { type: 'object', required: false, desc: 'Additional edge metadata' },
+        },
+        response: `{
+  "id": "edge-uuid",
+  "from_memory_id": "mem-1",
+  "to_memory_id": "mem-2",
+  "relationship_type": "related_to",
+  "weight": 1.0,
+  "metadata": {},
+  "created_at": "2025-04-29T12:00:00Z"
+}`,
+      },
+      {
+        id: 'graph-traverse',
+        method: 'GET',
+        path: '/v1/graph/traverse/:memoryId',
+        desc: 'Traverse the knowledge graph from a root memory using recursive CTE. Returns connected nodes up to the specified depth.',
+        auth: true,
+        params: { memoryId: { type: 'uuid', desc: 'Root memory ID' } },
+        query: {
+          depth: { type: 'number', required: false, desc: 'Max traversal depth 1-5 (default 2)' },
+          relationship_type: { type: 'string', required: false, desc: 'Filter by relationship type' },
+        },
+        response: `{
+  "root_memory_id": "mem-uuid",
+  "max_depth": 2,
+  "node_count": 5,
+  "nodes": [
+    {
+      "memory_id": "mem-2",
+      "fact": "PostgreSQL uses MVCC",
+      "importance": 0.7,
+      "depth": 1,
+      "edge": {
+        "id": "edge-uuid",
+        "relationship_type": "related_to",
+        "weight": 0.9
+      }
+    }
+  ]
+}`,
+      },
+      {
+        id: 'graph-related',
+        method: 'GET',
+        path: '/v1/graph/related/:memoryId',
+        desc: 'Get directly related memories (depth=1). Simpler and faster than full traversal.',
+        auth: true,
+        params: { memoryId: { type: 'uuid', desc: 'Memory ID' } },
+        query: {
+          relationship_type: { type: 'string', required: false, desc: 'Filter by relationship type' },
+          limit: { type: 'number', required: false, desc: 'Max results (default 20)' },
+        },
+        response: `{
+  "memory_id": "mem-uuid",
+  "related": [
+    {
+      "memory_id": "mem-2",
+      "fact": "Related memory fact",
+      "importance": 0.7,
+      "edge": { "relationship_type": "depends_on", "weight": 0.8 }
+    }
+  ]
+}`,
+      },
+      {
+        id: 'graph-delete-edge',
+        method: 'DELETE',
+        path: '/v1/graph/edge/:edgeId',
+        desc: 'Remove a graph edge between two memories.',
+        auth: true,
+        params: { edgeId: { type: 'uuid', desc: 'Edge ID to delete' } },
+        response: '204 No Content',
+      },
+    ],
+  },
+
+  // ── Billing ──
+  {
+    section: 'Billing',
+    sectionDesc: 'Manage subscriptions, check usage, and access the Stripe billing portal.',
+    endpoints: [
+      {
+        id: 'billing-checkout',
+        method: 'POST',
+        path: '/v1/billing/checkout',
+        desc: 'Create a Stripe Checkout session to subscribe to a paid plan.',
+        auth: false,
+        body: {
+          plan: { type: 'string', required: true, desc: '"developer" ($19/mo), "team" ($79/mo), or "business" ($199/mo)' },
+          email: { type: 'string', required: true, desc: 'Email for the subscription' },
+          success_url: { type: 'string', required: false, desc: 'Redirect URL after success' },
+          cancel_url: { type: 'string', required: false, desc: 'Redirect URL on cancel' },
+        },
+        response: `{
+  "checkout_url": "https://checkout.stripe.com/c/pay/..."
+}`,
+      },
+      {
+        id: 'billing-portal',
+        method: 'GET',
+        path: '/v1/billing/portal',
+        desc: 'Get a link to the Stripe billing portal to manage your subscription.',
+        auth: true,
+        response: `{
+  "portal_url": "https://billing.stripe.com/p/session/..."
+}`,
+      },
+      {
+        id: 'billing-usage',
+        method: 'GET',
+        path: '/v1/billing/usage',
+        desc: 'Check detailed usage across memories, agents, and teams.',
+        auth: true,
+        response: `{
+  "plan": "developer",
+  "usage": {
+    "memories": { "used": 4521, "limit": 10000 },
+    "agents": { "used": 2, "limit": 5 },
+    "teams": { "used": 1, "limit": 1 }
+  }
+}`,
+      },
+    ],
+  },
+
+  // ── Feedback ──
+  {
+    section: 'Feedback',
+    sectionDesc: 'Submit feature requests, bug reports, and vote on the public roadmap.',
+    endpoints: [
+      {
+        id: 'submit-feedback',
+        method: 'POST',
+        path: '/v1/feedback',
+        desc: 'Submit a feature request, bug report, or general feedback. Auth optional.',
+        auth: false,
+        body: {
+          type: { type: 'string', required: true, desc: '"feature", "bug", or "general"' },
+          title: { type: 'string', required: true, desc: 'Short title (max 200 chars)' },
+          description: { type: 'string', required: false, desc: 'Detailed description (max 5000 chars)' },
+          email: { type: 'string', required: false, desc: 'Contact email' },
+          metadata: { type: 'object', required: false, desc: 'Additional metadata' },
+        },
+        response: `{
+  "id": "fb-uuid",
+  "type": "feature",
+  "title": "Add webhook support",
+  "status": "new",
+  "created_at": "2025-04-29T12:00:00Z"
+}`,
+      },
+      {
+        id: 'list-feedback',
+        method: 'GET',
+        path: '/v1/feedback',
+        desc: 'List all feedback sorted by votes. Public roadmap.',
+        auth: false,
+        query: {
+          type: { type: 'string', required: false, desc: 'Filter by type' },
+          status: { type: 'string', required: false, desc: 'Filter by status (new, reviewed, planned, done, wontfix)' },
+          limit: { type: 'number', required: false, desc: 'Max results (default 50)' },
+        },
+        response: `{
+  "feedback": [
+    { "id": "fb-uuid", "type": "feature", "title": "Add webhook support", "votes": 12, "status": "planned" }
+  ],
+  "count": 1
+}`,
+      },
+      {
+        id: 'vote-feedback',
+        method: 'POST',
+        path: '/v1/feedback/:id/vote',
+        desc: 'Upvote a feedback item.',
+        auth: false,
+        params: { id: { type: 'uuid', desc: 'Feedback ID' } },
+        response: `{
+  "id": "fb-uuid",
+  "votes": 13
+}`,
+      },
+    ],
+  },
+];
+
+// ═══════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderParamTable(params, label) {
+  if (!params || Object.keys(params).length === 0) return '';
+  let html = `<div class="detail-label">${label}</div>`;
+  html += '<table class="param-table"><thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>';
+  for (const [name, p] of Object.entries(params)) {
+    const req = p.required
+      ? '<span class="param-required">Required</span>'
+      : '<span class="param-optional">Optional</span>';
+    html += `<tr>
+      <td><span class="param-name">${name}</span></td>
+      <td><span class="param-type">${p.type}</span></td>
+      <td>${req}</td>
+      <td style="color:var(--text-secondary);font-size:12.5px;">${p.desc || ''}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+function buildCurl(ep) {
+  const base = 'https://api.smara.io';
+  let path = ep.path;
+  // Replace params with placeholders
+  if (ep.params) {
+    for (const k of Object.keys(ep.params)) {
+      path = path.replace(`:${k}`, `{${k}}`);
+    }
+  }
+
+  let cmd = `curl -X ${ep.method} "${base}${path}"`;
+  if (ep.auth) {
+    cmd += ` \\\n  -H "Authorization: Bearer smara_your_key"`;
+  }
+  if (ep.body && ['POST', 'PATCH', 'PUT'].includes(ep.method)) {
+    cmd += ` \\\n  -H "Content-Type: application/json"`;
+    const bodyObj = {};
+    for (const [k, v] of Object.entries(ep.body)) {
+      if (v.type === 'number') bodyObj[k] = 0.5;
+      else if (v.type === 'uuid') bodyObj[k] = 'uuid-here';
+      else if (v.type === 'object') bodyObj[k] = {};
+      else if (v.type === 'boolean') bodyObj[k] = true;
+      else bodyObj[k] = `your_${k}`;
+    }
+    cmd += ` \\\n  -d '${JSON.stringify(bodyObj, null, 2)}'`;
+  }
+  if (ep.query) {
+    const qParams = Object.entries(ep.query).filter(([,v]) => v.required).map(([k]) => `${k}=value`);
+    if (qParams.length > 0) {
+      cmd = cmd.replace(`"${base}${path}"`, `"${base}${path}?${qParams.join('&')}"`);
+    }
+  }
+  return cmd;
+}
+
+function buildJs(ep) {
+  const base = 'https://api.smara.io';
+  let path = ep.path;
+  if (ep.params) {
+    for (const k of Object.keys(ep.params)) {
+      path = path.replace(`:${k}`, '${' + k + '}');
+    }
+  }
+
+  let code = '';
+  const headers = {};
+  if (ep.auth) headers['Authorization'] = 'Bearer smara_your_key';
+
+  if (ep.body && ['POST', 'PATCH', 'PUT'].includes(ep.method)) {
+    headers['Content-Type'] = 'application/json';
+    const bodyObj = {};
+    for (const [k, v] of Object.entries(ep.body)) {
+      if (v.type === 'number') bodyObj[k] = 0.5;
+      else if (v.type === 'uuid') bodyObj[k] = 'uuid-here';
+      else if (v.type === 'object') bodyObj[k] = {};
+      else bodyObj[k] = `your_${k}`;
+    }
+    code = `const response = await fetch(\`${base}${path}\`, {
+  method: '${ep.method}',
+  headers: ${JSON.stringify(headers, null, 4)},
+  body: JSON.stringify(${JSON.stringify(bodyObj, null, 4)}),
+});
+
+const data = await response.json();
+console.log(data);`;
+  } else {
+    let url = `${base}${path}`;
+    if (ep.query) {
+      const qp = Object.entries(ep.query).filter(([,v]) => v.required).map(([k]) => `${k}=value`);
+      if (qp.length) url += `?${qp.join('&')}`;
+    }
+    code = `const response = await fetch(\`${url}\`, {
+  headers: ${JSON.stringify(headers, null, 4)},
+});
+
+const data = await response.json();
+console.log(data);`;
+  }
+  return code;
+}
+
+function buildPython(ep) {
+  const base = 'https://api.smara.io';
+  let path = ep.path;
+  if (ep.params) {
+    for (const k of Object.keys(ep.params)) {
+      path = path.replace(`:${k}`, '{' + k + '}');
+    }
+  }
+
+  let code = 'import requests\n\n';
+  const headers = {};
+  if (ep.auth) headers['Authorization'] = 'Bearer smara_your_key';
+
+  if (ep.body && ['POST', 'PATCH', 'PUT'].includes(ep.method)) {
+    headers['Content-Type'] = 'application/json';
+    const bodyObj = {};
+    for (const [k, v] of Object.entries(ep.body)) {
+      if (v.type === 'number') bodyObj[k] = 0.5;
+      else if (v.type === 'uuid') bodyObj[k] = 'uuid-here';
+      else if (v.type === 'object') bodyObj[k] = {};
+      else bodyObj[k] = `your_${k}`;
+    }
+    code += `response = requests.${ep.method.toLowerCase()}(
+    f"${base}${path}",
+    headers=${JSON.stringify(headers).replace(/"/g, '"')},
+    json=${JSON.stringify(bodyObj, null, 4).replace(/null/g, 'None').replace(/true/g, 'True').replace(/false/g, 'False')},
+)
+
+print(response.json())`;
+  } else {
+    let url = `${base}${path}`;
+    const params = {};
+    if (ep.query) {
+      for (const [k, v] of Object.entries(ep.query)) {
+        if (v.required) params[k] = 'value';
+      }
+    }
+    const hasParams = Object.keys(params).length > 0;
+    code += `response = requests.${ep.method.toLowerCase()}(
+    f"${url}",
+    headers=${JSON.stringify(headers).replace(/"/g, '"')},${hasParams ? `\n    params=${JSON.stringify(params)},` : ''}
+)
+
+print(response.json())`;
+  }
+  return code;
+}
+
+function renderCodeTabs(ep, tabId) {
+  const curl = escapeHtml(buildCurl(ep));
+  const js = escapeHtml(buildJs(ep));
+  const py = escapeHtml(buildPython(ep));
+
+  return `
+    <div class="detail-label">Code Examples</div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('${tabId}', 'curl', this)">curl</button>
+      <button class="tab-btn" onclick="switchTab('${tabId}', 'js', this)">JavaScript</button>
+      <button class="tab-btn" onclick="switchTab('${tabId}', 'py', this)">Python</button>
+    </div>
+    <div id="${tabId}-curl" class="tab-content active">
+      <div class="code-block-wrap" style="border-radius:0 0 10px 10px;margin-top:0;">
+        <div class="code-block-header"><span class="lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre class="code-block">${curl}</pre>
+      </div>
+    </div>
+    <div id="${tabId}-js" class="tab-content">
+      <div class="code-block-wrap" style="border-radius:0 0 10px 10px;margin-top:0;">
+        <div class="code-block-header"><span class="lang">javascript</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre class="code-block">${js}</pre>
+      </div>
+    </div>
+    <div id="${tabId}-py" class="tab-content">
+      <div class="code-block-wrap" style="border-radius:0 0 10px 10px;margin-top:0;">
+        <div class="code-block-header"><span class="lang">python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre class="code-block">${py}</pre>
+      </div>
+    </div>
+  `;
+}
+
+function renderEndpoint(ep) {
+  const authBadge = ep.auth === 'jwt'
+    ? '<div class="endpoint-auth"><span class="lock">&#128274;</span> JWT Bearer token required</div>'
+    : ep.auth
+      ? '<div class="endpoint-auth"><span class="lock">&#128274;</span> API key required</div>'
+      : '<div class="endpoint-auth" style="background:var(--green-bg);color:var(--green);">&#127760; Public endpoint</div>';
+
+  const responseBlock = ep.response.startsWith('2')
+    ? `<div class="detail-label">Response</div><div style="font-family:var(--mono);font-size:12.5px;color:var(--text-secondary);padding:8px 0;">${ep.response}</div>`
+    : `<div class="detail-label">Response</div>
+       <div class="code-block-wrap">
+         <div class="code-block-header"><span class="lang">json</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+         <pre class="code-block">${escapeHtml(ep.response)}</pre>
+       </div>`;
+
+  return `
+    <div class="endpoint-card" id="${ep.id}">
+      <div class="endpoint-header">
+        <span class="method-badge method-${ep.method}">${ep.method}</span>
+        <span class="path">${ep.path}</span>
+      </div>
+      <div class="endpoint-desc">${ep.desc}</div>
+      ${authBadge}
+      ${ep.params ? renderParamTable(
+        Object.fromEntries(Object.entries(ep.params).map(([k, v]) => [k, { ...v, required: true }])),
+        'Path Parameters'
+      ) : ''}
+      ${ep.query ? renderParamTable(ep.query, 'Query Parameters') : ''}
+      ${ep.body ? renderParamTable(ep.body, 'Request Body') : ''}
+      ${responseBlock}
+      ${renderCodeTabs(ep, `tab-${ep.id}`)}
+    </div>
+  `;
+}
+
+// Build sidebar
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  let html = '';
+  html += `<div class="sidebar-section">
+    <a class="sidebar-item" href="#getting-started" style="padding-left:20px;font-weight:500;">Getting Started</a>
+  </div>`;
+
+  for (const section of API) {
+    const sectionId = section.section.toLowerCase().replace(/\s+/g, '-');
+    html += `<div class="sidebar-section" data-section="${sectionId}">
+      <div class="sidebar-heading open" onclick="toggleSection(this)">
+        ${section.section}
+        <span class="chevron">&#9656;</span>
+      </div>
+      <div class="sidebar-items open">`;
+    for (const ep of section.endpoints) {
+      html += `<a class="sidebar-item" href="#${ep.id}" data-endpoint="${ep.id}">
+        <span class="method-badge method-${ep.method}">${ep.method}</span>
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${ep.path.replace('/v1/', '')}</span>
+      </a>`;
+    }
+    html += `</div></div>`;
+  }
+  nav.innerHTML = html;
+}
+
+// Build content
+function renderContent() {
+  const content = document.getElementById('endpointContent');
+  let html = '';
+  for (const section of API) {
+    const sectionId = section.section.toLowerCase().replace(/\s+/g, '-');
+    html += `<section class="endpoint-section" id="section-${sectionId}">
+      <h2 class="section-title">${section.section}</h2>
+      <p class="section-desc">${section.sectionDesc}</p>`;
+    for (const ep of section.endpoints) {
+      html += renderEndpoint(ep);
+    }
+    html += `</section>`;
+  }
+  content.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════════════════
+
+function toggleSection(el) {
+  el.classList.toggle('open');
+  const items = el.nextElementSibling;
+  items.classList.toggle('open');
+}
+
+function switchTab(tabGroupId, lang, btn) {
+  const parent = btn.closest('.endpoint-card') || btn.closest('.hero-section') || document;
+  const tabs = btn.parentElement.querySelectorAll('.tab-btn');
+  tabs.forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  const contents = parent.querySelectorAll(`[id^="${tabGroupId}-"]`);
+  contents.forEach(c => c.classList.remove('active'));
+  const target = document.getElementById(`${tabGroupId}-${lang}`);
+  if (target) target.classList.add('active');
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-block-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('mobileOverlay').classList.toggle('open');
+}
+
+function filterEndpoints(query) {
+  const q = query.toLowerCase().trim();
+  const items = document.querySelectorAll('.sidebar-item[data-endpoint]');
+  const sections = document.querySelectorAll('.sidebar-section[data-section]');
+
+  if (!q) {
+    items.forEach(i => i.style.display = '');
+    sections.forEach(s => s.style.display = '');
+    return;
+  }
+
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    const epId = item.dataset.endpoint;
+    const ep = API.flatMap(s => s.endpoints).find(e => e.id === epId);
+    const match = text.includes(q) || (ep && (ep.desc.toLowerCase().includes(q) || ep.path.toLowerCase().includes(q)));
+    item.style.display = match ? '' : 'none';
+  });
+
+  sections.forEach(section => {
+    const visibleItems = section.querySelectorAll('.sidebar-item[data-endpoint]:not([style*="display: none"])');
+    section.style.display = visibleItems.length > 0 ? '' : 'none';
+  });
+}
+
+// Active section tracking on scroll
+function setupScrollSpy() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+        const link = document.querySelector(`.sidebar-item[href="#${id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+
+  document.querySelectorAll('.endpoint-card, .hero-section').forEach(el => {
+    observer.observe(el);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+
+renderSidebar();
+renderContent();
+setupScrollSpy();
+
+// Keyboard shortcut: / to focus search
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+});
+</script>
+
+</body>
+</html>

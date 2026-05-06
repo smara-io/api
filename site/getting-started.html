@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Started &mdash; Smara</title>
+<meta name="description" content="Set up Smara in 5 minutes. Get your API key, install the MCP server, and give your AI tools persistent memory.">
+<link rel="canonical" href="https://smara.io/getting-started">
+<meta property="og:title" content="Getting Started with Smara">
+<meta property="og:description" content="Set up persistent AI memory in 5 minutes. Step-by-step guide for Claude Code, Cursor, and Windsurf.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://smara.io/getting-started">
+<meta property="og:image" content="https://smara.io/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f9fc;
+    --bg-card: rgba(255,255,255,0.72);
+    --bg-glass: rgba(255,255,255,0.55);
+    --bg-code: #f5f5f7;
+    --bg-dark: #1d1d1f;
+    --text: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #aeaeb2;
+    --border: rgba(0,0,0,0.06);
+    --border-glass: rgba(255,255,255,0.6);
+    --accent: #0071e3;
+    --accent-light: #e8f2ff;
+    --accent-glow: rgba(0,113,227,0.15);
+    --green: #34c759;
+    --green-light: #ecfdf5;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,113,227,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(52,199,89,0.04) 0%, transparent 50%);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection { background: var(--accent-light); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 56px;
+    background: rgba(248,249,252,0.72);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px;
+    height: 100%; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-weight: 600; font-size: 15px; color: var(--text);
+    text-decoration: none; display: flex; align-items: center; gap: 8px;
+    letter-spacing: -0.02em;
+  }
+  .nav-logo .dot { color: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 24px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; color: var(--text-secondary); text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a.active { color: var(--accent); font-weight: 500; }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-github {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: color 0.15s;
+  }
+  .nav-github:hover { color: var(--text); }
+  .nav-github svg { width: 16px; height: 16px; }
+  .nav-cta {
+    font-size: 13px; font-weight: 500; color: #fff;
+    background: var(--accent); padding: 7px 16px; border-radius: 980px;
+    text-decoration: none; transition: all 0.2s;
+    box-shadow: 0 2px 8px var(--accent-glow);
+  }
+  .nav-cta:hover { box-shadow: 0 4px 16px rgba(0,113,227,0.25); transform: translateY(-1px); }
+
+  /* HEADER */
+  .page-header {
+    padding: 120px 24px 48px;
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .page-header h1 {
+    font-size: clamp(32px, 4.5vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .page-header h1 .accent { color: var(--accent); }
+  .page-header p {
+    font-size: 17px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* PROGRESS BAR */
+  .progress-container {
+    max-width: 680px;
+    margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  .progress-bar-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-sm);
+  }
+  .progress-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .progress-label {
+    font-size: 14px; font-weight: 500; color: var(--text);
+  }
+  .progress-label span { color: var(--accent); }
+  .progress-time {
+    font-size: 12px; color: var(--text-tertiary);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .progress-track {
+    height: 6px;
+    background: rgba(0,0,0,0.04);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #34c759);
+    border-radius: 3px;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* TIMELINE */
+  .timeline {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 47px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--border), rgba(0,0,0,0.03));
+  }
+
+  /* STEP */
+  .step {
+    position: relative;
+    padding-left: 72px;
+    margin-bottom: 24px;
+  }
+  .step:last-child { margin-bottom: 0; }
+
+  .step-marker {
+    position: absolute;
+    left: 32px;
+    top: 20px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 2;
+    box-shadow: 0 0 0 4px var(--bg);
+  }
+  .step-marker:hover {
+    border-color: var(--accent);
+  }
+  .step-marker svg {
+    width: 14px; height: 14px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: #fff;
+  }
+  .step.completed .step-marker {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--bg), 0 2px 8px var(--accent-glow);
+  }
+  .step.completed .step-marker svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .step-num {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    transition: opacity 0.3s;
+  }
+  .step.completed .step-num { opacity: 0; position: absolute; }
+
+  .step-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+  .step-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+  .step.completed .step-card {
+    border-color: rgba(0,113,227,0.12);
+  }
+
+  .step-header {
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+  .step-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+  .step-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .step-title .optional {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 980px;
+    padding: 1px 8px;
+    letter-spacing: 0.02em;
+  }
+  .step-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .step-chevron {
+    width: 20px; height: 20px;
+    color: var(--text-tertiary);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+  .step.open .step-chevron {
+    transform: rotate(180deg);
+  }
+
+  .step-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .step.open .step-body {
+    max-height: 800px;
+  }
+  .step-content {
+    padding: 0 24px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .step-content > *:first-child {
+    margin-top: 20px;
+  }
+
+  /* CODE BLOCKS */
+  .code-block {
+    position: relative;
+    background: var(--bg-dark);
+    border-radius: 10px;
+    margin: 12px 0;
+    overflow: hidden;
+  }
+  .code-block-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .code-block-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+  }
+  .copy-btn {
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.08);
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .copy-btn:hover {
+    background: rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.8);
+  }
+  .copy-btn.copied {
+    color: var(--green);
+  }
+  .code-block pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.85);
+  }
+  .code-block pre .key { color: #7ec8e3; }
+  .code-block pre .str { color: #a8d8a8; }
+  .code-block pre .com { color: rgba(255,255,255,0.3); }
+  .code-block pre .cmd { color: #c9a8ff; }
+  .code-block pre .flag { color: #f8d49a; }
+  .code-block pre .url { color: #7ec8e3; }
+  .code-block pre .num { color: #f8d49a; }
+  .code-block pre .punct { color: rgba(255,255,255,0.4); }
+
+  /* SAMPLE FORMAT */
+  .sample-format {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    margin: 8px 0;
+  }
+  .sample-format .label {
+    font-family: var(--font);
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+  }
+
+  /* TAB SWITCHER */
+  .tab-group {
+    margin: 16px 0;
+  }
+  .tab-bar {
+    display: flex;
+    gap: 2px;
+    background: rgba(0,0,0,0.04);
+    border-radius: 10px;
+    padding: 3px;
+    margin-bottom: 12px;
+  }
+  .tab-btn {
+    flex: 1;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover {
+    color: var(--text);
+  }
+  .tab-btn.active {
+    background: #fff;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+  .tab-panel {
+    display: none;
+  }
+  .tab-panel.active {
+    display: block;
+  }
+
+  /* CONVERSATION DEMO */
+  .convo {
+    display: flex; flex-direction: column; gap: 12px;
+    margin: 12px 0;
+  }
+  .convo-msg {
+    display: flex; gap: 10px;
+    align-items: flex-start;
+  }
+  .convo-avatar {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+  .convo-avatar.user {
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+  .convo-avatar.ai {
+    background: linear-gradient(135deg, #f0e6ff, #e6f0ff);
+    color: #7c3aed;
+  }
+  .convo-bubble {
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+    max-width: 85%;
+  }
+  .convo-bubble code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: rgba(0,0,0,0.04);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  .convo-bubble .stored {
+    display: inline-flex; align-items: center; gap: 4px;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 6px;
+  }
+
+  /* LINK CARD */
+  .link-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-decoration: none;
+    color: var(--text);
+    margin: 12px 0;
+    transition: all 0.2s;
+  }
+  .link-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 2px 12px var(--accent-glow);
+    transform: translateY(-1px);
+  }
+  .link-card-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--accent-light);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .link-card-icon svg { width: 18px; height: 18px; color: var(--accent); }
+  .link-card-text { flex: 1; }
+  .link-card-text strong { font-size: 14px; font-weight: 600; display: block; }
+  .link-card-text span { font-size: 12px; color: var(--text-secondary); }
+  .link-card-arrow {
+    color: var(--text-tertiary);
+    transition: transform 0.2s;
+  }
+  .link-card:hover .link-card-arrow { transform: translateX(3px); color: var(--accent); }
+
+  /* HELP BAR */
+  .help-bar {
+    max-width: 680px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+  }
+  .help-inner {
+    text-align: center;
+    padding: 32px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .help-inner p {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+  .help-inner a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .help-inner a:hover { text-decoration: underline; }
+
+  /* COMPLETE STATE */
+  .complete-banner {
+    display: none;
+    max-width: 680px;
+    margin: 0 auto 32px;
+    padding: 0 24px;
+  }
+  .complete-banner.visible { display: block; }
+  .complete-inner {
+    background: var(--green-light);
+    border: 1px solid rgba(52,199,89,0.2);
+    border-radius: 16px;
+    padding: 24px 28px;
+    text-align: center;
+  }
+  .complete-inner h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .complete-inner p {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  /* REVEAL ANIMATION */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .timeline::before { left: 39px; }
+    .step { padding-left: 60px; }
+    .step-marker { left: 24px; width: 28px; height: 28px; }
+    .step-header { padding: 16px 18px; }
+    .step-content { padding: 0 18px 18px; }
+    .tab-bar { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tab-btn { font-size: 12px; padding: 7px 10px; }
+    .code-block pre { font-size: 11px; padding: 12px; }
+    .page-header { padding: 100px 24px 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">smara<span class="dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="/docs">Docs</a></li>
+      <li><a href="/playground">Playground</a></li>
+      <li><a href="/compare">Compare</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="/changelog">Changelog</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener" class="nav-github">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      </a>
+      <a href="/#signup" class="nav-cta">Get API key</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header class="page-header">
+  <h1 class="reveal">Get started with <span class="accent">Smara</span></h1>
+  <p class="reveal">Set up persistent memory for your AI tools in about 5 minutes.</p>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-container reveal">
+  <div class="progress-bar-wrap">
+    <div class="progress-top">
+      <div class="progress-label"><span id="progress-count">0</span> of 6 steps complete</div>
+      <div class="progress-time">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        ~5 minutes
+      </div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETE BANNER -->
+<div class="complete-banner" id="complete-banner">
+  <div class="complete-inner">
+    <h3>All done! You're set up.</h3>
+    <p>Your AI tools now have persistent memory. Start coding and Smara handles the rest.</p>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline">
+
+  <!-- STEP 1 -->
+  <div class="step open reveal" data-step="1">
+    <div class="step-marker" onclick="toggleComplete(1)" title="Mark complete">
+      <span class="step-num">1</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <div class="step-card">
+      <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-header-left">
+          <div class="step-title">Get your API key</div>
+          <div class="step-desc">Sign up at smara.io to get your free API key. 10,000 memories included.</div>
+        </div>
+        <svg class="step-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="step-body">
+        <div class="step-content">
+          <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">Create a free account and grab your API key from the dashboard. Your key looks like this:</p>
+          <div class="sample-format">
+            <span class="label">Format:</span>
+            <span>smr_xxxxxxxxxxxx</span>
+          </div>
+          <p style="font-size:13px;color:var(--text-tertiary);margin-top:12px;">Keep this key handy &mdash; you'll paste it into your config in the next step.</p>
+          <a href="/#signup" class="link-card" style="margin-top:16px;">
+            <div class="link-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
+            </div>
+            <div class="link-card-text">
+              <strong>Sign up free on smara.io</strong>
+              <span>Takes 30 seconds. No credit card required.</span>
+            </div>
+            <svg class="link-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step reveal" data-step="2">
+    <div class="step-marker" onclick="toggleComplete(2)" title="Mark complete">
+      <span class="step-num">2</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <div class="step-card">
+      <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-header-left">
+          <div class="step-title">Install the MCP server</div>
+          <div class="step-desc">Add Smara to your AI tool in 30 seconds.</div>
+        </div>
+        <svg class="step-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="step-body">
+        <div class="step-content">
+          <div class="tab-group">
+            <div class="tab-bar">
+              <button class="tab-btn active" onclick="switchTab(this, 'claude-code')">Claude Code</button>
+              <button class="tab-btn" onclick="switchTab(this, 'cursor')">Cursor</button>
+              <button class="tab-btn" onclick="switchTab(this, 'windsurf')">Windsurf</button>
+              <button class="tab-btn" onclick="switchTab(this, 'manual')">Manual</button>
+            </div>
+
+            <div class="tab-panel active" id="tab-claude-code">
+              <p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">Add this to your <code style="font-family:var(--mono);font-size:12px;background:var(--bg-code);padding:1px 5px;border-radius:4px;">claude_desktop_config.json</code>:</p>
+              <div class="code-block">
+                <div class="code-block-header">
+                  <span class="code-block-label">claude_desktop_config.json</span>
+                  <button class="copy-btn" onclick="copyCode(this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+                <pre><code>{
+  <span class="key">"mcpServers"</span><span class="punct">:</span> {
+    <span class="key">"smara"</span><span class="punct">:</span> {
+      <span class="key">"command"</span><span class="punct">:</span> <span class="str">"npx"</span><span class="punct">,</span>
+      <span class="key">"args"</span><span class="punct">:</span> [<span class="str">"@smara/mcp-server"</span>]<span class="punct">,</span>
+      <span class="key">"env"</span><span class="punct">:</span> {
+        <span class="key">"SMARA_API_KEY"</span><span class="punct">:</span> <span class="str">"smr_YOUR_KEY_HERE"</span>
+      }
+    }
+  }
+}</code></pre>
+              </div>
+            </div>
+
+            <div class="tab-panel" id="tab-cursor">
+              <p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">Add this to <code style="font-family:var(--mono);font-size:12px;background:var(--bg-code);padding:1px 5px;border-radius:4px;">.cursor/mcp.json</code> in your project root:</p>
+              <div class="code-block">
+                <div class="code-block-header">
+                  <span class="code-block-label">.cursor/mcp.json</span>
+                  <button class="copy-btn" onclick="copyCode(this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+                <pre><code>{
+  <span class="key">"mcpServers"</span><span class="punct">:</span> {
+    <span class="key">"smara"</span><span class="punct">:</span> {
+      <span class="key">"command"</span><span class="punct">:</span> <span class="str">"npx"</span><span class="punct">,</span>
+      <span class="key">"args"</span><span class="punct">:</span> [<span class="str">"@smara/mcp-server"</span>]<span class="punct">,</span>
+      <span class="key">"env"</span><span class="punct">:</span> {
+        <span class="key">"SMARA_API_KEY"</span><span class="punct">:</span> <span class="str">"smr_YOUR_KEY_HERE"</span>
+      }
+    }
+  }
+}</code></pre>
+              </div>
+            </div>
+
+            <div class="tab-panel" id="tab-windsurf">
+              <p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">Add this to your Windsurf MCP config:</p>
+              <div class="code-block">
+                <div class="code-block-header">
+                  <span class="code-block-label">~/.windsurf/mcp.json</span>
+                  <button class="copy-btn" onclick="copyCode(this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+                <pre><code>{
+  <span class="key">"mcpServers"</span><span class="punct">:</span> {
+    <span class="key">"smara"</span><span class="punct">:</span> {
+      <span class="key">"command"</span><span class="punct">:</span> <span class="str">"npx"</span><span class="punct">,</span>
+      <span class="key">"args"</span><span class="punct">:</span> [<span class="str">"@smara/mcp-server"</span>]<span class="punct">,</span>
+      <span class="key">"env"</span><span class="punct">:</span> {
+        <span class="key">"SMARA_API_KEY"</span><span class="punct">:</span> <span class="str">"smr_YOUR_KEY_HERE"</span>
+      }
+    }
+  }
+}</code></pre>
+              </div>
+            </div>
+
+            <div class="tab-panel" id="tab-manual">
+              <p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">Run the auto-installer which detects your tools and configures everything:</p>
+              <div class="code-block">
+                <div class="code-block-header">
+                  <span class="code-block-label">Terminal</span>
+                  <button class="copy-btn" onclick="copyCode(this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+                <pre><code><span class="cmd">npx</span> <span class="str">@smara/mcp-server</span> <span class="flag">--init</span></code></pre>
+              </div>
+              <p style="font-size:13px;color:var(--text-tertiary);margin-top:8px;">This detects installed AI tools and writes the config automatically. You'll be prompted for your API key.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step reveal" data-step="3">
+    <div class="step-marker" onclick="toggleComplete(3)" title="Mark complete">
+      <span class="step-num">3</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <div class="step-card">
+      <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-header-left">
+          <div class="step-title">Store your first memory</div>
+          <div class="step-desc">Just start coding. Smara auto-captures context.</div>
+        </div>
+        <svg class="step-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="step-body">
+        <div class="step-content">
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">Once installed, your AI tool stores memories automatically. Here's what it looks like:</p>
+          <div class="convo">
+            <div class="convo-msg">
+              <div class="convo-avatar user">Y</div>
+              <div class="convo-bubble">Let's use PostgreSQL for the user service. We need JSONB for the preferences column and a GIN index on tags.</div>
+            </div>
+            <div class="convo-msg">
+              <div class="convo-avatar ai">AI</div>
+              <div class="convo-bubble">
+                Got it. I'll set up PostgreSQL with JSONB for preferences and add a GIN index on the tags column.
+                <div class="stored">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  Stored to Smara
+                </div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:16px;margin-bottom:8px;">Or store manually via the API:</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-label">Terminal</span>
+              <button class="copy-btn" onclick="copyCode(this)">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre><code><span class="cmd">curl</span> <span class="flag">-X POST</span> <span class="url">https://api.smara.io/v1/memories</span> \
+  <span class="flag">-H</span> <span class="str">"Authorization: Bearer smr_YOUR_KEY"</span> \
+  <span class="flag">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="flag">-d</span> <span class="str">'{
+    "content": "We chose PostgreSQL with JSONB for preferences",
+    "source": "architecture-decision",
+    "importance": 8
+  }'</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step reveal" data-step="4">
+    <div class="step-marker" onclick="toggleComplete(4)" title="Mark complete">
+      <span class="step-num">4</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <div class="step-card">
+      <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-header-left">
+          <div class="step-title">Search your memories</div>
+          <div class="step-desc">Ask your AI about past decisions.</div>
+        </div>
+        <svg class="step-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="step-body">
+        <div class="step-content">
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">Your AI automatically searches Smara when you ask about past context:</p>
+          <div class="convo">
+            <div class="convo-msg">
+              <div class="convo-avatar user">Y</div>
+              <div class="convo-bubble">What did we decide about the database schema?</div>
+            </div>
+            <div class="convo-msg">
+              <div class="convo-avatar ai">AI</div>
+              <div class="convo-bubble">
+                Based on our earlier discussion, you chose <strong>PostgreSQL</strong> with a <code>JSONB</code> column for user preferences and a <strong>GIN index</strong> on the tags column.
+                <div class="stored">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+                  Found via Smara
+                </div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:16px;margin-bottom:8px;">Or search directly via the API:</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-label">Terminal</span>
+              <button class="copy-btn" onclick="copyCode(this)">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre><code><span class="cmd">curl</span> <span class="url">https://api.smara.io/v1/memories/search</span> \
+  <span class="flag">-H</span> <span class="str">"Authorization: Bearer smr_YOUR_KEY"</span> \
+  <span class="flag">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="flag">-d</span> <span class="str">'{"query": "database schema decisions"}'</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step reveal" data-step="5">
+    <div class="step-marker" onclick="toggleComplete(5)" title="Mark complete">
+      <span class="step-num">5</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <div class="step-card">
+      <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-header-left">
+          <div class="step-title">Set up a team <span class="optional">optional</span></div>
+          <div class="step-desc">Share project context with your team.</div>
+        </div>
+        <svg class="step-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="step-body">
+        <div class="step-content">
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;">Teams let you share project decisions with collaborators while keeping personal preferences private. Your AI automatically classifies memories as team-shared or personal.</p>
+          <ul style="margin:12px 0;padding-left:20px;font-size:13px;color:var(--text-secondary);line-height:2;">
+            <li>Architectural decisions, API patterns &rarr; shared with team</li>
+            <li>Editor preferences, personal workflows &rarr; stay private</li>
+            <li>Combined search returns both when relevant</li>
+          </ul>
+          <a href="/docs#teams" class="link-card">
+            <div class="link-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div class="link-card-text">
+              <strong>Teams documentation</strong>
+              <span>Learn about roles, permissions, and team memory management.</span>
+            </div>
+            <svg class="link-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step reveal" data-step="6">
+    <div class="step-marker" onclick="toggleComplete(6)" title="Mark complete">
+      <span class="step-num">6</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <div class="step-card">
+      <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-header-left">
+          <div class="step-title">Explore the playground</div>
+          <div class="step-desc">Try the API live in your browser.</div>
+        </div>
+        <svg class="step-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="step-body">
+        <div class="step-content">
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;">The playground lets you test every API endpoint directly in your browser. Store memories, search, and experiment with decay scoring &mdash; all without writing code.</p>
+          <a href="/playground" class="link-card">
+            <div class="link-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div class="link-card-text">
+              <strong>Open the Playground</strong>
+              <span>Interactive API explorer with live requests.</span>
+            </div>
+            <svg class="link-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- HELP -->
+<div class="help-bar reveal">
+  <div class="help-inner">
+    <p>Need help? Check the <a href="/docs">full documentation</a> or reach out at <a href="mailto:parallelromb@gmail.com">parallelromb@gmail.com</a></p>
+  </div>
+</div>
+
+<script>
+  // State
+  const STORAGE_KEY = 'smara-onboarding';
+  const TOTAL_STEPS = 6;
+
+  function getState() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    } catch { return {}; }
+  }
+
+  function saveState(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  // Toggle step completion
+  function toggleComplete(stepNum) {
+    const state = getState();
+    state[stepNum] = !state[stepNum];
+    saveState(state);
+    renderState();
+  }
+
+  // Toggle step expand/collapse
+  function toggleStep(header) {
+    const step = header.closest('.step');
+    step.classList.toggle('open');
+  }
+
+  // Render from state
+  function renderState() {
+    const state = getState();
+    let completed = 0;
+
+    for (let i = 1; i <= TOTAL_STEPS; i++) {
+      const el = document.querySelector(`.step[data-step="${i}"]`);
+      if (!el) continue;
+      if (state[i]) {
+        el.classList.add('completed');
+        completed++;
+      } else {
+        el.classList.remove('completed');
+      }
+    }
+
+    document.getElementById('progress-count').textContent = completed;
+    document.getElementById('progress-fill').style.width = ((completed / TOTAL_STEPS) * 100) + '%';
+
+    const banner = document.getElementById('complete-banner');
+    if (completed === TOTAL_STEPS) {
+      banner.classList.add('visible');
+    } else {
+      banner.classList.remove('visible');
+    }
+  }
+
+  // Copy code
+  function copyCode(btn) {
+    const block = btn.closest('.code-block');
+    const code = block.querySelector('code').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.classList.add('copied');
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Copied`;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`;
+      }, 2000);
+    });
+  }
+
+  // Tab switcher
+  function switchTab(btn, tabId) {
+    const group = btn.closest('.tab-group');
+    group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    group.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tabId).classList.add('active');
+  }
+
+  // Reveal on scroll
+  function initReveals() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 60);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }
+
+  // Init
+  renderState();
+  initReveals();
+</script>
+</body>
+</html>

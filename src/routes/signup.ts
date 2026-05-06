@@ -13,7 +13,8 @@ import { pool } from '../db/pool.js';
 import { enqueueDripSequence } from './email.js';
 
 const BCRYPT_ROUNDS = 12;
-const JWT_SECRET = process.env.JWT_SECRET ?? 'smara-dev-jwt-secret-change-in-prod';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is required');
 const JWT_EXPIRES_IN = '30d';
 
 /* ── Helpers ───────────────────────────────────────────────────── */

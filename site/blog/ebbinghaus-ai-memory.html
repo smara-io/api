@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Ebbinghaus Decay Curves Make AI Memory Actually Useful</title>
+  <meta name="description" content="Learn how Ebbinghaus forgetting curves solve the stale memory problem in AI agents. See how Smara implements decay-scored retrieval with before/after examples.">
+  <meta property="og:title" content="How Ebbinghaus Decay Curves Make AI Memory Actually Useful">
+  <meta property="og:description" content="Why flat memory retrieval fails and how Ebbinghaus decay curves fix it. Includes implementation details and API examples.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://smara.io/blog/ebbinghaus-ai-memory">
+  <meta property="og:site_name" content="Smara">
+  <meta property="og:image" content="https://smara.io/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="article:author" content="Sri Panchavati">
+  <meta property="article:published_time" content="2026-04-27">
+  <link rel="canonical" href="https://smara.io/blog/ebbinghaus-ai-memory">
+  <meta name="author" content="Sri Panchavati">
+  <meta name="keywords" content="AI memory decay, Ebbinghaus forgetting curve AI, memory scoring AI agents, decay-scored retrieval">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@SmaraMemo">
+  <meta name="twitter:title" content="How Ebbinghaus Decay Curves Make AI Memory Actually Useful">
+  <meta name="twitter:description" content="Why flat memory retrieval fails and how Ebbinghaus decay curves fix it. Implementation details and API examples.">
+  <meta name="twitter:image" content="https://smara.io/og-image.png">
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"How Ebbinghaus Decay Curves Make AI Memory Actually Useful","description":"Learn how Ebbinghaus forgetting curves solve the stale memory problem in AI agents.","url":"https://smara.io/blog/ebbinghaus-ai-memory","author":{"@type":"Person","name":"Sri Panchavati"},"publisher":{"@type":"Organization","name":"Smara","url":"https://smara.io"},"datePublished":"2026-04-27","image":"https://smara.io/og-image.png"}
+  </script>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --bg-card: rgba(255,255,255,0.72);
+      --bg-code: rgba(0,0,0,0.04);
+      --text: #1d1d1f;
+      --text-muted: #6e6e73;
+      --accent: #0071e3;
+      --accent-hover: #005bb5;
+      --border: rgba(0,0,0,0.06);
+      --green: #4ade80;
+      --orange: #fb923c;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 18px;
+    }
+    .container { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }
+    .meta {
+      color: var(--text-muted);
+      font-size: 14px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin-bottom: 8px;
+    }
+    .meta a { color: var(--accent); text-decoration: none; }
+    .meta a:hover { text-decoration: underline; }
+    .reading-time {
+      display: inline-block;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-left: 8px;
+    }
+    h1 { font-size: 2.4rem; line-height: 1.2; margin: 16px 0 32px; font-weight: 700; letter-spacing: -0.02em; }
+    h2 { font-size: 1.5rem; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-weight: 600; }
+    h3 { font-size: 1.15rem; margin: 32px 0 12px; font-weight: 600; }
+    p { margin: 0 0 16px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-hover); text-decoration: underline; }
+    strong { color: #1d1d1f; }
+    code {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.85em;
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+    pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      line-height: 1.5;
+    }
+    pre code { background: none; border: none; padding: 0; font-size: 14px; color: #1d1d1f; }
+    .comment { color: #6e6e73; }
+    .keyword { color: #ad3da4; }
+    .string { color: #067d26; }
+    .func { color: #d2a8ff; }
+    .num { color: #1c00cf; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+    th { background: var(--bg-card); color: var(--text-muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0 32px;
+    }
+    .toc h4 { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .toc ol { padding-left: 20px; }
+    .toc li { font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin-bottom: 6px; }
+    .formula {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      font-size: 1.3em;
+      font-family: 'Georgia', serif;
+      font-style: italic;
+      margin: 20px 0;
+      color: var(--accent);
+    }
+    .cta {
+      background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%);
+      border-radius: 8px;
+      padding: 40px;
+      text-align: center;
+      margin: 48px 0 0;
+    }
+    .cta p { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: rgba(255,255,255,0.9); margin-bottom: 16px; font-size: 16px; }
+    .cta-btn {
+      display: inline-block;
+      background: #fff;
+      color: #1d1d1f;
+      padding: 12px 32px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      text-decoration: none;
+      transition: transform 0.15s ease;
+    }
+    .cta-btn:hover { transform: translateY(-1px); text-decoration: none; color: #1d1d1f; }
+    .back-link {
+      display: inline-block;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .back-link:hover { color: var(--accent); }
+    .comparison-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .comparison-box > div {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .comparison-box h4 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .comparison-box .before h4 { color: var(--orange); }
+    .comparison-box .after h4 { color: var(--green); }
+    @media (max-width: 640px) {
+      .comparison-box { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+    <div class="meta">
+      By <a href="https://parallelromb.dev">Sri Panchavati</a> &middot; April 2026
+      <span class="reading-time">5 min read</span>
+    </div>
+
+    <h1>How Ebbinghaus Decay Curves Make AI Memory Actually Useful</h1>
+
+    <nav class="toc">
+      <h4>Table of Contents</h4>
+      <ol>
+        <li><a href="#ebbinghaus">The Ebbinghaus Forgetting Curve</a></li>
+        <li><a href="#flat-fails">Why Flat Retrieval Fails</a></li>
+        <li><a href="#implementation">How Smara Implements Ebbinghaus Decay</a></li>
+        <li><a href="#before-after">Before and After: API Examples</a></li>
+        <li><a href="#contradiction">Automatic Contradiction Handling</a></li>
+        <li><a href="#importance">Setting Importance Scores</a></li>
+        <li><a href="#context">The Context Endpoint</a></li>
+      </ol>
+    </nav>
+
+    <p>Most AI memory systems treat every stored fact the same way. A user preference from last week and a mention from six months ago get equal weight in retrieval. This doesn't match how useful memory actually works&mdash;and it's why your AI agent's context window fills up with stale, irrelevant facts.</p>
+
+    <p>The fix comes from a 140-year-old psychology experiment.</p>
+
+    <h2 id="ebbinghaus">The Ebbinghaus Forgetting Curve</h2>
+
+    <p>In 1885, Hermann Ebbinghaus published his research on memory retention. His key finding: <strong>memory retention decays exponentially over time</strong>, following a predictable curve. The stronger the initial encoding (how important the memory is), the slower it decays.</p>
+
+    <div class="formula">
+      retention = e<sup>(-t / S)</sup>
+    </div>
+
+    <p>Where <code>t</code> is time elapsed and <code>S</code> is the memory's stability. A strongly encoded memory fades slowly. A weakly encoded one fades fast.</p>
+
+    <p>This is how human memory works. You remember yesterday's important conversation clearly. You vaguely remember a passing comment from last month. You've completely forgotten what you ate for lunch three Tuesdays ago. Your brain doesn't treat all memories equally&mdash;it prioritizes by importance and recency.</p>
+
+    <p>AI memory systems should work the same way.</p>
+
+    <h2 id="flat-fails">Why Flat Retrieval Fails</h2>
+
+    <p>Here's a concrete example. Say your AI assistant has stored 500 memories about a user named Alice over six months. Alice mentions she's moving from New York to San Francisco. She asks: "What's a good neighborhood for me?"</p>
+
+    <p>With flat vector retrieval, the system returns results ranked purely by semantic similarity:</p>
+
+    <ol style="margin: 0 0 16px 24px;">
+      <li>"Alice lived in the Upper East Side" (6 months old)</li>
+      <li>"Alice is looking at apartments in the Mission District" (yesterday)</li>
+      <li>"Alice's friend recommended Noe Valley" (3 days ago)</li>
+      <li>"Alice liked the neighborhood feel of Brooklyn Heights" (4 months old)</li>
+    </ol>
+
+    <p>Results 1 and 4 are about <em>New York</em>. They're semantically similar to the query but completely irrelevant now. A flat retrieval system has no way to know that.</p>
+
+    <p>With decay-ranked retrieval, the same search produces correctly prioritized results:</p>
+
+    <ol style="margin: 0 0 16px 24px;">
+      <li>"Alice is looking at apartments in the Mission District" (decay: 0.97)</li>
+      <li>"Alice's friend recommended Noe Valley" (decay: 0.91)</li>
+      <li>"Alice is moving from New York to San Francisco" (decay: 0.82)</li>
+      <li>"Alice liked the neighborhood feel of Brooklyn Heights" (decay: 0.08)</li>
+    </ol>
+
+    <p>The old New York memories are still there, but they've decayed. The system naturally prioritizes current, relevant context.</p>
+
+    <h2 id="implementation">How Smara Implements Ebbinghaus Decay</h2>
+
+    <p>Smara applies the forgetting curve at retrieval time. Every memory has two key attributes: <strong>importance</strong> (0.0 to 1.0, set when storing) and <strong>decay_score</strong> (calculated live).</p>
+
+    <pre><code><span class="keyword">function</span> <span class="func">ebbinghaus</span>(createdAt: Date, importance: <span class="keyword">number</span>): <span class="keyword">number</span> {
+  <span class="keyword">const</span> days = (Date.now() - createdAt.getTime()) / (<span class="num">1000</span> * <span class="num">60</span> * <span class="num">60</span> * <span class="num">24</span>);
+  <span class="keyword">const</span> halfLife = Math.max(importance, <span class="num">0.1</span>) * <span class="num">10</span>;  <span class="comment">// days</span>
+  <span class="keyword">return</span> Math.exp(-days / halfLife);
+}</code></pre>
+
+    <p>A memory with <code>importance: 1.0</code> has a <strong>10-day half-life</strong>. After 10 days, its decay score drops to ~0.37. After 20 days, ~0.14.</p>
+
+    <p>A memory with <code>importance: 0.3</code> has a <strong>3-day half-life</strong>. After 3 days, ~0.37. After a week, ~0.10. It fades much faster.</p>
+
+    <p>The final retrieval score blends vector similarity with decay:</p>
+
+    <pre><code><span class="keyword">function</span> <span class="func">blendScore</span>(similarity: <span class="keyword">number</span>, decayScore: <span class="keyword">number</span>): <span class="keyword">number</span> {
+  <span class="keyword">return</span> similarity * <span class="num">0.7</span> + decayScore * <span class="num">0.3</span>;
+}</code></pre>
+
+    <p><strong>70% semantic relevance, 30% temporal freshness.</strong> A highly relevant old memory can still beat a vaguely relevant new one&mdash;but all else being equal, recent memories win.</p>
+
+    <h2 id="before-after">Before and After: API Examples</h2>
+
+    <div class="comparison-box">
+      <div class="before">
+        <h4>Without Decay (Flat Retrieval)</h4>
+        <p style="font-size: 14px; font-family: monospace; color: var(--text-muted);">
+          "Alice is vegetarian" &mdash; sim: 0.92<br>
+          "Alice loves sushi" &mdash; sim: 0.89<br>
+          "Alice is trying vegan" &mdash; sim: 0.87<br>
+          <br>
+          Contradictions unsorted. Which is current?
+        </p>
+      </div>
+      <div class="after">
+        <h4>With Smara Decay Scoring</h4>
+        <p style="font-size: 14px; font-family: monospace; color: var(--text-muted);">
+          "Alice is trying vegan" &mdash; score: 0.894<br>
+          "Alice is vegetarian" &mdash; score: 0.680<br>
+          "Alice loves sushi" &mdash; score: 0.632<br>
+          <br>
+          Most recent fact surfaces first.
+        </p>
+      </div>
+    </div>
+
+    <p>With Smara's decay scoring:</p>
+
+    <pre><code>curl <span class="string">"https://api.smara.io/v1/memories/search?user_id=alice&amp;q=food+preferences"</span></code></pre>
+
+    <pre><code>{
+  <span class="string">"results"</span>: [
+    {
+      <span class="string">"fact"</span>: <span class="string">"Alice is trying a vegan diet"</span>,
+      <span class="string">"similarity"</span>: <span class="num">0.87</span>,
+      <span class="string">"decay_score"</span>: <span class="num">0.95</span>,
+      <span class="string">"score"</span>: <span class="num">0.894</span>,
+      <span class="string">"created_at"</span>: <span class="string">"2026-04-25T..."</span>
+    },
+    {
+      <span class="string">"fact"</span>: <span class="string">"Alice is vegetarian"</span>,
+      <span class="string">"similarity"</span>: <span class="num">0.92</span>,
+      <span class="string">"decay_score"</span>: <span class="num">0.12</span>,
+      <span class="string">"score"</span>: <span class="num">0.680</span>,
+      <span class="string">"created_at"</span>: <span class="string">"2025-11-03T..."</span>
+    }
+  ]
+}</code></pre>
+
+    <h2 id="contradiction">Automatic Contradiction Handling</h2>
+
+    <p>Smara goes further than decay scoring. When you store a new memory, it checks for near-duplicates and contradictions using cosine similarity bands:</p>
+
+    <table>
+      <thead>
+        <tr><th>Cosine Range</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>&ge; 0.985</td><td>True duplicate &mdash; skip storage</td></tr>
+        <tr><td>0.94 &ndash; 0.985</td><td>Contradiction &mdash; store new, soft-delete old</td></tr>
+        <tr><td>&lt; 0.94</td><td>New fact &mdash; store alongside existing</td></tr>
+      </tbody>
+    </table>
+
+    <pre><code><span class="comment"># This automatically handles the old "vegetarian" memory</span>
+curl -X POST https://api.smara.io/v1/memories \
+  -H <span class="string">"Authorization: Bearer smara_..."</span> \
+  -d <span class="string">'{"user_id": "alice", "fact": "Alice is trying a vegan diet", "importance": 0.8}'</span>
+
+<span class="comment"># Response shows what happened</span>
+{
+  <span class="string">"action"</span>: <span class="string">"replaced"</span>,
+  <span class="string">"id"</span>: <span class="string">"new-memory-id"</span>,
+  <span class="string">"replaced_id"</span>: <span class="string">"old-vegetarian-memory-id"</span>
+}</code></pre>
+
+    <h2 id="importance">Setting Importance Scores</h2>
+
+    <table>
+      <thead>
+        <tr><th>Importance</th><th>Half-life</th><th>Use for</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1.0</td><td>10 days</td><td>Core identity facts, strong preferences</td></tr>
+        <tr><td>0.7</td><td>7 days</td><td>Current projects, active goals</td></tr>
+        <tr><td>0.5</td><td>5 days</td><td>General preferences, casual mentions</td></tr>
+        <tr><td>0.3</td><td>3 days</td><td>Temporary states, passing interests</td></tr>
+        <tr><td>0.1</td><td>1 day</td><td>Ephemeral context, one-off mentions</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="context">The Context Endpoint</h2>
+
+    <p>For the fastest integration, use Smara's context endpoint. It returns decay-ranked memories pre-formatted for LLM system prompts:</p>
+
+    <pre><code>curl <span class="string">"https://api.smara.io/v1/users/alice/context?q=weekend+plans&amp;top_n=5"</span></code></pre>
+
+    <pre><code>{
+  <span class="string">"context"</span>: <span class="string">"[1] (importance: 0.8, decay: 0.95, source: api) Alice is planning a hike this Saturday\n[2] (importance: 0.6, decay: 0.72, source: api) Alice prefers morning activities"</span>,
+  <span class="string">"memories"</span>: [...]
+}</code></pre>
+
+    <p>Drop that <code>context</code> string directly into your system prompt. The LLM gets ranked, relevant context with zero post-processing.</p>
+
+    <h2>Conclusion</h2>
+
+    <p>Flat memory retrieval was a reasonable first approach, but it breaks down as memories accumulate. Ebbinghaus decay curves solve this by adding the dimension that vector search misses: <strong>time</strong>. Important recent facts surface. Stale facts fade. Contradictions resolve themselves.</p>
+
+    <p>This isn't a theoretical improvement. It's the difference between an AI assistant that confidently tells Alice about great restaurants in New York (where she used to live) and one that recommends spots in San Francisco (where she lives now).</p>
+
+    <div class="cta">
+      <p>Try Smara free &mdash; see decay scoring in action with your first 100 memories.</p>
+      <a href="https://smara.io" class="cta-btn">Try Smara Free &rarr;</a>
+    </div>
+
+    <hr>
+
+    <h2 style="border-bottom: none; margin-bottom: 20px;">Related Posts</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+      <a href="/blog/smara-vs-mem0.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Comparison</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Smara vs Mem0</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">Head-to-head comparison of architecture, pricing, and DX.</p>
+      </a>
+      <a href="/blog/ai-agents-persistent-memory.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Architecture</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Building AI Agents with Persistent Memory</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">Patterns for giving agents context across sessions.</p>
+      </a>
+      <a href="/blog/claude-code-memory-mcp.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Tutorial</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Adding Memory to Claude Code via MCP</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">Give Claude Code persistent memory in 30 seconds.</p>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

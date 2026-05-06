@@ -5,9 +5,8 @@ import crypto from 'crypto';
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET ?? '';
 
 const PLAN_MAP: Record<string, { plan: string; memoryLimit: number }> = {
-  // Live Stripe price IDs → plan config (updated 2026-03-30)
-  'price_1TGkCV40cOBHeEx0NCRVwVIJ': { plan: 'developer', memoryLimit: 200_000 },     // $19/mo
-  'price_1TGkCV40cOBHeEx0r7pjaTMS': { plan: 'pro',       memoryLimit: 2_000_000 },   // $99/mo
+  ...(process.env.STRIPE_PRICE_DEVELOPER ? { [process.env.STRIPE_PRICE_DEVELOPER]: { plan: 'developer', memoryLimit: 200_000 } } : {}),
+  ...(process.env.STRIPE_PRICE_PRO ? { [process.env.STRIPE_PRICE_PRO]: { plan: 'pro', memoryLimit: 2_000_000 } } : {}),
 };
 
 function verifyStripeSignature(payload: string, signature: string, secret: string): boolean {

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smara &mdash; System Status</title>
+<meta name="description" content="Real-time system status for Smara — API, MCP Server, Database, and Search.">
+<meta name="theme-color" content="#f8f9fc">
+<link rel="canonical" href="https://smara.io/status">
+<meta property="og:title" content="Smara — System Status">
+<meta property="og:description" content="Real-time system status for Smara — API, MCP Server, Database, and Search.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://smara.io/status">
+<meta property="og:site_name" content="Smara">
+<meta property="og:image" content="https://smara.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@SmaraMemo">
+<meta name="twitter:title" content="Smara — System Status">
+<meta name="twitter:description" content="Real-time system status for Smara — API, MCP Server, Database, and Search.">
+<meta name="twitter:image" content="https://smara.io/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f8f9fc;
+  --bg-card: rgba(255,255,255,0.72);
+  --bg-glass: rgba(255,255,255,0.55);
+  --text: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #aeaeb2;
+  --border: rgba(0,0,0,0.06);
+  --accent: #0071e3;
+  --accent-light: #e8f2ff;
+  --green: #34c759;
+  --green-light: #ecfdf5;
+  --yellow: #f59e0b;
+  --yellow-light: #fffbeb;
+  --red: #ef4444;
+  --red-light: #fef2f2;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,113,227,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(52,199,89,0.04) 0%, transparent 50%);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Nav ── */
+nav {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+.nav-logo span { color: var(--accent); }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.nav-right a {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+.nav-right a:hover { color: var(--text); }
+
+/* ── Header status ── */
+.status-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.status-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+}
+.overall-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 28px;
+  border-radius: 100px;
+  font-size: 15px;
+  font-weight: 600;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid;
+  transition: all 0.4s ease;
+}
+.overall-badge .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.15); }
+}
+.overall-badge.operational {
+  background: rgba(52,199,89,0.08);
+  border-color: rgba(52,199,89,0.2);
+  color: #15803d;
+}
+.overall-badge.operational .dot { background: var(--green); box-shadow: 0 0 8px rgba(52,199,89,0.4); }
+.overall-badge.degraded {
+  background: rgba(245,158,11,0.08);
+  border-color: rgba(245,158,11,0.2);
+  color: #92400e;
+}
+.overall-badge.degraded .dot { background: var(--yellow); box-shadow: 0 0 8px rgba(245,158,11,0.4); }
+.overall-badge.outage {
+  background: rgba(239,68,68,0.08);
+  border-color: rgba(239,68,68,0.2);
+  color: #991b1b;
+}
+.overall-badge.outage .dot { background: var(--red); box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+
+.last-checked {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  font-family: var(--mono);
+}
+
+/* ── Cards ── */
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+}
+
+.service-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 48px;
+}
+.service-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.service-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.service-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+.service-host {
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--text-tertiary);
+}
+.service-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.response-time {
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--text-tertiary);
+}
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.status-badge .mini-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.status-badge.up {
+  background: var(--green-light);
+  color: #15803d;
+}
+.status-badge.up .mini-dot { background: var(--green); }
+.status-badge.degraded {
+  background: var(--yellow-light);
+  color: #92400e;
+}
+.status-badge.degraded .mini-dot { background: var(--yellow); }
+.status-badge.down {
+  background: var(--red-light);
+  color: #991b1b;
+}
+.status-badge.down .mini-dot { background: var(--red); }
+.status-badge.checking {
+  background: rgba(0,0,0,0.04);
+  color: var(--text-tertiary);
+}
+.status-badge.checking .mini-dot { background: var(--text-tertiary); animation: pulse-dot 1s ease-in-out infinite; }
+
+/* ── Uptime chart ── */
+.uptime-section {
+  margin-bottom: 48px;
+}
+.uptime-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+}
+.uptime-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.uptime-pct {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #15803d;
+}
+.uptime-label {
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+.uptime-bars {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: 40px;
+}
+.uptime-bar {
+  flex: 1;
+  border-radius: 3px;
+  min-height: 8px;
+  transition: opacity 0.2s;
+  position: relative;
+}
+.uptime-bar:hover { opacity: 0.75; }
+.uptime-bar.full { background: var(--green); height: 100%; }
+.uptime-bar.partial { background: var(--yellow); height: 75%; }
+.uptime-bar.down { background: var(--red); height: 50%; }
+.uptime-legend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: var(--mono);
+}
+
+/* ── Incidents ── */
+.incidents-section {
+  margin-bottom: 48px;
+}
+.no-incidents {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.no-incidents .check-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--green-light);
+  border-radius: 50%;
+  margin-bottom: 8px;
+  color: #15803d;
+  font-size: 18px;
+}
+.incident-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 12px;
+}
+.incident-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.incident-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+.incident-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: var(--green-light);
+  color: #15803d;
+}
+.incident-date {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  font-family: var(--mono);
+  margin-bottom: 8px;
+}
+.incident-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.incident-timeline {
+  border-left: 2px solid var(--border);
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.timeline-entry {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.timeline-entry strong {
+  font-weight: 600;
+  color: var(--text);
+}
+.timeline-entry time {
+  font-family: var(--mono);
+  color: var(--text-tertiary);
+  font-size: 11px;
+}
+
+/* ── Subscribe ── */
+.subscribe-section {
+  margin-bottom: 64px;
+}
+.subscribe-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+.subscribe-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.subscribe-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+.subscribe-form {
+  display: flex;
+  gap: 8px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.subscribe-form input {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: var(--font);
+  font-size: 14px;
+  background: white;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.subscribe-form input:focus { border-color: var(--accent); }
+.subscribe-form button {
+  padding: 10px 20px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.subscribe-form button:hover { opacity: 0.85; }
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 0;
+  margin-top: 24px;
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer-left { font-size: 13px; color: var(--text-tertiary); }
+.footer-left a { color: var(--text-secondary); text-decoration: none; }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+.footer-links a:hover { color: var(--text); }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .container { padding: 0 16px; }
+  .status-header h1 { font-size: 22px; }
+  .service-card { padding: 14px 16px; flex-wrap: wrap; gap: 8px; }
+  .subscribe-form { flex-direction: column; }
+  .footer-inner { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .uptime-pct { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="container">
+    <a href="/" class="nav-logo">smara<span>.</span></a>
+    <div class="nav-right">
+      <a href="/docs">Docs</a>
+      <a href="/playground">Playground</a>
+      <a href="/compare">Compare</a>
+      <a href="/blog/">Blog</a>
+      <a href="/changelog">Changelog</a>
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="status-header">
+    <h1>System Status</h1>
+    <div class="overall-badge operational" id="overall-badge">
+      <span class="dot"></span>
+      <span id="overall-text">Checking systems...</span>
+    </div>
+    <div class="last-checked">Last checked: <span id="last-checked">--</span></div>
+  </div>
+
+  <!-- Service cards -->
+  <div class="section-title">Services</div>
+  <div class="service-list" id="service-list">
+    <div class="service-card" data-service="api">
+      <div class="service-info">
+        <div class="service-name">API</div>
+        <div class="service-host">api.smara.io</div>
+      </div>
+      <div class="service-right">
+        <span class="response-time" id="api-time"></span>
+        <span class="status-badge checking" id="api-badge"><span class="mini-dot"></span>Checking</span>
+      </div>
+    </div>
+    <div class="service-card" data-service="website">
+      <div class="service-info">
+        <div class="service-name">Website</div>
+        <div class="service-host">smara.io</div>
+      </div>
+      <div class="service-right">
+        <span class="response-time" id="website-time"></span>
+        <span class="status-badge up" id="website-badge"><span class="mini-dot"></span>Operational</span>
+      </div>
+    </div>
+    <div class="service-card" data-service="mcp">
+      <div class="service-info">
+        <div class="service-name">MCP Server</div>
+        <div class="service-host">@smara/mcp-server</div>
+      </div>
+      <div class="service-right">
+        <span class="response-time" id="mcp-time"></span>
+        <span class="status-badge up" id="mcp-badge"><span class="mini-dot"></span>Operational</span>
+      </div>
+    </div>
+    <div class="service-card" data-service="database">
+      <div class="service-info">
+        <div class="service-name">Database</div>
+        <div class="service-host">PostgreSQL</div>
+      </div>
+      <div class="service-right">
+        <span class="response-time" id="database-time"></span>
+        <span class="status-badge checking" id="database-badge"><span class="mini-dot"></span>Checking</span>
+      </div>
+    </div>
+    <div class="service-card" data-service="search">
+      <div class="service-info">
+        <div class="service-name">Search</div>
+        <div class="service-host">Vector + semantic</div>
+      </div>
+      <div class="service-right">
+        <span class="response-time" id="search-time"></span>
+        <span class="status-badge up" id="search-badge"><span class="mini-dot"></span>Operational</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Uptime -->
+  <div class="uptime-section">
+    <div class="section-title">Uptime &mdash; Last 30 Days</div>
+    <div class="uptime-card">
+      <div class="uptime-header">
+        <span class="uptime-pct">99.9%</span>
+        <span class="uptime-label">uptime last 30 days</span>
+      </div>
+      <div class="uptime-bars" id="uptime-bars"></div>
+      <div class="uptime-legend">
+        <span>30 days ago</span>
+        <span>Today</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Incidents -->
+  <div class="incidents-section">
+    <div class="section-title">Recent Incidents</div>
+
+    <div class="no-incidents">
+      <div><span class="check-icon">&#10003;</span></div>
+      No incidents in the last 7 days
+    </div>
+
+    <div class="section-title" style="margin-top: 32px;">Past Incidents</div>
+
+    <div class="incident-card">
+      <div class="incident-header">
+        <span class="incident-title">Elevated API Latency</span>
+        <span class="incident-status">Resolved</span>
+      </div>
+      <div class="incident-date">April 15, 2026</div>
+      <div class="incident-desc">API response times increased to ~800ms due to a connection pool exhaustion during a traffic spike. No data loss.</div>
+      <div class="incident-timeline">
+        <div class="timeline-entry"><strong>Resolved</strong> &mdash; Pool limits increased, latency back to normal. <time>14:32 UTC</time></div>
+        <div class="timeline-entry"><strong>Monitoring</strong> &mdash; Fix deployed, watching metrics. <time>14:10 UTC</time></div>
+        <div class="timeline-entry"><strong>Investigating</strong> &mdash; Elevated p99 latency detected. <time>13:45 UTC</time></div>
+      </div>
+    </div>
+
+    <div class="incident-card">
+      <div class="incident-header">
+        <span class="incident-title">Database Maintenance Window</span>
+        <span class="incident-status">Resolved</span>
+      </div>
+      <div class="incident-date">April 8, 2026</div>
+      <div class="incident-desc">Scheduled PostgreSQL upgrade to version 16.2. Brief read-only period during failover.</div>
+      <div class="incident-timeline">
+        <div class="timeline-entry"><strong>Completed</strong> &mdash; All services fully operational. <time>04:15 UTC</time></div>
+        <div class="timeline-entry"><strong>In progress</strong> &mdash; Failover initiated, writes paused. <time>03:50 UTC</time></div>
+        <div class="timeline-entry"><strong>Scheduled</strong> &mdash; Maintenance window begins. <time>03:30 UTC</time></div>
+      </div>
+    </div>
+
+    <div class="incident-card">
+      <div class="incident-header">
+        <span class="incident-title">MCP Server Connection Timeouts</span>
+        <span class="incident-status">Resolved</span>
+      </div>
+      <div class="incident-date">March 29, 2026</div>
+      <div class="incident-desc">Some MCP clients experienced connection timeouts due to a TLS certificate renewal delay. Affected ~5% of connections for 12 minutes.</div>
+      <div class="incident-timeline">
+        <div class="timeline-entry"><strong>Resolved</strong> &mdash; Certificate renewed, connections restored. <time>09:22 UTC</time></div>
+        <div class="timeline-entry"><strong>Identified</strong> &mdash; Root cause: cert auto-renewal blocked by rate limit. <time>09:15 UTC</time></div>
+        <div class="timeline-entry"><strong>Investigating</strong> &mdash; Reports of MCP connection failures. <time>09:10 UTC</time></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subscribe -->
+  <div class="subscribe-section">
+    <div class="subscribe-card">
+      <h3>Get notified of outages</h3>
+      <p>Subscribe to receive email updates when services are degraded or down.</p>
+      <form class="subscribe-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Subscribed!'; this.querySelector('button').style.background='#34c759';">
+        <input type="email" placeholder="you@example.com" aria-label="Email address">
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container footer-inner">
+    <div class="footer-left">
+      smara &middot; &#x0938;&#x094D;&#x092E;&#x0930; &middot; the act of remembrance
+    </div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/docs">Docs</a>
+      <a href="/blog/">Blog</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/compare">Compare</a>
+      <a href="/changelog">Changelog</a>
+      <a href="/playground">Playground</a>
+      <a href="/status">Status</a>
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Uptime bars (mock data) ──
+(function renderUptimeBars() {
+  const container = document.getElementById('uptime-bars');
+  const days = 30;
+  for (let i = 0; i < days; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'uptime-bar';
+    // Day 15 (April 15) = partial, rest = full
+    if (i === 15) {
+      bar.classList.add('partial');
+      bar.title = 'April 15 — Elevated latency (99.2%)';
+    } else {
+      bar.classList.add('full');
+      const d = new Date();
+      d.setDate(d.getDate() - (days - 1 - i));
+      bar.title = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' — 100%';
+    }
+    container.appendChild(bar);
+  }
+})();
+
+// ── Health check ──
+async function checkHealth() {
+  const apiBadge = document.getElementById('api-badge');
+  const apiTime = document.getElementById('api-time');
+  const dbBadge = document.getElementById('database-badge');
+  const overallBadge = document.getElementById('overall-badge');
+  const overallText = document.getElementById('overall-text');
+  const lastChecked = document.getElementById('last-checked');
+
+  const start = performance.now();
+  try {
+    const resp = await fetch('https://api.smara.io/health', { mode: 'cors', cache: 'no-store' });
+    const elapsed = Math.round(performance.now() - start);
+
+    if (resp.ok) {
+      apiBadge.className = 'status-badge up';
+      apiBadge.innerHTML = '<span class="mini-dot"></span>Operational';
+      apiTime.textContent = elapsed + 'ms';
+
+      dbBadge.className = 'status-badge up';
+      dbBadge.innerHTML = '<span class="mini-dot"></span>Operational';
+
+      overallBadge.className = 'overall-badge operational';
+      overallText.textContent = 'All Systems Operational';
+    } else {
+      throw new Error('non-200');
+    }
+  } catch (e) {
+    const elapsed = Math.round(performance.now() - start);
+    apiBadge.className = 'status-badge down';
+    apiBadge.innerHTML = '<span class="mini-dot"></span>Down';
+    apiTime.textContent = elapsed > 0 ? elapsed + 'ms' : '';
+
+    dbBadge.className = 'status-badge down';
+    dbBadge.innerHTML = '<span class="mini-dot"></span>Unknown';
+
+    overallBadge.className = 'overall-badge outage';
+    overallText.textContent = 'Major Outage';
+  }
+
+  lastChecked.textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+// Initial check + refresh every 60s
+checkHealth();
+setInterval(checkHealth, 60000);
+</script>
+
+</body>
+</html>

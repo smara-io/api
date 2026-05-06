@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Memory to Claude Code in 30 Seconds with MCP</title>
+  <meta name="description" content="Quick tutorial: install the Smara MCP server and give Claude Code persistent memory across sessions. Works with Claude Code, Cursor, and any MCP-compatible tool.">
+  <meta property="og:title" content="Add Memory to Claude Code in 30 Seconds with MCP">
+  <meta property="og:description" content="Install Smara MCP server and give Claude Code persistent memory. 30 seconds, no code changes.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://smara.io/blog/claude-code-memory-mcp">
+  <meta property="og:site_name" content="Smara">
+  <meta property="og:image" content="https://smara.io/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="article:author" content="Sri Panchavati">
+  <meta property="article:published_time" content="2026-04-27">
+  <link rel="canonical" href="https://smara.io/blog/claude-code-memory-mcp">
+  <meta name="author" content="Sri Panchavati">
+  <meta name="keywords" content="Claude Code memory, MCP memory server, Claude Code MCP, persistent memory Claude">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@SmaraMemo">
+  <meta name="twitter:title" content="Add Memory to Claude Code in 30 Seconds with MCP">
+  <meta name="twitter:description" content="Install Smara MCP server and give Claude Code persistent memory. 30 seconds, no code changes.">
+  <meta name="twitter:image" content="https://smara.io/og-image.png">
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"Add Memory to Claude Code in 30 Seconds with MCP","description":"Quick tutorial: install the Smara MCP server and give Claude Code persistent memory across sessions.","url":"https://smara.io/blog/claude-code-memory-mcp","author":{"@type":"Person","name":"Sri Panchavati"},"publisher":{"@type":"Organization","name":"Smara","url":"https://smara.io"},"datePublished":"2026-04-27","image":"https://smara.io/og-image.png"}
+  </script>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --bg-card: rgba(255,255,255,0.72);
+      --bg-code: rgba(0,0,0,0.04);
+      --text: #1d1d1f;
+      --text-muted: #6e6e73;
+      --accent: #0071e3;
+      --accent-hover: #005bb5;
+      --border: rgba(0,0,0,0.06);
+      --green: #4ade80;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Georgia', 'Times New Roman', serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 18px; }
+    .container { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }
+    .meta { color: var(--text-muted); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin-bottom: 8px; }
+    .meta a { color: var(--accent); text-decoration: none; }
+    .meta a:hover { text-decoration: underline; }
+    .reading-time { display: inline-block; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 3px 12px; font-size: 12px; color: var(--text-muted); margin-left: 8px; }
+    h1 { font-size: 2.4rem; line-height: 1.2; margin: 16px 0 32px; font-weight: 700; letter-spacing: -0.02em; }
+    h2 { font-size: 1.5rem; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-weight: 600; }
+    h3 { font-size: 1.15rem; margin: 32px 0 12px; font-weight: 600; }
+    p { margin: 0 0 16px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-hover); text-decoration: underline; }
+    strong { color: #1d1d1f; }
+    code { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 0.85em; background: var(--bg-code); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; }
+    pre { background: var(--bg-code); border: 1px solid var(--border); border-radius: 8px; padding: 20px; overflow-x: auto; margin: 16px 0 24px; line-height: 1.5; }
+    pre code { background: none; border: none; padding: 0; font-size: 14px; color: #1d1d1f; }
+    .comment { color: #6e6e73; }
+    .keyword { color: #ad3da4; }
+    .string { color: #067d26; }
+    .num { color: #1c00cf; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+    th { background: var(--bg-card); color: var(--text-muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .cta { background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); border-radius: 8px; padding: 40px; text-align: center; margin: 48px 0 0; }
+    .cta p { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: rgba(255,255,255,0.9); margin-bottom: 16px; font-size: 16px; }
+    .cta-btn { display: inline-block; background: #fff; color: #1d1d1f; padding: 12px 32px; border-radius: 6px; font-weight: 600; font-size: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-decoration: none; transition: transform 0.15s ease; }
+    .cta-btn:hover { transform: translateY(-1px); text-decoration: none; color: #1d1d1f; }
+    .back-link { display: inline-block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+    .back-link:hover { color: var(--accent); }
+    .step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin: 20px 0;
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      flex-shrink: 0;
+    }
+    .step-header h3 { margin: 0; }
+    .tool-card {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 12px 0;
+    }
+    .tool-name {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .tool-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .session-demo {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 16px 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+    }
+    .session-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .session-user { color: var(--green); font-weight: 600; }
+    .session-ai { color: var(--text-muted); }
+    .session-internal { color: var(--text-muted); font-style: italic; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+    <div class="meta">
+      By <a href="https://parallelromb.dev">Sri Panchavati</a> &middot; April 2026
+      <span class="reading-time">3 min read</span>
+    </div>
+
+    <h1>Add Memory to Claude Code in 30 Seconds with MCP</h1>
+
+    <p>Claude Code is powerful, but it forgets everything between sessions. Your coding preferences, project context, architectural decisions&mdash;gone every time you start a new conversation. The Smara MCP server fixes this. Install it once, and Claude Code remembers.</p>
+
+    <h2>What You Get</h2>
+
+    <p>After setup, Claude Code will:</p>
+    <ul>
+      <li>Remember your coding preferences (languages, frameworks, style)</li>
+      <li>Recall project-specific context across sessions</li>
+      <li>Store and retrieve facts about your codebase automatically</li>
+      <li>Surface relevant memories based on what you're currently working on</li>
+    </ul>
+
+    <h2>Setup (30 seconds)</h2>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <h3>Get a Smara API Key</h3>
+      </div>
+      <p style="margin-bottom: 0;">Sign up at <a href="https://smara.io">smara.io</a> (free tier: 100 memories, no credit card).</p>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <h3>Add to Claude Code Settings</h3>
+      </div>
+      <pre><code><span class="comment">// ~/.claude/settings.json</span>
+{
+  <span class="string">"mcpServers"</span>: {
+    <span class="string">"smara"</span>: {
+      <span class="string">"command"</span>: <span class="string">"npx"</span>,
+      <span class="string">"args"</span>: [<span class="string">"-y"</span>, <span class="string">"smara-mcp"</span>],
+      <span class="string">"env"</span>: {
+        <span class="string">"SMARA_API_KEY"</span>: <span class="string">"smara_your_key_here"</span>,
+        <span class="string">"SMARA_USER_ID"</span>: <span class="string">"your-name"</span>
+      }
+    }
+  }
+}</code></pre>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <h3>Restart Claude Code</h3>
+      </div>
+      <p style="margin-bottom: 0;">Close and reopen Claude Code. That's it.</p>
+    </div>
+
+    <h2>How It Works</h2>
+
+    <p>The MCP server exposes three tools to Claude Code:</p>
+
+    <div class="tool-card">
+      <div class="tool-name">smara_store</div>
+      <div class="tool-desc">Save a memory. Claude Code calls this automatically when it learns something worth remembering.</div>
+      <pre style="margin-bottom: 0;"><code>{ <span class="string">"fact"</span>: <span class="string">"Sri prefers TypeScript with strict mode"</span>, <span class="string">"importance"</span>: <span class="num">0.8</span> }</code></pre>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-name">smara_search</div>
+      <div class="tool-desc">Find relevant memories. Called before responding to search past sessions for context.</div>
+      <pre style="margin-bottom: 0;"><code>{ <span class="string">"q"</span>: <span class="string">"TypeScript preferences"</span> }</code></pre>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-name">smara_context</div>
+      <div class="tool-desc">Get formatted context. Returns decay-ranked memories ready for the system prompt.</div>
+      <pre style="margin-bottom: 0;"><code>{ <span class="string">"q"</span>: <span class="string">"current project setup"</span>, <span class="string">"top_n"</span>: <span class="num">5</span> }</code></pre>
+    </div>
+
+    <h2>See It in Action</h2>
+
+    <div class="session-demo">
+      <div class="session-label">Session 1</div>
+      <p><span class="session-user">You:</span> This project uses Fastify with TypeScript, Postgres with pgvector, and we deploy to Railway. Our API prefix is /v1/.</p>
+      <p><span class="session-ai">Claude Code:</span> Got it! I'll remember your stack details.</p>
+      <p class="session-internal">[Internally calls smara_store for each fact]</p>
+    </div>
+
+    <div class="session-demo">
+      <div class="session-label">Session 2 &mdash; days later</div>
+      <p><span class="session-user">You:</span> Add a new endpoint for user notifications.</p>
+      <p class="session-internal">[Searches Smara for project context]</p>
+      <p><span class="session-ai">Claude Code:</span> I'll create a Fastify route at /v1/notifications following your existing patterns. Here's the implementation using your Postgres connection pool...</p>
+    </div>
+
+    <h2>Using Namespaces</h2>
+
+    <p>Organize memories by project so they don't bleed between codebases:</p>
+
+    <pre><code>{
+  <span class="string">"mcpServers"</span>: {
+    <span class="string">"smara"</span>: {
+      <span class="string">"command"</span>: <span class="string">"npx"</span>,
+      <span class="string">"args"</span>: [<span class="string">"-y"</span>, <span class="string">"smara-mcp"</span>],
+      <span class="string">"env"</span>: {
+        <span class="string">"SMARA_API_KEY"</span>: <span class="string">"smara_your_key_here"</span>,
+        <span class="string">"SMARA_USER_ID"</span>: <span class="string">"sri"</span>,
+        <span class="string">"SMARA_NAMESPACE"</span>: <span class="string">"my-api-project"</span>
+      }
+    }
+  }
+}</code></pre>
+
+    <h2>Why Not Just Use CLAUDE.md?</h2>
+
+    <table>
+      <thead>
+        <tr><th></th><th>CLAUDE.md</th><th>Smara MCP</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Scope</strong></td><td>Per-project</td><td>Cross-project + per-project</td></tr>
+        <tr><td><strong>Updates</strong></td><td>Manual edits</td><td>Automatic from conversations</td></tr>
+        <tr><td><strong>Search</strong></td><td>Full file loaded</td><td>Semantic, only relevant facts</td></tr>
+        <tr><td><strong>Decay</strong></td><td>No</td><td>Yes &mdash; stale facts fade</td></tr>
+        <tr><td><strong>Personalization</strong></td><td>Project only</td><td>You + project</td></tr>
+      </tbody>
+    </table>
+
+    <p>The best setup is both: <code>CLAUDE.md</code> for static project docs, Smara MCP for dynamic personal and project memory.</p>
+
+    <h2>Pricing</h2>
+
+    <table>
+      <thead>
+        <tr><th>Plan</th><th>Memories</th><th>Price</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Free</td><td>100</td><td>$0/mo</td></tr>
+        <tr><td>Developer</td><td>10,000</td><td>$19/mo</td></tr>
+        <tr><td>Team</td><td>100,000</td><td>$79/mo</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Troubleshooting</h2>
+
+    <p><strong>MCP server not loading?</strong> Check that <code>npx</code> is in your PATH and your API key is valid:</p>
+
+    <pre><code>curl -H <span class="string">"Authorization: Bearer smara_your_key"</span> https://api.smara.io/health</code></pre>
+
+    <p><strong>Want to see what's stored?</strong></p>
+
+    <pre><code>curl -H <span class="string">"Authorization: Bearer smara_your_key"</span> \
+  <span class="string">"https://api.smara.io/v1/memories?user_id=your-name"</span></code></pre>
+
+    <div class="cta">
+      <p>Free, no credit card, 30 seconds to persistent memory in Claude Code.</p>
+      <a href="https://smara.io" class="cta-btn">Get Started Free &rarr;</a>
+    </div>
+
+    <hr>
+
+    <h2 style="border-bottom: none; margin-bottom: 20px;">Related Posts</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+      <a href="/blog/ai-agents-persistent-memory.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Architecture</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Building AI Agents with Persistent Memory</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">Patterns for giving agents context across sessions.</p>
+      </a>
+      <a href="/blog/smara-vs-mem0.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Comparison</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Smara vs Mem0</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">Head-to-head comparison of architecture, pricing, and DX.</p>
+      </a>
+      <a href="/blog/ebbinghaus-ai-memory.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Technical</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Ebbinghaus Curves for AI Memory</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">How forgetting curves make AI memory smarter.</p>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

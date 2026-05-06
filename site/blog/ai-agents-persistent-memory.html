@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building AI Agents with Persistent Memory: A Complete Guide</title>
+  <meta name="description" content="Step-by-step tutorial for building AI agents with persistent memory using Smara's Python SDK. Covers storing, searching, agent-scoped memory, graph connections, and team memory.">
+  <meta property="og:title" content="Building AI Agents with Persistent Memory: A Complete Guide">
+  <meta property="og:description" content="Complete tutorial: build an AI agent that remembers across conversations with code examples throughout.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://smara.io/blog/ai-agents-persistent-memory">
+  <meta property="og:site_name" content="Smara">
+  <meta property="og:image" content="https://smara.io/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="article:author" content="Sri Panchavati">
+  <meta property="article:published_time" content="2026-04-27">
+  <link rel="canonical" href="https://smara.io/blog/ai-agents-persistent-memory">
+  <meta name="author" content="Sri Panchavati">
+  <meta name="keywords" content="AI agent memory, persistent memory for AI agents, build AI agent with memory, AI agent tutorial">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@SmaraMemo">
+  <meta name="twitter:title" content="Building AI Agents with Persistent Memory: A Complete Guide">
+  <meta name="twitter:description" content="Complete tutorial: build an AI agent that remembers across conversations with code examples throughout.">
+  <meta name="twitter:image" content="https://smara.io/og-image.png">
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"Building AI Agents with Persistent Memory: A Complete Guide","description":"Step-by-step tutorial for building AI agents with persistent memory using Smara.","url":"https://smara.io/blog/ai-agents-persistent-memory","author":{"@type":"Person","name":"Sri Panchavati"},"publisher":{"@type":"Organization","name":"Smara","url":"https://smara.io"},"datePublished":"2026-04-27","image":"https://smara.io/og-image.png"}
+  </script>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --bg-card: rgba(255,255,255,0.72);
+      --bg-code: rgba(0,0,0,0.04);
+      --text: #1d1d1f;
+      --text-muted: #6e6e73;
+      --accent: #0071e3;
+      --accent-hover: #005bb5;
+      --border: rgba(0,0,0,0.06);
+      --green: #4ade80;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Georgia', 'Times New Roman', serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 18px; }
+    .container { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }
+    .meta { color: var(--text-muted); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin-bottom: 8px; }
+    .meta a { color: var(--accent); text-decoration: none; }
+    .meta a:hover { text-decoration: underline; }
+    .reading-time { display: inline-block; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 3px 12px; font-size: 12px; color: var(--text-muted); margin-left: 8px; }
+    h1 { font-size: 2.4rem; line-height: 1.2; margin: 16px 0 32px; font-weight: 700; letter-spacing: -0.02em; }
+    h2 { font-size: 1.5rem; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-weight: 600; }
+    h3 { font-size: 1.15rem; margin: 32px 0 12px; font-weight: 600; }
+    p { margin: 0 0 16px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-hover); text-decoration: underline; }
+    strong { color: #1d1d1f; }
+    code { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 0.85em; background: var(--bg-code); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; }
+    pre { background: var(--bg-code); border: 1px solid var(--border); border-radius: 8px; padding: 20px; overflow-x: auto; margin: 16px 0 24px; line-height: 1.5; }
+    pre code { background: none; border: none; padding: 0; font-size: 14px; color: #1d1d1f; }
+    .comment { color: #6e6e73; }
+    .keyword { color: #ad3da4; }
+    .string { color: #067d26; }
+    .func { color: #d2a8ff; }
+    .num { color: #1c00cf; }
+    ol, ul { margin: 0 0 16px 24px; }
+    li { margin-bottom: 6px; }
+    .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 24px 0 32px; }
+    .toc h4 { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .toc ol { padding-left: 20px; margin-bottom: 0; }
+    .toc li { font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin-bottom: 6px; }
+    .cta { background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); border-radius: 8px; padding: 40px; text-align: center; margin: 48px 0 0; }
+    .cta p { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: rgba(255,255,255,0.9); margin-bottom: 16px; font-size: 16px; }
+    .cta-btn { display: inline-block; background: #fff; color: #1d1d1f; padding: 12px 32px; border-radius: 6px; font-weight: 600; font-size: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-decoration: none; transition: transform 0.15s ease; }
+    .cta-btn:hover { transform: translateY(-1px); text-decoration: none; color: #1d1d1f; }
+    .back-link { display: inline-block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+    .back-link:hover { color: var(--accent); }
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .architecture-diagram {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin: 20px 0;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+    <div class="meta">
+      By <a href="https://parallelromb.dev">Sri Panchavati</a> &middot; April 2026
+      <span class="reading-time">8 min read</span>
+    </div>
+
+    <h1>Building AI Agents with Persistent Memory: A Complete Guide</h1>
+
+    <nav class="toc">
+      <h4>Table of Contents</h4>
+      <ol>
+        <li><a href="#why">Why Agents Need Persistent Memory</a></li>
+        <li><a href="#architecture">Architecture Overview</a></li>
+        <li><a href="#setup">Setting Up Smara</a></li>
+        <li><a href="#storing">Storing Memories</a></li>
+        <li><a href="#searching">Searching and Retrieving Context</a></li>
+        <li><a href="#agent-scoped">Agent-Scoped Memory</a></li>
+        <li><a href="#graph">Graph Memory: Connecting Facts</a></li>
+        <li><a href="#namespaces">Namespaces and Organization</a></li>
+        <li><a href="#teams">Team Memory for Multi-Agent Systems</a></li>
+        <li><a href="#complete">Putting It All Together</a></li>
+        <li><a href="#best-practices">Best Practices</a></li>
+      </ol>
+    </nav>
+
+    <p>The biggest limitation of most AI agents isn't intelligence&mdash;it's amnesia. Every conversation starts from scratch. Every interaction loses context. Your agent can write code, analyze data, and reason through complex problems, but it can't remember that the user prefers TypeScript, dislikes verbose output, or is working on a project called "Atlas."</p>
+
+    <p>This guide walks through building an AI agent with true persistent memory using Smara's API.</p>
+
+    <h2 id="why">Why Agents Need Persistent Memory</h2>
+
+    <p>Consider a customer support agent. A user contacts support three times over a month:</p>
+    <ul>
+      <li><strong>Day 1</strong>: Reports a billing issue. Agent resolves it.</li>
+      <li><strong>Day 10</strong>: Asks about upgrading their plan.</li>
+      <li><strong>Day 25</strong>: Reports the same billing issue again.</li>
+    </ul>
+    <p>Without persistent memory, the agent on Day 25 has no idea this is a recurring problem. With memory, it can say: "I see this billing issue happened before. Let me escalate to investigate the root cause rather than applying another temporary fix."</p>
+
+    <h2 id="architecture">Architecture Overview</h2>
+
+    <div class="architecture-diagram">
+      User &harr; Your Agent &harr; LLM (Claude, GPT, etc.)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&darr;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Smara API (memory storage + retrieval)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&darr;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Postgres + pgvector (persistence)
+    </div>
+
+    <p>Before each LLM call, your agent queries Smara for relevant memories and injects them into the system prompt. After each conversation, your agent extracts and stores new facts.</p>
+
+    <h2 id="setup">Setting Up Smara</h2>
+
+    <p>Sign up at <a href="https://smara.io">smara.io</a> to get an API key, or self-host:</p>
+
+    <pre><code><span class="comment"># Self-host option</span>
+docker run -d \
+  -e DATABASE_URL=<span class="string">"postgresql://user:pass@host:5432/smara"</span> \
+  -e VOYAGE_API_KEY=<span class="string">"your-voyage-key"</span> \
+  -p <span class="num">3010</span>:<span class="num">3010</span> \
+  ghcr.io/parallelromb/smara:latest</code></pre>
+
+    <p>Install the Python SDK:</p>
+
+    <pre><code>pip install smara</code></pre>
+
+    <pre><code><span class="keyword">from</span> smara <span class="keyword">import</span> Smara
+
+client = Smara(
+    api_key=<span class="string">"smara_your_api_key_here"</span>,
+    base_url=<span class="string">"https://api.smara.io"</span>
+)</code></pre>
+
+    <h2 id="storing">Storing Memories</h2>
+
+    <pre><code><span class="comment"># Store a simple fact</span>
+result = client.store(
+    user_id=<span class="string">"user-123"</span>,
+    fact=<span class="string">"Prefers Python over JavaScript for backend work"</span>,
+    importance=<span class="num">0.7</span>
+)
+<span class="func">print</span>(result)
+<span class="comment"># {"action": "stored", "id": "mem-abc-123"}</span></code></pre>
+
+    <h3>Importance Scoring</h3>
+
+    <pre><code><span class="comment"># Core identity fact - 10-day half-life</span>
+client.store(<span class="string">"user-123"</span>, <span class="string">"Is a senior backend engineer at Stripe"</span>, importance=<span class="num">1.0</span>)
+
+<span class="comment"># Active project - 7-day half-life</span>
+client.store(<span class="string">"user-123"</span>, <span class="string">"Currently building a payment reconciliation service"</span>, importance=<span class="num">0.7</span>)
+
+<span class="comment"># Passing mention - 2-day half-life</span>
+client.store(<span class="string">"user-123"</span>, <span class="string">"Had a meeting with the team today"</span>, importance=<span class="num">0.2</span>)</code></pre>
+
+    <h3>Automatic Deduplication and Contradiction Handling</h3>
+
+    <pre><code><span class="comment"># First store</span>
+client.store(<span class="string">"user-123"</span>, <span class="string">"Lives in New York"</span>)
+<span class="comment"># {"action": "stored", "id": "mem-1"}</span>
+
+<span class="comment"># Duplicate detection (cosine &ge; 0.985)</span>
+client.store(<span class="string">"user-123"</span>, <span class="string">"Lives in New York City"</span>)
+<span class="comment"># {"action": "duplicate", "id": "mem-1"}</span>
+
+<span class="comment"># Contradiction handling (cosine 0.94-0.985)</span>
+client.store(<span class="string">"user-123"</span>, <span class="string">"Lives in San Francisco"</span>)
+<span class="comment"># {"action": "replaced", "id": "mem-2", "replaced_id": "mem-1"}</span></code></pre>
+
+    <h2 id="searching">Searching and Retrieving Context</h2>
+
+    <h3>Semantic Search</h3>
+
+    <pre><code>results = client.search(
+    user_id=<span class="string">"user-123"</span>,
+    q=<span class="string">"cloud infrastructure preferences"</span>,
+    limit=<span class="num">5</span>,
+    namespace=<span class="string">"infrastructure"</span>
+)
+
+<span class="keyword">for</span> r <span class="keyword">in</span> results:
+    <span class="func">print</span>(<span class="string">f"[{r.score:.3f}] {r.fact}"</span>)
+    <span class="func">print</span>(<span class="string">f"  similarity: {r.similarity}, decay: {r.decay_score}"</span>)</code></pre>
+
+    <h3>The Context Endpoint</h3>
+
+    <pre><code><span class="keyword">import</span> requests
+<span class="keyword">import</span> anthropic
+
+response = requests.get(
+    <span class="string">"https://api.smara.io/v1/users/user-123/context"</span>,
+    headers={<span class="string">"Authorization"</span>: <span class="string">"Bearer smara_..."</span>},
+    params={<span class="string">"q"</span>: <span class="string">"coding preferences"</span>, <span class="string">"top_n"</span>: <span class="num">5</span>}
+)
+memory_context = response.json()[<span class="string">"context"</span>]
+
+<span class="comment"># Inject directly into LLM call</span>
+client_anthropic = anthropic.Anthropic()
+response = client_anthropic.messages.create(
+    model=<span class="string">"claude-sonnet-4-20250514"</span>,
+    system=<span class="string">f"""You are a helpful coding assistant.
+
+Here is what you know about this user:
+{memory_context}
+
+Use this context to personalize your responses."""</span>,
+    messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Help me set up a new API project"</span>}]
+)</code></pre>
+
+    <h2 id="agent-scoped">Agent-Scoped Memory</h2>
+
+    <p>When you have multiple agents, each one can maintain its own memory scope:</p>
+
+    <pre><code><span class="comment"># Create an agent</span>
+agent = requests.post(<span class="string">f"{BASE}/v1/agents"</span>, headers=HEADERS, json={
+    <span class="string">"name"</span>: <span class="string">"CodeAssist"</span>,
+    <span class="string">"description"</span>: <span class="string">"A coding assistant with persistent memory"</span>,
+    <span class="string">"owner_id"</span>: <span class="string">"developer-sri"</span>,
+    <span class="string">"model"</span>: <span class="string">"claude-sonnet-4-20250514"</span>,
+}).json()
+
+<span class="comment"># Store memory scoped to this agent</span>
+requests.post(<span class="string">f"{BASE}/v1/agents/{agent['id']}/memories"</span>, headers=HEADERS, json={
+    <span class="string">"user_id"</span>: <span class="string">"user-123"</span>,
+    <span class="string">"fact"</span>: <span class="string">"Prefers functional programming patterns"</span>,
+    <span class="string">"importance"</span>: <span class="num">0.8</span>
+})
+
+<span class="comment"># Search only this agent's memories</span>
+results = requests.get(
+    <span class="string">f"{BASE}/v1/agents/{agent['id']}/memories"</span>,
+    headers=HEADERS,
+    params={<span class="string">"user_id"</span>: <span class="string">"user-123"</span>, <span class="string">"q"</span>: <span class="string">"programming style"</span>}
+).json()</code></pre>
+
+    <h2 id="graph">Graph Memory: Connecting Facts</h2>
+
+    <p>Flat memory storage misses relationships between facts. Smara's graph memory lets you create typed, weighted edges:</p>
+
+    <pre><code><span class="comment"># Store related memories</span>
+mem1 = client.store(<span class="string">"user-123"</span>, <span class="string">"Works at Stripe on payment systems"</span>)
+mem2 = client.store(<span class="string">"user-123"</span>, <span class="string">"Building a payment reconciliation service"</span>)
+mem3 = client.store(<span class="string">"user-123"</span>, <span class="string">"Needs to handle idempotency in payment retries"</span>)
+
+<span class="comment"># Connect them</span>
+requests.post(<span class="string">f"{BASE}/v1/graph/connect"</span>, headers=HEADERS, json={
+    <span class="string">"from_memory_id"</span>: mem1[<span class="string">"id"</span>],
+    <span class="string">"to_memory_id"</span>: mem2[<span class="string">"id"</span>],
+    <span class="string">"relationship_type"</span>: <span class="string">"context_for"</span>,
+    <span class="string">"weight"</span>: <span class="num">0.9</span>
+})
+
+<span class="comment"># Traverse the graph</span>
+graph = requests.get(
+    <span class="string">f"{BASE}/v1/graph/traverse/{mem1['id']}"</span>,
+    headers=HEADERS,
+    params={<span class="string">"depth"</span>: <span class="num">3</span>}
+).json()
+
+<span class="keyword">for</span> node <span class="keyword">in</span> graph[<span class="string">"nodes"</span>]:
+    <span class="func">print</span>(<span class="string">f"[depth {node['depth']}] {node['fact']}"</span>)</code></pre>
+
+    <h2 id="namespaces">Namespaces and Organization</h2>
+
+    <pre><code><span class="comment"># Store in different namespaces</span>
+client.store(<span class="string">"user-123"</span>, <span class="string">"Prefers dark mode"</span>, namespace=<span class="string">"preferences"</span>)
+client.store(<span class="string">"user-123"</span>, <span class="string">"Sprint 42 ends Friday"</span>, namespace=<span class="string">"work"</span>)
+client.store(<span class="string">"user-123"</span>, <span class="string">"Allergic to shellfish"</span>, namespace=<span class="string">"personal"</span>)
+
+<span class="comment"># Search within a specific namespace</span>
+work_results = client.search(<span class="string">"user-123"</span>, q=<span class="string">"current sprint"</span>, namespace=<span class="string">"work"</span>)</code></pre>
+
+    <h2 id="teams">Team Memory for Multi-Agent Systems</h2>
+
+    <pre><code><span class="comment"># Create a team</span>
+team = requests.post(<span class="string">f"{BASE}/v1/teams"</span>, headers=HEADERS, json={
+    <span class="string">"name"</span>: <span class="string">"Engineering"</span>,
+    <span class="string">"slug"</span>: <span class="string">"engineering"</span>,
+    <span class="string">"user_id"</span>: <span class="string">"sri"</span>
+}).json()
+
+<span class="comment"># Store a team-visible memory</span>
+requests.post(<span class="string">f"{BASE}/v1/memories"</span>, headers=HEADERS, json={
+    <span class="string">"user_id"</span>: <span class="string">"sri"</span>,
+    <span class="string">"fact"</span>: <span class="string">"The API migration deadline is May 15"</span>,
+    <span class="string">"team_id"</span>: team[<span class="string">"id"</span>],
+    <span class="string">"visibility"</span>: <span class="string">"team"</span>,
+    <span class="string">"importance"</span>: <span class="num">0.9</span>
+})
+
+<span class="comment"># Any team member can search team memories</span>
+results = requests.get(<span class="string">f"{BASE}/v1/memories/search"</span>, headers=HEADERS, params={
+    <span class="string">"user_id"</span>: <span class="string">"agent-codeassist"</span>,
+    <span class="string">"q"</span>: <span class="string">"migration deadline"</span>,
+    <span class="string">"team_id"</span>: team[<span class="string">"id"</span>],
+    <span class="string">"include_team"</span>: <span class="string">"true"</span>
+}).json()</code></pre>
+
+    <h2 id="complete">Putting It All Together</h2>
+
+    <p>Here's a complete agent loop with persistent memory:</p>
+
+    <pre><code><span class="keyword">import</span> anthropic
+<span class="keyword">import</span> requests
+
+SMARA_KEY = <span class="string">"smara_..."</span>
+SMARA_BASE = <span class="string">"https://api.smara.io"</span>
+HEADERS = {<span class="string">"Authorization"</span>: <span class="string">f"Bearer {SMARA_KEY}"</span>}
+claude = anthropic.Anthropic()
+
+<span class="keyword">def</span> <span class="func">get_memory_context</span>(user_id: str, message: str) -> str:
+    <span class="string">"""Retrieve relevant memories for the current conversation."""</span>
+    response = requests.get(
+        <span class="string">f"{SMARA_BASE}/v1/users/{user_id}/context"</span>,
+        headers=HEADERS,
+        params={<span class="string">"q"</span>: message, <span class="string">"top_n"</span>: <span class="num">10</span>}
+    )
+    <span class="keyword">return</span> response.json().get(<span class="string">"context"</span>, <span class="string">"No previous context."</span>)
+
+<span class="keyword">def</span> <span class="func">extract_and_store_facts</span>(user_id: str, conversation: str):
+    <span class="string">"""Use Claude to extract storable facts from the conversation."""</span>
+    extraction = claude.messages.create(
+        model=<span class="string">"claude-haiku-4-20250414"</span>,
+        system=<span class="string">"Extract discrete facts about the user. "</span>
+               <span class="string">"Return each on a new line. Rate importance 0.0-1.0 after |"</span>,
+        messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: conversation}]
+    )
+    facts = extraction.content[<span class="num">0</span>].text.strip().split(<span class="string">"\n"</span>)
+    <span class="keyword">for</span> line <span class="keyword">in</span> facts:
+        <span class="keyword">if</span> <span class="string">"|"</span> <span class="keyword">not in</span> line: <span class="keyword">continue</span>
+        fact, imp = line.rsplit(<span class="string">"|"</span>, <span class="num">1</span>)
+        requests.post(<span class="string">f"{SMARA_BASE}/v1/memories"</span>, headers=HEADERS, json={
+            <span class="string">"user_id"</span>: user_id,
+            <span class="string">"fact"</span>: fact.strip(),
+            <span class="string">"importance"</span>: min(max(<span class="func">float</span>(imp.strip()), <span class="num">0.0</span>), <span class="num">1.0</span>),
+            <span class="string">"source"</span>: <span class="string">"conversation-extraction"</span>
+        })
+
+<span class="keyword">def</span> <span class="func">agent_respond</span>(user_id: str, user_message: str) -> str:
+    <span class="string">"""Main agent loop: retrieve, respond, store."""</span>
+    memory_context = get_memory_context(user_id, user_message)
+    response = claude.messages.create(
+        model=<span class="string">"claude-sonnet-4-20250514"</span>,
+        system=<span class="string">f"""You are a helpful assistant with persistent memory.
+
+Known facts about this user:
+{memory_context}"""</span>,
+        messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: user_message}]
+    )
+    assistant_message = response.content[<span class="num">0</span>].text
+    extract_and_store_facts(user_id, <span class="string">f"User: {user_message}\nAssistant: {assistant_message}"</span>)
+    <span class="keyword">return</span> assistant_message</code></pre>
+
+    <h2 id="best-practices">Best Practices</h2>
+
+    <ol>
+      <li><strong>Use importance scores strategically.</strong> Core identity facts: 0.8-1.0. Temporary states: 0.1-0.3.</li>
+      <li><strong>Extract facts, don't store conversations.</strong> Store "Prefers TypeScript," not "User said they like TypeScript in message #47."</li>
+      <li><strong>Use namespaces to prevent context bleed.</strong> A user's medical preferences shouldn't appear when they ask about code.</li>
+      <li><strong>Let contradiction handling do the work.</strong> Don't manually check for outdated facts. Store the new fact and let Smara handle it.</li>
+      <li><strong>Use the context endpoint for LLM integration.</strong> Don't fetch raw memories and format them yourself.</li>
+      <li><strong>Scope agent memories.</strong> Use agent-scoped memory to prevent cross-agent contamination.</li>
+      <li><strong>Connect related facts with graph edges.</strong> Enable richer retrieval through relationship traversal.</li>
+    </ol>
+
+    <div class="cta">
+      <p>Start building agents with persistent memory. Free tier: 100 memories, 1 agent.</p>
+      <a href="https://smara.io" class="cta-btn">Try Smara Free &rarr;</a>
+    </div>
+
+    <hr>
+
+    <h2 style="border-bottom: none; margin-bottom: 20px;">Related Posts</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+      <a href="/blog/ebbinghaus-ai-memory.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Technical</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Ebbinghaus Curves for AI Memory</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">How forgetting curves make AI memory smarter.</p>
+      </a>
+      <a href="/blog/claude-code-memory-mcp.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Tutorial</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Adding Memory to Claude Code via MCP</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">Give Claude Code persistent memory in 30 seconds.</p>
+      </a>
+      <a href="/blog/best-mem0-alternatives.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Guide</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Best Mem0 Alternatives (2026)</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">Comparing Smara, Zep, Letta, and more.</p>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

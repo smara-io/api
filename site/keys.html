@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Keys &mdash; Smara</title>
+<meta name="description" content="Manage your Smara API keys, monitor usage, configure webhooks, and view API logs.">
+<meta name="theme-color" content="#f8f9fc">
+<link rel="canonical" href="https://smara.io/keys">
+<meta property="og:title" content="API Keys &mdash; Smara">
+<meta property="og:description" content="Manage your Smara API keys, monitor usage, and view logs.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://smara.io/keys">
+<meta property="og:site_name" content="Smara">
+<meta property="og:image" content="https://smara.io/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@SmaraMemo">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f9fc;
+    --bg-card: rgba(255,255,255,0.72);
+    --bg-glass: rgba(255,255,255,0.55);
+    --bg-code: #f5f5f7;
+    --bg-dark: #1d1d1f;
+    --text: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #aeaeb2;
+    --border: rgba(0,0,0,0.06);
+    --border-glass: rgba(255,255,255,0.6);
+    --accent: #0071e3;
+    --accent-light: #e8f2ff;
+    --accent-glow: rgba(0,113,227,0.15);
+    --green: #34c759;
+    --green-light: #ecfdf5;
+    --red: #ef4444;
+    --red-light: #fef2f2;
+    --orange: #f59e0b;
+    --orange-light: #fffbeb;
+    --purple: #a855f7;
+    --purple-light: #faf5ff;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,113,227,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(52,199,89,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 20% 80%, rgba(245,158,11,0.04) 0%, transparent 50%);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection { background: var(--accent-light); }
+
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 56px;
+    background: rgba(248,249,252,0.72);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  }
+  .nav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px;
+    height: 100%; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-weight: 600; font-size: 15px; color: var(--text);
+    text-decoration: none; display: flex; align-items: center; gap: 8px;
+    letter-spacing: -0.02em;
+  }
+  .nav-logo .dot { color: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 24px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; color: var(--text-secondary); text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a.active { color: var(--accent); font-weight: 500; }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-github {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: color 0.15s;
+  }
+  .nav-github:hover { color: var(--text); }
+  .nav-github svg { width: 16px; height: 16px; }
+  .nav-cta {
+    font-size: 13px; font-weight: 500; color: #fff;
+    background: var(--accent); padding: 7px 16px; border-radius: 980px;
+    text-decoration: none; transition: all 0.2s;
+    box-shadow: 0 2px 8px var(--accent-glow);
+  }
+  .nav-cta:hover { box-shadow: 0 4px 16px rgba(0,113,227,0.25); transform: translateY(-1px); }
+
+  /* ─── PAGE HEADER ─── */
+  .page-header {
+    padding: 100px 24px 40px;
+    text-align: center;
+  }
+  .page-header h1 {
+    font-size: 36px; font-weight: 700; letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+  .page-header p {
+    font-size: 17px; color: var(--text-secondary); max-width: 520px; margin: 0 auto;
+  }
+
+  /* ─── GLASS CARD ─── */
+  .card {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px) saturate(1.3);
+    -webkit-backdrop-filter: blur(20px) saturate(1.3);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: var(--shadow-md); }
+  .card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .icon {
+    width: 20px; height: 20px; color: var(--text-secondary);
+  }
+
+  /* ─── SECTIONS ─── */
+  .sections {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px 80px;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+
+  /* ─── API KEY DISPLAY ─── */
+  .key-display {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text);
+    position: relative;
+  }
+  .key-display .key-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    user-select: all;
+  }
+  .key-actions {
+    display: flex; gap: 6px; flex-shrink: 0;
+  }
+  .key-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+    font-size: 0;
+  }
+  .key-btn:hover { background: var(--bg); color: var(--text); border-color: rgba(0,0,0,0.12); }
+  .key-btn svg { width: 16px; height: 16px; }
+
+  .key-mgmt-btns {
+    display: flex; gap: 10px; margin-top: 16px;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font); font-size: 13px; font-weight: 500;
+    padding: 9px 18px; border-radius: 980px;
+    border: none; cursor: pointer; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-accent {
+    background: var(--accent); color: #fff;
+    box-shadow: 0 2px 8px var(--accent-glow);
+  }
+  .btn-accent:hover { box-shadow: 0 4px 16px rgba(0,113,227,0.25); transform: translateY(-1px); }
+  .btn-outline {
+    background: #fff; color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-outline:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .btn-danger {
+    background: #fff; color: var(--red);
+    border: 1px solid rgba(239,68,68,0.2);
+  }
+  .btn-danger:hover { background: var(--red-light); }
+
+  .key-created {
+    margin-top: 12px; font-size: 12px; color: var(--text-tertiary);
+  }
+
+  /* ─── PLAN BADGE ─── */
+  .plan-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px; border-radius: 980px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .plan-free { background: var(--bg-code); color: var(--text-secondary); }
+  .plan-dev { background: var(--accent-light); color: var(--accent); }
+  .plan-pro { background: var(--purple-light); color: var(--purple); }
+
+  /* ─── STATS GRID ─── */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 28px; font-weight: 700; letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .stat-label {
+    font-size: 12px; color: var(--text-tertiary);
+    margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500;
+  }
+  .stat-bar {
+    margin-top: 10px; height: 4px; border-radius: 2px;
+    background: var(--bg-code); overflow: hidden;
+  }
+  .stat-bar-fill {
+    height: 100%; border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+
+  /* ─── RATE LIMITS ─── */
+  .limits-table {
+    width: 100%; border-collapse: collapse;
+  }
+  .limits-table th, .limits-table td {
+    padding: 12px 16px; text-align: left;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  .limits-table th {
+    font-weight: 500; color: var(--text-tertiary);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .limits-table tr.current td {
+    background: var(--accent-light);
+    font-weight: 500;
+  }
+  .limits-table tr.current td:first-child { border-radius: 8px 0 0 8px; }
+  .limits-table tr.current td:last-child { border-radius: 0 8px 8px 0; }
+
+  /* ─── CHART ─── */
+  .chart-wrap {
+    position: relative;
+    height: 240px;
+  }
+
+  /* ─── TEAM KEYS ─── */
+  .team-key-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .team-key-row:last-child { border-bottom: none; }
+  .team-key-info { display: flex; flex-direction: column; gap: 2px; }
+  .team-key-name { font-size: 14px; font-weight: 500; }
+  .team-key-meta { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+  .team-key-badge {
+    font-size: 11px; font-weight: 500; padding: 3px 10px;
+    border-radius: 980px;
+  }
+  .badge-active { background: var(--green-light); color: var(--green); }
+  .badge-read { background: var(--orange-light); color: var(--orange); }
+
+  /* ─── WEBHOOKS ─── */
+  .webhook-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--text-tertiary);
+  }
+  .webhook-placeholder svg {
+    width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.4;
+  }
+  .webhook-placeholder p {
+    font-size: 14px; max-width: 360px; margin-bottom: 16px;
+  }
+
+  /* ─── LOGS TABLE ─── */
+  .logs-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 13px;
+  }
+  .logs-table th, .logs-table td {
+    padding: 10px 14px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .logs-table th {
+    font-weight: 500; color: var(--text-tertiary);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    position: sticky; top: 0; background: var(--bg-card);
+  }
+  .logs-table td { font-family: var(--mono); font-size: 12px; }
+  .logs-table .method {
+    font-weight: 600; font-size: 11px;
+    padding: 2px 8px; border-radius: 4px;
+    display: inline-block;
+  }
+  .method-get { background: var(--green-light); color: var(--green); }
+  .method-post { background: var(--accent-light); color: var(--accent); }
+  .method-delete { background: var(--red-light); color: var(--red); }
+  .status-ok { color: var(--green); }
+  .status-err { color: var(--red); }
+
+  .logs-scroll {
+    max-height: 340px; overflow-y: auto;
+    border-radius: 0 0 12px 12px;
+  }
+
+  /* ─── TWO COLUMN LAYOUT ─── */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+
+  /* ─── CONFIRM DIALOG ─── */
+  .overlay {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 200;
+    align-items: center; justify-content: center;
+  }
+  .overlay.active { display: flex; }
+  .dialog {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 420px; width: 90%;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+  }
+  .dialog h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .dialog p { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6; }
+  .dialog-actions { display: flex; gap: 10px; justify-content: center; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--bg-dark); color: #fff;
+    font-size: 13px; font-weight: 500;
+    padding: 12px 24px; border-radius: 980px;
+    box-shadow: var(--shadow-lg);
+    z-index: 300;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-inner {
+    max-width: 1080px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-left { font-size: 13px; color: var(--text-tertiary); }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+  .footer-links a:hover { color: var(--text); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; gap: 16px; align-items: flex-start; }
+    .key-display { flex-direction: column; align-items: flex-start; }
+    .key-actions { align-self: flex-end; }
+    .logs-scroll { overflow-x: auto; }
+  }
+
+  /* ─── ANIMATIONS ─── */
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">smara<span class="dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="/docs">Docs</a></li>
+      <li><a href="/playground">Playground</a></li>
+      <li><a href="/compare">Compare</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="/changelog">Changelog</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener" class="nav-github">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
+      <a href="/#signup" class="nav-cta">Get API key</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1 class="reveal">API Keys</h1>
+  <p class="reveal">Manage your keys, monitor usage, and configure integrations.</p>
+</div>
+
+<div class="sections">
+
+  <!-- API KEY + PLAN -->
+  <div class="two-col reveal">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.5 9.5a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/><path d="M7.5 12.5l-5 5m0 0h3m-3 0v-3"/></svg>
+          Your API Key
+        </div>
+      </div>
+      <div class="key-display">
+        <span class="key-text" id="keyText">smr_demo_&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;</span>
+        <div class="key-actions">
+          <button class="key-btn" onclick="toggleReveal()" title="Show / hide key" id="revealBtn">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 10s3-5.5 7.5-5.5S17.5 10 17.5 10s-3 5.5-7.5 5.5S2.5 10 2.5 10z"/><circle cx="10" cy="10" r="2.5"/></svg>
+          </button>
+          <button class="key-btn" onclick="copyKey()" title="Copy to clipboard" id="copyBtn">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="6" width="10" height="10" rx="2"/><path d="M4 14V5a2 2 0 012-2h9"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="key-created">Created Apr 12, 2026 &middot; Last used 2 hours ago</div>
+      <div class="key-mgmt-btns">
+        <button class="btn btn-outline" onclick="showDialog('regen')">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10a7 7 0 0113.07-3.5M17 10a7 7 0 01-13.07 3.5"/><path d="M16 3v4h-4M4 17v-4h4"/></svg>
+          Regenerate
+        </button>
+        <button class="btn btn-danger" onclick="showDialog('revoke')">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l12 12M16 4L4 16"/></svg>
+          Revoke
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="3"/><path d="M7 10h6M10 7v6"/></svg>
+          Current Plan
+        </div>
+        <span class="plan-badge plan-free" id="planBadge">Free</span>
+      </div>
+      <table class="limits-table">
+        <thead>
+          <tr><th>Plan</th><th>Requests / day</th><th>Memories</th><th>Price</th></tr>
+        </thead>
+        <tbody>
+          <tr class="current"><td>Free</td><td>1,000</td><td>10,000</td><td>$0</td></tr>
+          <tr><td>Developer</td><td>10,000</td><td>200,000</td><td>$19/mo</td></tr>
+          <tr><td>Pro</td><td>Unlimited</td><td>2,000,000</td><td>$99/mo</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 20px;">
+        <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener" class="btn btn-accent">Self-host (Unlimited)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- USAGE STATS -->
+  <div class="stats-grid reveal">
+    <div class="stat-card">
+      <div class="stat-value" id="reqToday">347</div>
+      <div class="stat-label">Requests Today</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width: 34.7%; background: var(--accent);"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="reqMonth">8,241</div>
+      <div class="stat-label">Requests This Month</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width: 27.5%; background: var(--green);"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">1,847</div>
+      <div class="stat-label">Memories Stored</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width: 18.5%; background: var(--orange);"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">24 MB</div>
+      <div class="stat-label">Storage Used</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width: 12%; background: var(--purple);"></div></div>
+    </div>
+  </div>
+
+  <!-- USAGE CHART -->
+  <div class="card reveal">
+    <div class="card-header">
+      <div class="card-title">
+        <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 15 7 9 11 12 17 5"/><path d="M14 5h3v3"/></svg>
+        API Requests &mdash; Last 30 Days
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="usageChart"></canvas>
+    </div>
+  </div>
+
+  <!-- TEAM KEYS + WEBHOOKS -->
+  <div class="two-col reveal">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="3"/><circle cx="14" cy="9" r="2.5"/><path d="M1 17v-1a4 4 0 014-4h4a4 4 0 014 4v1"/></svg>
+          Team Keys
+        </div>
+        <span class="plan-badge plan-dev" style="font-size: 10px;">Team Plan Required</span>
+      </div>
+      <div class="team-key-row">
+        <div class="team-key-info">
+          <div class="team-key-name">Frontend CI</div>
+          <div class="team-key-meta">smr_team_fe_ci_****g7x2</div>
+        </div>
+        <span class="team-key-badge badge-active">Read / Write</span>
+      </div>
+      <div class="team-key-row">
+        <div class="team-key-info">
+          <div class="team-key-name">Backend Staging</div>
+          <div class="team-key-meta">smr_team_be_stg_****n4p1</div>
+        </div>
+        <span class="team-key-badge badge-active">Read / Write</span>
+      </div>
+      <div class="team-key-row">
+        <div class="team-key-info">
+          <div class="team-key-name">Analytics (read-only)</div>
+          <div class="team-key-meta">smr_team_ana_****k8m3</div>
+        </div>
+        <span class="team-key-badge badge-read">Read Only</span>
+      </div>
+      <div style="margin-top: 16px;">
+        <button class="btn btn-outline" disabled style="opacity: 0.5; cursor: not-allowed;">+ Create Team Key</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2v4m0 8v4M2 10h4m8 0h4"/><circle cx="10" cy="10" r="3"/></svg>
+          Webhooks
+        </div>
+      </div>
+      <div class="webhook-placeholder">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M24 8v8m0 16v8M8 24h8m16 0h8"/><circle cx="24" cy="24" r="8"/><path d="M16 16l4 4m8 8l4 4M32 16l-4 4m-8 8l-4 4"/></svg>
+        <p>Webhook endpoints let you receive real-time notifications when memories are created, updated, or accessed.</p>
+        <span class="plan-badge plan-dev">Coming Soon</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- API LOGS -->
+  <div class="card reveal">
+    <div class="card-header">
+      <div class="card-title">
+        <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 7h6M7 10h4M7 13h5"/></svg>
+        Recent API Calls
+      </div>
+      <span style="font-size: 12px; color: var(--text-tertiary);">Last 24 hours</span>
+    </div>
+    <div class="logs-scroll">
+      <table class="logs-table" id="logsTable">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Method</th>
+            <th>Endpoint</th>
+            <th>Status</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      smara &middot; &#x0938;&#x094D;&#x092E;&#x0930; &middot; the act of remembrance
+    </div>
+    <div class="footer-links">
+      <a href="/docs">Docs</a>
+      <a href="/blog/">Blog</a>
+      <a href="/compare">Compare</a>
+      <a href="/changelog">Changelog</a>
+      <a href="/playground">Playground</a>
+      <a href="/keys">API Keys</a>
+      <a href="/status">Status</a>
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<!-- CONFIRM DIALOG -->
+<div class="overlay" id="overlay">
+  <div class="dialog">
+    <h3 id="dialogTitle">Regenerate Key?</h3>
+    <p id="dialogBody">This will invalidate your current API key immediately. All integrations using this key will stop working until updated.</p>
+    <div class="dialog-actions">
+      <button class="btn btn-outline" onclick="hideDialog()">Cancel</button>
+      <button class="btn btn-danger" id="dialogConfirm" onclick="confirmAction()">Regenerate</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── MOCK DATA ───
+const FULL_KEY = 'smr_demo_7f3a9b2c4e1d';
+const MASKED_KEY = 'smr_demo_\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022';
+let revealed = false;
+let pendingAction = null;
+
+// ─── KEY MANAGEMENT ───
+function toggleReveal() {
+  revealed = !revealed;
+  document.getElementById('keyText').textContent = revealed ? FULL_KEY : MASKED_KEY;
+  const btn = document.getElementById('revealBtn');
+  btn.title = revealed ? 'Hide key' : 'Show key';
+  if (revealed) {
+    btn.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 10s3-5.5 7.5-5.5S17.5 10 17.5 10s-3 5.5-7.5 5.5S2.5 10 2.5 10z"/><circle cx="10" cy="10" r="2.5"/><line x1="3" y1="17" x2="17" y2="3"/></svg>';
+  } else {
+    btn.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 10s3-5.5 7.5-5.5S17.5 10 17.5 10s-3 5.5-7.5 5.5S2.5 10 2.5 10z"/><circle cx="10" cy="10" r="2.5"/></svg>';
+  }
+}
+
+function copyKey() {
+  navigator.clipboard.writeText(FULL_KEY).then(() => {
+    showToast('API key copied to clipboard');
+  }).catch(() => {
+    showToast('Failed to copy — try revealing and selecting manually');
+  });
+}
+
+function showDialog(action) {
+  pendingAction = action;
+  const overlay = document.getElementById('overlay');
+  const title = document.getElementById('dialogTitle');
+  const body = document.getElementById('dialogBody');
+  const btn = document.getElementById('dialogConfirm');
+  if (action === 'regen') {
+    title.textContent = 'Regenerate API Key?';
+    body.textContent = 'This will invalidate your current key immediately. All integrations using this key will stop working until updated with the new key.';
+    btn.textContent = 'Regenerate';
+    btn.className = 'btn btn-accent';
+  } else {
+    title.textContent = 'Revoke API Key?';
+    body.textContent = 'This will permanently delete your API key. You will need to create a new one and update all integrations. This action cannot be undone.';
+    btn.textContent = 'Revoke Key';
+    btn.className = 'btn btn-danger';
+  }
+  overlay.classList.add('active');
+}
+
+function hideDialog() {
+  document.getElementById('overlay').classList.remove('active');
+  pendingAction = null;
+}
+
+function confirmAction() {
+  if (pendingAction === 'regen') {
+    showToast('API key regenerated successfully');
+    document.getElementById('keyText').textContent = MASKED_KEY;
+    revealed = false;
+  } else {
+    showToast('API key revoked');
+    document.getElementById('keyText').textContent = 'No active key';
+    document.getElementById('keyText').style.color = 'var(--text-tertiary)';
+  }
+  hideDialog();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ─── MOCK LOG DATA ───
+const endpoints = [
+  '/v1/memories', '/v1/memories/search', '/v1/memories/store',
+  '/v1/teams', '/v1/agents', '/v1/health'
+];
+const methods = ['GET', 'POST', 'POST', 'GET', 'GET', 'GET'];
+const tbody = document.querySelector('#logsTable tbody');
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+for (let i = 0; i < 15; i++) {
+  const now = new Date(Date.now() - i * (Math.random() * 3600000 + 300000));
+  const h = pad(now.getHours()), m = pad(now.getMinutes()), s = pad(now.getSeconds());
+  const idx = Math.floor(Math.random() * endpoints.length);
+  const status = Math.random() > 0.08 ? 200 : (Math.random() > 0.5 ? 429 : 500);
+  const duration = Math.floor(Math.random() * 180 + 12);
+  const tr = document.createElement('tr');
+  const methodClass = methods[idx] === 'GET' ? 'method-get' : methods[idx] === 'POST' ? 'method-post' : 'method-delete';
+  const statusClass = status === 200 ? 'status-ok' : 'status-err';
+  tr.innerHTML = `
+    <td>${pad(now.getMonth()+1)}/${pad(now.getDate())} ${h}:${m}:${s}</td>
+    <td><span class="method ${methodClass}">${methods[idx]}</span></td>
+    <td>${endpoints[idx]}</td>
+    <td class="${statusClass}">${status}</td>
+    <td>${duration}ms</td>
+  `;
+  tbody.appendChild(tr);
+}
+
+// ─── CHART ───
+const labels = [];
+const data = [];
+for (let i = 29; i >= 0; i--) {
+  const d = new Date(Date.now() - i * 86400000);
+  labels.push(`${d.getMonth()+1}/${d.getDate()}`);
+  const base = 250 + Math.sin(i * 0.3) * 80;
+  data.push(Math.floor(base + Math.random() * 100));
+}
+
+new Chart(document.getElementById('usageChart'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [{
+      label: 'API Requests',
+      data,
+      borderColor: '#0071e3',
+      backgroundColor: 'rgba(0,113,227,0.08)',
+      fill: true,
+      tension: 0.35,
+      pointRadius: 0,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: '#0071e3',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1d1d1f',
+        titleFont: { family: "'Inter', sans-serif", size: 12 },
+        bodyFont: { family: "'JetBrains Mono', monospace", size: 12 },
+        padding: 12,
+        cornerRadius: 8,
+        displayColors: false
+      }
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { font: { size: 11, family: "'Inter', sans-serif" }, color: '#aeaeb2', maxTicksLimit: 8 },
+        border: { display: false }
+      },
+      y: {
+        grid: { color: 'rgba(0,0,0,0.04)' },
+        ticks: { font: { size: 11, family: "'Inter', sans-serif" }, color: '#aeaeb2' },
+        border: { display: false },
+        beginAtZero: true
+      }
+    }
+  }
+});
+
+// ─── SCROLL REVEAL ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Trigger hero reveals immediately
+setTimeout(() => {
+  document.querySelectorAll('.page-header .reveal').forEach(el => el.classList.add('visible'));
+}, 100);
+
+// ─── CLOSE DIALOG ON OVERLAY CLICK ───
+document.getElementById('overlay').addEventListener('click', function(e) {
+  if (e.target === this) hideDialog();
+});
+
+// ─── ESC TO CLOSE ───
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') hideDialog();
+});
+</script>
+
+</body>
+</html>

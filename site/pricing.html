@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing &mdash; Smara</title>
+<meta name="description" content="Simple, transparent pricing for Smara. Start free with 10,000 memories. Scale to Developer ($19/mo) or Pro ($99/mo) when you're ready.">
+<meta name="keywords" content="Smara pricing, AI memory pricing, MCP server pricing, persistent memory plans">
+<meta name="theme-color" content="#f8f9fc">
+<link rel="canonical" href="https://smara.io/pricing">
+<meta property="og:title" content="Pricing &mdash; Smara">
+<meta property="og:description" content="Start free with 10,000 memories. Scale when you're ready.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://smara.io/pricing">
+<meta property="og:site_name" content="Smara">
+<meta property="og:image" content="https://smara.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@SmaraMemo">
+<meta name="twitter:title" content="Pricing — Smara">
+<meta name="twitter:description" content="Start free with 10,000 memories. Scale to Developer ($19/mo) or Pro ($99/mo) when you're ready.">
+<meta name="twitter:image" content="https://smara.io/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Smara Pricing",
+  "description": "Simple, transparent pricing for Smara persistent memory API.",
+  "url": "https://smara.io/pricing",
+  "mainEntity": {
+    "@type": "Product",
+    "name": "Smara",
+    "offers": [
+      {"@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free", "description": "10,000 memories, 1 team/3 members, 2 AI agents"},
+      {"@type": "Offer", "price": "19", "priceCurrency": "USD", "name": "Developer", "description": "200,000 memories, 3 teams/10 members, 10 AI agents + 5 custom skills"},
+      {"@type": "Offer", "price": "99", "priceCurrency": "USD", "name": "Pro", "description": "2M memories, Unlimited teams/50 members, Unlimited agents+skills"}
+    ]
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f9fc;
+    --bg-card: rgba(255,255,255,0.72);
+    --bg-glass: rgba(255,255,255,0.55);
+    --bg-code: #f5f5f7;
+    --bg-dark: #1d1d1f;
+    --text: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #aeaeb2;
+    --border: rgba(0,0,0,0.06);
+    --border-glass: rgba(255,255,255,0.6);
+    --accent: #0071e3;
+    --accent-light: #e8f2ff;
+    --accent-glow: rgba(0,113,227,0.15);
+    --green: #34c759;
+    --green-light: #ecfdf5;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    --shadow-xl: 0 24px 80px rgba(0,0,0,0.1), 0 4px 16px rgba(0,0,0,0.05);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,113,227,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(52,199,89,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 20% 80%, rgba(245,158,11,0.04) 0%, transparent 50%);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection { background: var(--accent-light); }
+
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 56px;
+    background: rgba(248,249,252,0.72);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  }
+  .nav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px;
+    height: 100%; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-weight: 600; font-size: 15px; color: var(--text);
+    text-decoration: none; display: flex; align-items: center; gap: 8px;
+    letter-spacing: -0.02em;
+  }
+  .nav-logo .dot { color: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 24px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; color: var(--text-secondary); text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a.active { color: var(--accent); font-weight: 500; }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-github {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: color 0.15s;
+  }
+  .nav-github:hover { color: var(--text); }
+  .nav-github svg { width: 16px; height: 16px; }
+  .nav-cta {
+    font-size: 13px; font-weight: 500; color: #fff;
+    background: var(--accent); padding: 7px 16px; border-radius: 980px;
+    text-decoration: none; transition: all 0.2s;
+    box-shadow: 0 2px 8px var(--accent-glow);
+  }
+  .nav-cta:hover { box-shadow: 0 4px 16px rgba(0,113,227,0.25); transform: translateY(-1px); }
+
+  /* ─── HERO ─── */
+  .pricing-hero {
+    padding: 140px 24px 60px;
+    text-align: center;
+  }
+  .pricing-hero h1 {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .pricing-hero p {
+    font-size: 19px;
+    color: var(--text-secondary);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ─── PRICING CARDS ─── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    align-items: start;
+  }
+
+  .pricing-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 32px;
+    position: relative;
+    transition: transform 0.25s, box-shadow 0.25s;
+    box-shadow: var(--shadow-md);
+  }
+  .pricing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .pricing-card.featured {
+    border: 2px solid var(--accent);
+    box-shadow: var(--shadow-lg), 0 0 0 1px var(--accent-glow);
+    transform: translateY(-8px);
+    z-index: 2;
+  }
+  .pricing-card.featured:hover {
+    transform: translateY(-12px);
+    box-shadow: var(--shadow-xl), 0 0 0 1px var(--accent-glow);
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: -13px; left: 50%; transform: translateX(-50%);
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 16px;
+    border-radius: 980px;
+  }
+
+  .pricing-card .plan-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .pricing-card .plan-price {
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .pricing-card .plan-price span {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-secondary);
+  }
+  .pricing-card .plan-desc {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-bottom: 28px;
+    min-height: 20px;
+  }
+
+  .pricing-card ul {
+    list-style: none;
+    margin-bottom: 32px;
+  }
+  .pricing-card ul li {
+    font-size: 14px;
+    color: var(--text-secondary);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .pricing-card ul li:last-child { border-bottom: none; }
+  .pricing-card ul li::before {
+    content: '';
+    display: inline-block;
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2334c759' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  .plan-cta {
+    display: block;
+    text-align: center;
+    padding: 12px 24px;
+    border-radius: 980px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: var(--font);
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+  }
+  .plan-cta.primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 2px 8px var(--accent-glow);
+  }
+  .plan-cta.primary:hover {
+    box-shadow: 0 4px 16px rgba(0,113,227,0.25);
+    transform: translateY(-1px);
+  }
+  .plan-cta.secondary {
+    background: var(--bg-code);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .plan-cta.secondary:hover {
+    background: #eee;
+    transform: translateY(-1px);
+  }
+
+  /* ─── COMPARISON TABLE ─── */
+  .comparison-section {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+  .comparison-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-card);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+  .comparison-table thead th {
+    padding: 16px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: rgba(248,249,252,0.5);
+  }
+  .comparison-table thead th:first-child {
+    text-align: left;
+    width: 35%;
+  }
+  .comparison-table thead th.highlight {
+    color: var(--accent);
+    background: rgba(0,113,227,0.04);
+  }
+  .comparison-table tbody td {
+    padding: 14px 20px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-align: center;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .comparison-table tbody td:first-child {
+    text-align: left;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .comparison-table tbody td.highlight {
+    background: rgba(0,113,227,0.02);
+  }
+  .comparison-table tbody tr:last-child td { border-bottom: none; }
+  .comparison-table .category-row td {
+    background: rgba(248,249,252,0.6);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+    padding: 10px 20px;
+  }
+  .check {
+    display: inline-block; width: 18px; height: 18px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2334c759' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+  }
+  .dash {
+    display: inline-block;
+    width: 12px; height: 2px;
+    background: var(--text-tertiary);
+    border-radius: 1px;
+    vertical-align: middle;
+  }
+
+  /* ─── FAQ ─── */
+  .faq-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+  .faq-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .faq-item {
+    background: var(--bg-card);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+  }
+  .faq-item:hover { box-shadow: var(--shadow-md); }
+  .faq-q {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s;
+  }
+  .faq-q:hover { color: var(--accent); }
+  .faq-q .chevron {
+    width: 20px; height: 20px; flex-shrink: 0;
+    transition: transform 0.25s;
+    color: var(--text-tertiary);
+  }
+  .faq-item.open .faq-q .chevron { transform: rotate(180deg); }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+  .faq-item.open .faq-a {
+    max-height: 200px;
+  }
+  .faq-a-inner {
+    padding: 0 24px 18px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ─── CTA ─── */
+  .bottom-cta {
+    text-align: center;
+    padding: 60px 24px 100px;
+  }
+  .bottom-cta h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .bottom-cta p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent); color: #fff;
+    font-size: 15px; font-weight: 500; font-family: var(--font);
+    padding: 12px 28px; border-radius: 980px;
+    text-decoration: none; border: none; cursor: pointer;
+    box-shadow: 0 2px 12px var(--accent-glow);
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { box-shadow: 0 4px 20px rgba(0,113,227,0.25); transform: translateY(-1px); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-inner {
+    max-width: 1080px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-left { font-size: 13px; color: var(--text-tertiary); }
+  .footer-left a { color: var(--text-secondary); text-decoration: none; }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+  .footer-links a:hover { color: var(--text); }
+
+  /* ─── ANIMATIONS ─── */
+  .reveal { opacity: 0; transform: translateY(20px); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+    .pricing-card.featured { transform: none; }
+    .pricing-card.featured:hover { transform: translateY(-4px); }
+    .comparison-table { font-size: 13px; }
+    .comparison-table thead th,
+    .comparison-table tbody td { padding: 10px 12px; }
+    .footer-inner { flex-direction: column; gap: 16px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">smara<span class="dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="/docs">Docs</a></li>
+      <li><a href="/playground">Playground</a></li>
+      <li><a href="/compare">Compare</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="/changelog">Changelog</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener" class="nav-github">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+      <a href="/#signup" class="nav-cta">Get API key</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="pricing-hero">
+  <h1 class="reveal">Simple, transparent pricing</h1>
+  <p class="reveal">Start free. Scale when you're ready.</p>
+</section>
+
+<!-- PRICING CARDS -->
+<div class="pricing-grid">
+
+  <!-- FREE -->
+  <div class="pricing-card reveal">
+    <div class="plan-name">Free</div>
+    <div class="plan-price">$0<span>/mo</span></div>
+    <div class="plan-desc">For individuals getting started</div>
+    <ul>
+      <li>10,000 memories</li>
+      <li>1 team, 3 members</li>
+      <li>2 AI agents</li>
+      <li>Full MCP + REST API</li>
+      <li>Semantic search</li>
+      <li>Ebbinghaus decay</li>
+      <li>Community support</li>
+    </ul>
+    <a href="https://smara.io" class="plan-cta secondary">Get Started Free</a>
+  </div>
+
+  <!-- DEVELOPER -->
+  <div class="pricing-card featured reveal">
+    <div class="popular-badge">Popular</div>
+    <div class="plan-name">Developer</div>
+    <div class="plan-price">$19<span>/mo</span></div>
+    <div class="plan-desc">For teams building with AI</div>
+    <ul>
+      <li>200,000 memories</li>
+      <li>3 teams, 10 members each</li>
+      <li>10 AI agents + 5 custom skills</li>
+      <li>Priority pipeline</li>
+      <li>Source tagging</li>
+      <li>Advanced analytics</li>
+      <li>Email support</li>
+    </ul>
+    <a href="#" class="plan-cta primary">Start Developer</a>
+  </div>
+
+  <!-- PRO -->
+  <div class="pricing-card reveal">
+    <div class="plan-name">Pro</div>
+    <div class="plan-price">$99<span>/mo</span></div>
+    <div class="plan-desc">For production workloads</div>
+    <ul>
+      <li>2,000,000 memories</li>
+      <li>Unlimited teams, 50 members</li>
+      <li>Unlimited agents + skills</li>
+      <li>Dedicated queue</li>
+      <li>Custom decay curves</li>
+      <li>Slack integration + SLA</li>
+      <li>Priority support</li>
+    </ul>
+    <a href="#" class="plan-cta secondary">Start Pro</a>
+  </div>
+
+</div>
+
+<!-- COMPARISON TABLE -->
+<section class="comparison-section">
+  <h2 class="reveal">Full feature comparison</h2>
+  <table class="comparison-table reveal">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Free</th>
+        <th class="highlight">Developer</th>
+        <th>Pro</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="category-row"><td colspan="4">Storage &amp; Limits</td></tr>
+      <tr>
+        <td>Memories</td>
+        <td>10,000</td>
+        <td class="highlight">200,000</td>
+        <td>2,000,000</td>
+      </tr>
+      <tr>
+        <td>Teams</td>
+        <td>1</td>
+        <td class="highlight">3</td>
+        <td>Unlimited</td>
+      </tr>
+      <tr>
+        <td>Members per team</td>
+        <td>3</td>
+        <td class="highlight">10</td>
+        <td>50</td>
+      </tr>
+      <tr>
+        <td>AI agents</td>
+        <td>2</td>
+        <td class="highlight">10</td>
+        <td>Unlimited</td>
+      </tr>
+      <tr>
+        <td>Custom skills</td>
+        <td><span class="dash"></span></td>
+        <td class="highlight">5</td>
+        <td>Unlimited</td>
+      </tr>
+
+      <tr class="category-row"><td colspan="4">Core Features</td></tr>
+      <tr>
+        <td>MCP protocol</td>
+        <td><span class="check"></span></td>
+        <td class="highlight"><span class="check"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+      <tr>
+        <td>REST API</td>
+        <td><span class="check"></span></td>
+        <td class="highlight"><span class="check"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+      <tr>
+        <td>Semantic search</td>
+        <td><span class="check"></span></td>
+        <td class="highlight"><span class="check"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+      <tr>
+        <td>Ebbinghaus decay</td>
+        <td><span class="check"></span></td>
+        <td class="highlight"><span class="check"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+      <tr>
+        <td>Source tagging</td>
+        <td><span class="dash"></span></td>
+        <td class="highlight"><span class="check"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+      <tr>
+        <td>Advanced analytics</td>
+        <td><span class="dash"></span></td>
+        <td class="highlight"><span class="check"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+      <tr>
+        <td>Custom decay curves</td>
+        <td><span class="dash"></span></td>
+        <td class="highlight"><span class="dash"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+
+      <tr class="category-row"><td colspan="4">Infrastructure</td></tr>
+      <tr>
+        <td>Priority pipeline</td>
+        <td><span class="dash"></span></td>
+        <td class="highlight"><span class="check"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+      <tr>
+        <td>Dedicated queue</td>
+        <td><span class="dash"></span></td>
+        <td class="highlight"><span class="dash"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+      <tr>
+        <td>Slack integration</td>
+        <td><span class="dash"></span></td>
+        <td class="highlight"><span class="dash"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+      <tr>
+        <td>SLA</td>
+        <td><span class="dash"></span></td>
+        <td class="highlight"><span class="dash"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+
+      <tr class="category-row"><td colspan="4">Support</td></tr>
+      <tr>
+        <td>Community</td>
+        <td><span class="check"></span></td>
+        <td class="highlight"><span class="check"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+      <tr>
+        <td>Email support</td>
+        <td><span class="dash"></span></td>
+        <td class="highlight"><span class="check"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+      <tr>
+        <td>Priority support</td>
+        <td><span class="dash"></span></td>
+        <td class="highlight"><span class="dash"></span></td>
+        <td><span class="check"></span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <h2 class="reveal">Frequently asked questions</h2>
+
+  <div class="faq-item reveal">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      Can I try before I buy?
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="faq-a"><div class="faq-a-inner">
+      Absolutely. The free tier gives you 10,000 memories, full API access, semantic search, and Ebbinghaus decay &mdash; no credit card required. Most solo developers never need to upgrade.
+    </div></div>
+  </div>
+
+  <div class="faq-item reveal">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      What happens if I exceed my memory limit?
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="faq-a"><div class="faq-a-inner">
+      We use graceful degradation, not hard cutoffs. You'll get a warning at 90% usage, and new writes will queue for review rather than being rejected. Existing memories remain fully searchable. Upgrade anytime to lift the limit instantly.
+    </div></div>
+  </div>
+
+  <div class="faq-item reveal">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      Can I switch plans?
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="faq-a"><div class="faq-a-inner">
+      Yes. Upgrade or downgrade at any time. Changes are prorated &mdash; you'll only pay for what you use. Downgrading preserves your existing memories; you just won't be able to create new ones beyond the lower tier's limit.
+    </div></div>
+  </div>
+
+  <div class="faq-item reveal">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      Is my data private?
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="faq-a"><div class="faq-a-inner">
+      Yes. Each API key isolates your data in its own schema. All data is encrypted in transit (TLS 1.3) and at rest. We never use your memories for training or share them with third parties.
+    </div></div>
+  </div>
+
+  <div class="faq-item reveal">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      Do you offer annual billing?
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="faq-a"><div class="faq-a-inner">
+      Coming soon. Annual plans will save you 20% compared to monthly billing. Join the waitlist or start monthly &mdash; you'll be automatically migrated to annual pricing when it launches.
+    </div></div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta">
+  <h2 class="reveal">Still not sure?</h2>
+  <p class="reveal">Try the interactive playground and see Smara in action.</p>
+  <a href="/playground" class="btn-primary reveal">Try the Playground</a>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      smara &middot; &#x0938;&#x094D;&#x092E;&#x0930; &middot; the act of remembrance
+    </div>
+    <div class="footer-links">
+      <a href="/docs">Docs</a>
+      <a href="/blog/">Blog</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/compare">Compare</a>
+      <a href="/changelog">Changelog</a>
+      <a href="/playground">Playground</a>
+      <a href="/status">Status</a>
+      <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero entrance
+gsap.fromTo('.pricing-hero .reveal', { opacity: 0, y: 20 }, {
+  opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out'
+});
+
+// Scroll reveals
+document.querySelectorAll('.reveal').forEach(el => {
+  if (el.closest('.pricing-hero')) return;
+  gsap.fromTo(el, { opacity: 0, y: 20 }, {
+    opacity: 1, y: 0, duration: 0.5, ease: 'power2.out',
+    scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+  });
+});
+</script>
+
+</body>
+</html>

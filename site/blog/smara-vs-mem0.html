@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smara vs Mem0: Which AI Memory API Should You Use in 2026?</title>
+  <meta name="description" content="A detailed comparison of Smara and Mem0 AI memory APIs. Compare pricing, features, architecture, and developer experience to choose the right memory API for your AI agents.">
+  <meta property="og:title" content="Smara vs Mem0: Which AI Memory API Should You Use in 2026?">
+  <meta property="og:description" content="Compare pricing, features, architecture, and DX between Smara and Mem0. Includes migration guide.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://smara.io/blog/smara-vs-mem0">
+  <meta property="og:site_name" content="Smara">
+  <meta property="og:image" content="https://smara.io/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="article:author" content="Sri Panchavati">
+  <meta property="article:published_time" content="2026-04-27">
+  <link rel="canonical" href="https://smara.io/blog/smara-vs-mem0">
+  <meta name="author" content="Sri Panchavati">
+  <meta name="keywords" content="mem0 alternative, smara vs mem0, AI memory API, AI agent memory comparison">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@SmaraMemo">
+  <meta name="twitter:title" content="Smara vs Mem0: Which AI Memory API Should You Use in 2026?">
+  <meta name="twitter:description" content="Compare pricing, features, architecture, and DX between Smara and Mem0. Includes migration guide.">
+  <meta name="twitter:image" content="https://smara.io/og-image.png">
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"Smara vs Mem0: Which AI Memory API Should You Use in 2026?","description":"A detailed comparison of Smara and Mem0 AI memory APIs.","url":"https://smara.io/blog/smara-vs-mem0","author":{"@type":"Person","name":"Sri Panchavati"},"publisher":{"@type":"Organization","name":"Smara","url":"https://smara.io"},"datePublished":"2026-04-27","image":"https://smara.io/og-image.png"}
+  </script>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --bg-card: rgba(255,255,255,0.72);
+      --bg-code: rgba(0,0,0,0.04);
+      --text: #1d1d1f;
+      --text-muted: #6e6e73;
+      --accent: #0071e3;
+      --accent-hover: #005bb5;
+      --border: rgba(0,0,0,0.06);
+      --green: #4ade80;
+      --orange: #fb923c;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 18px;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+    .meta {
+      color: var(--text-muted);
+      font-size: 14px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin-bottom: 8px;
+    }
+    .meta a { color: var(--accent); text-decoration: none; }
+    .meta a:hover { text-decoration: underline; }
+    .reading-time {
+      display: inline-block;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-left: 8px;
+    }
+    h1 {
+      font-size: 2.4rem;
+      line-height: 1.2;
+      margin: 16px 0 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin: 48px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+    h3 {
+      font-size: 1.15rem;
+      margin: 32px 0 12px;
+      font-weight: 600;
+    }
+    p { margin: 0 0 16px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-hover); text-decoration: underline; }
+    strong { color: #1d1d1f; }
+    code {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.85em;
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+    pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      line-height: 1.5;
+    }
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 14px;
+      color: #1d1d1f;
+    }
+    .comment { color: #6e6e73; }
+    .keyword { color: #ad3da4; }
+    .string { color: #067d26; }
+    .func { color: #d2a8ff; }
+    .num { color: #1c00cf; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: var(--bg-card);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    td { color: var(--text); }
+    tr:hover td { background: rgba(0, 113, 227, 0.04); }
+    .toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0 32px;
+    }
+    .toc h4 {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .toc ol { padding-left: 20px; }
+    .toc li {
+      font-size: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin-bottom: 6px;
+    }
+    .cta {
+      background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%);
+      border: none;
+      border-radius: 8px;
+      padding: 40px;
+      text-align: center;
+      margin: 48px 0 0;
+    }
+    .cta p {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: #fff;
+      color: #1d1d1f;
+      padding: 12px 32px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      text-decoration: none;
+      transition: transform 0.15s ease;
+    }
+    .cta-btn:hover { transform: translateY(-1px); text-decoration: none; color: #1d1d1f; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+    .back-link {
+      display: inline-block;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .back-link:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+    <div class="meta">
+      By <a href="https://parallelromb.dev">Sri Panchavati</a> &middot; April 2026
+      <span class="reading-time">7 min read</span>
+    </div>
+
+    <h1>Smara vs Mem0: Which AI Memory API Should You Use in 2026?</h1>
+
+    <nav class="toc">
+      <h4>Table of Contents</h4>
+      <ol>
+        <li><a href="#core-difference">The Core Difference: Flat vs. Decay-Ranked</a></li>
+        <li><a href="#features">Feature Comparison</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#dx">Developer Experience</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#mcp">MCP Native</a></li>
+        <li><a href="#migration">Migration Guide: Mem0 to Smara</a></li>
+        <li><a href="#verdict">Verdict</a></li>
+      </ol>
+    </nav>
+
+    <p>If you're building AI agents that need to remember things between conversations, you've probably come across Mem0. It was one of the first dedicated memory APIs for AI, and for good reason&mdash;it solved a real problem. But the landscape has changed. Smara launched in early 2026 with a fundamentally different architecture, and developers are asking: which one should I actually use?</p>
+
+    <p>This is a fair, detailed comparison. I built Smara, so take my perspective with the appropriate grain of salt. But I'll present the facts and let you decide.</p>
+
+    <h2 id="core-difference">The Core Difference: Flat Memory vs. Decay-Ranked Memory</h2>
+
+    <p>Mem0 stores memories as flat key-value pairs with vector embeddings. When you search, you get results ranked purely by semantic similarity. Every memory is treated equally regardless of when it was created or how important it is.</p>
+
+    <p>Smara uses <strong>Ebbinghaus decay curves</strong> to score memories. Each memory has an importance weight (0-1) and a time-based decay score. When you search, results are ranked by a blend of semantic similarity (70%) and decay score (30%). This means recent, important memories naturally float to the top, while stale, low-importance memories fade&mdash;just like human memory works.</p>
+
+    <pre><code><span class="comment"># Mem0 retrieval: pure cosine similarity</span>
+results = mem0.search(<span class="string">"user preferences"</span>, user_id=<span class="string">"alice"</span>)
+<span class="comment"># Returns: everything ever stored, ranked only by embedding distance</span>
+
+<span class="comment"># Smara retrieval: similarity x decay blend</span>
+results = smara.search(user_id=<span class="string">"alice"</span>, q=<span class="string">"user preferences"</span>)
+<span class="comment"># Returns: results ranked by recency + importance + similarity</span>
+<span class="comment"># Each result includes: similarity, decay_score, blended score</span></code></pre>
+
+    <p>This matters in practice. When an AI agent has thousands of memories for a user, flat retrieval returns outdated facts alongside current ones. Decay-ranked retrieval naturally prioritizes what's current and relevant.</p>
+
+    <h2 id="features">Feature Comparison</h2>
+
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>Smara</th><th>Mem0</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Vector search</td><td>Yes (pgvector, 1024d)</td><td>Yes (various backends)</td></tr>
+        <tr><td>Ebbinghaus decay scoring</td><td><strong style="color: var(--green)">Yes</strong></td><td>No</td></tr>
+        <tr><td>Graph memory (edges between facts)</td><td><strong style="color: var(--green)">Yes</strong></td><td>No</td></tr>
+        <tr><td>Agent-scoped memory</td><td><strong style="color: var(--green)">Yes (built-in)</strong></td><td>Manual via metadata</td></tr>
+        <tr><td>Team/shared memory</td><td><strong style="color: var(--green)">Yes (RBAC)</strong></td><td>No</td></tr>
+        <tr><td>Namespaces</td><td>Yes</td><td>Tags only</td></tr>
+        <tr><td>Duplicate detection</td><td>Automatic (cosine &gt; 0.985)</td><td>Manual</td></tr>
+        <tr><td>Contradiction handling</td><td>Auto-replace (cosine 0.94-0.985)</td><td>Manual</td></tr>
+        <tr><td>MCP server</td><td><strong style="color: var(--green)">Native</strong></td><td>Community</td></tr>
+        <tr><td>Self-hosting</td><td>Docker + Postgres</td><td>Docker + various</td></tr>
+        <tr><td>Context endpoint</td><td>Yes</td><td>No</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Graph Memory</h3>
+
+    <p>Smara lets you create typed, weighted edges between memories:</p>
+
+    <pre><code><span class="comment"># Connect two memories with a relationship</span>
+curl -X POST https://api.smara.io/v1/graph/connect \
+  -H <span class="string">"Authorization: Bearer smara_..."</span> \
+  -d <span class="string">'{
+    "from_memory_id": "mem-1",
+    "to_memory_id": "mem-2",
+    "relationship_type": "contradicts",
+    "weight": 0.9
+  }'</span>
+
+<span class="comment"># Traverse the graph up to 5 hops deep</span>
+curl <span class="string">"https://api.smara.io/v1/graph/traverse/mem-1?depth=3"</span></code></pre>
+
+    <p>This enables knowledge graphs where your agent can follow connections between facts, not just search by similarity. Mem0 has no equivalent.</p>
+
+    <h3>Agent-Scoped Memory</h3>
+
+    <p>Smara has first-class agent entities. You create an agent, assign it skills, and its memories are automatically scoped:</p>
+
+    <pre><code><span class="comment"># Store memory scoped to a specific agent</span>
+POST /v1/agents/{agentId}/memories
+{ <span class="string">"user_id"</span>: <span class="string">"alice"</span>, <span class="string">"fact"</span>: <span class="string">"Prefers TypeScript over Python"</span> }
+
+<span class="comment"># Search only this agent's memories</span>
+GET /v1/agents/{agentId}/memories?user_id=alice&amp;q=language preference</code></pre>
+
+    <h3>Team Memory with RBAC</h3>
+
+    <p>Smara supports team-based memory with role-based access control. You can share memories across team members with <code>admin</code>, <code>member</code>, and <code>read_only</code> roles. This is critical for multi-agent systems or team-based AI assistants. Mem0 has no team concept.</p>
+
+    <h2 id="pricing">Pricing</h2>
+
+    <table>
+      <thead>
+        <tr><th>Plan</th><th>Smara</th><th>Mem0</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Free</td><td>100 memories, 1 agent</td><td>1,000 memories</td></tr>
+        <tr><td>Developer</td><td><strong>$19/mo</strong> &mdash; 10K memories, 5 agents, 1 team</td><td>$99/mo &mdash; 10K memories</td></tr>
+        <tr><td>Team</td><td><strong>$79/mo</strong> &mdash; 100K memories, 25 agents, 5 teams</td><td>$499/mo &mdash; 100K memories</td></tr>
+        <tr><td>Enterprise</td><td><strong>$199/mo</strong> &mdash; unlimited</td><td>Custom ($1,000+/mo)</td></tr>
+      </tbody>
+    </table>
+
+    <p>At the Developer tier, Smara is <strong>80% cheaper</strong> than Mem0. At Team tier, <strong>84% cheaper</strong>. Both offer self-hosting.</p>
+
+    <h2 id="dx">Developer Experience</h2>
+
+    <p><strong>Smara's API</strong> is RESTful with consistent patterns. Every endpoint follows <code>/v1/{resource}</code>:</p>
+
+    <pre><code><span class="keyword">from</span> smara <span class="keyword">import</span> Smara
+
+client = Smara(api_key=<span class="string">"smara_..."</span>)
+
+<span class="comment"># Store</span>
+client.store(<span class="string">"alice"</span>, <span class="string">"Loves hiking on weekends"</span>, importance=<span class="num">0.7</span>)
+
+<span class="comment"># Search with decay-ranked results</span>
+results = client.search(<span class="string">"alice"</span>, <span class="string">"weekend activities"</span>)
+<span class="keyword">for</span> r <span class="keyword">in</span> results:
+    <span class="func">print</span>(<span class="string">f"</span>{r.fact} (score: {r.score}, decay: {r.decay_score})<span class="string">"</span>)
+
+<span class="comment"># Get LLM-ready context</span>
+context = client.context(<span class="string">"alice"</span>, q=<span class="string">"weekend plans"</span>, top_n=<span class="num">5</span>)</code></pre>
+
+    <p><strong>Mem0's API</strong> is also clean and well-documented. It's been around longer and has more community examples. Both are straightforward. Mem0 wins on ecosystem maturity. Smara wins on built-in features.</p>
+
+    <h2 id="architecture">Architecture</h2>
+
+    <p><strong>Smara</strong>: Single Fastify server + Postgres with pgvector. Embeddings via Voyage AI (1024d). One container + one database.</p>
+
+    <p><strong>Mem0</strong>: Python service with pluggable vector stores (Pinecone, Qdrant, Weaviate, ChromaDB, pgvector). More flexible but more infrastructure.</p>
+
+    <p>For simplicity: Smara. For integration with existing vector databases: Mem0 might be easier.</p>
+
+    <h2 id="mcp">MCP Native</h2>
+
+    <p>Smara ships a first-party MCP server. Claude Code, Cursor, and any MCP-compatible tool can use Smara as a memory backend with zero custom code. Install it once and your AI assistant remembers everything across sessions.</p>
+
+    <p>Mem0 has community-built MCP integrations, but nothing officially maintained.</p>
+
+    <h2 id="migration">Migration Guide: Mem0 to Smara</h2>
+
+    <p>If you're already on Mem0 and want to switch:</p>
+
+    <ol style="margin: 0 0 16px 24px;">
+      <li><strong>Export your memories</strong> from Mem0 using their API's list endpoint</li>
+      <li><strong>Map the fields</strong>: Mem0's <code>memory</code> &rarr; Smara's <code>fact</code></li>
+      <li><strong>Set importance scores</strong>: Default to 0.5 or use recency as a proxy</li>
+      <li><strong>Batch import</strong>: Use <code>POST /v1/memories</code>. Deduplication is automatic.</li>
+      <li><strong>Update SDK calls</strong>: <code>mem0.add()</code> &rarr; <code>smara.store()</code></li>
+    </ol>
+
+    <pre><code><span class="comment"># Migration script skeleton</span>
+<span class="keyword">import</span> requests
+
+SMARA_KEY = <span class="string">"smara_..."</span>
+MEM0_KEY = <span class="string">"..."</span>
+
+<span class="comment"># 1. Export from Mem0</span>
+mem0_memories = requests.get(
+    <span class="string">"https://api.mem0.ai/v1/memories/"</span>,
+    headers={<span class="string">"Authorization"</span>: <span class="string">f"Token {MEM0_KEY}"</span>},
+    params={<span class="string">"user_id"</span>: <span class="string">"alice"</span>}
+).json()
+
+<span class="comment"># 2. Import to Smara</span>
+<span class="keyword">for</span> mem <span class="keyword">in</span> mem0_memories:
+    requests.post(
+        <span class="string">"https://api.smara.io/v1/memories"</span>,
+        headers={<span class="string">"Authorization"</span>: <span class="string">f"Bearer {SMARA_KEY}"</span>},
+        json={
+            <span class="string">"user_id"</span>: <span class="string">"alice"</span>,
+            <span class="string">"fact"</span>: mem[<span class="string">"memory"</span>],
+            <span class="string">"importance"</span>: <span class="num">0.5</span>,
+            <span class="string">"source"</span>: <span class="string">"mem0-migration"</span>
+        }
+    )</code></pre>
+
+    <h2 id="verdict">Verdict</h2>
+
+    <p><strong>Choose Mem0</strong> if you need a proven, mature ecosystem with lots of community integrations and you're already invested in a specific vector database.</p>
+
+    <p><strong>Choose Smara</strong> if you want decay-scored memory that behaves like human recall, built-in graph memory, agent and team support, MCP integration, and significantly lower pricing.</p>
+
+    <p>For most new projects in 2026, Smara gives you more for less. The Ebbinghaus decay model alone is a meaningful improvement over flat retrieval for any agent that accumulates memories over time.</p>
+
+    <div class="cta">
+      <p>Ready to try Smara? 100 memories free, no credit card required.</p>
+      <a href="https://smara.io" class="cta-btn">Try Smara Free &rarr;</a>
+    </div>
+
+    <hr>
+
+    <h2 style="border-bottom: none; margin-bottom: 20px;">Related Posts</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+      <a href="/blog/best-mem0-alternatives.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Guide</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Best Mem0 Alternatives (2026)</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">Comparing Smara, Zep, Letta, and more.</p>
+      </a>
+      <a href="/blog/ebbinghaus-ai-memory.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Technical</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Ebbinghaus Curves for AI Memory</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">How forgetting curves make AI memory smarter.</p>
+      </a>
+      <a href="/blog/claude-code-memory-mcp.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Tutorial</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Adding Memory to Claude Code via MCP</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">Give Claude Code persistent memory in 30 seconds.</p>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

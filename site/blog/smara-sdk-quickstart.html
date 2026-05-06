@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smara SDK Quickstart: Add AI Memory in 5 Minutes</title>
+  <meta name="description" content="Complete quickstart guide: integrate Smara's persistent AI memory into any project using JavaScript, Python, or cURL. Store, search, and manage memories in minutes.">
+  <meta property="og:title" content="Smara SDK Quickstart: Add AI Memory in 5 Minutes">
+  <meta property="og:description" content="Integrate Smara's persistent AI memory into any project. Full examples in JavaScript, Python, and cURL.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://smara.io/blog/smara-sdk-quickstart">
+  <meta property="og:site_name" content="Smara">
+  <meta property="og:image" content="https://smara.io/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="article:author" content="Sri Panchavati">
+  <meta property="article:published_time" content="2026-04-29">
+  <link rel="canonical" href="https://smara.io/blog/smara-sdk-quickstart">
+  <meta name="author" content="Sri Panchavati">
+  <meta name="keywords" content="Smara SDK, AI memory API, persistent memory, MCP memory, Claude Code memory, AI agent memory tutorial">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@SmaraMemo">
+  <meta name="twitter:title" content="Smara SDK Quickstart: Add AI Memory in 5 Minutes">
+  <meta name="twitter:description" content="Integrate Smara's persistent AI memory into any project. Full examples in JavaScript, Python, and cURL.">
+  <meta name="twitter:image" content="https://smara.io/og-image.png">
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"Smara SDK Quickstart: Add AI Memory in 5 Minutes","description":"Complete quickstart guide: integrate Smara's persistent AI memory into any project using JavaScript, Python, or cURL.","url":"https://smara.io/blog/smara-sdk-quickstart","author":{"@type":"Person","name":"Sri Panchavati"},"publisher":{"@type":"Organization","name":"Smara","url":"https://smara.io"},"datePublished":"2026-04-29","image":"https://smara.io/og-image.png"}
+  </script>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --bg-card: rgba(255,255,255,0.72);
+      --bg-code: rgba(0,0,0,0.04);
+      --text: #1d1d1f;
+      --text-muted: #6e6e73;
+      --accent: #0071e3;
+      --accent-hover: #005bb5;
+      --border: rgba(0,0,0,0.06);
+      --green: #4ade80;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Georgia', 'Times New Roman', serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 18px; }
+    .container { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }
+    .meta { color: var(--text-muted); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin-bottom: 8px; }
+    .meta a { color: var(--accent); text-decoration: none; }
+    .meta a:hover { text-decoration: underline; }
+    .reading-time { display: inline-block; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 3px 12px; font-size: 12px; color: var(--text-muted); margin-left: 8px; }
+    h1 { font-size: 2.4rem; line-height: 1.2; margin: 16px 0 32px; font-weight: 700; letter-spacing: -0.02em; }
+    h2 { font-size: 1.5rem; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-weight: 600; }
+    h3 { font-size: 1.15rem; margin: 32px 0 12px; font-weight: 600; }
+    p { margin: 0 0 16px; }
+    ul, ol { margin: 0 0 16px; padding-left: 24px; }
+    li { margin-bottom: 6px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-hover); text-decoration: underline; }
+    strong { color: #1d1d1f; }
+    code { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 0.85em; background: var(--bg-code); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; }
+    pre { background: var(--bg-code); border: 1px solid var(--border); border-radius: 8px; padding: 20px; overflow-x: auto; margin: 16px 0 24px; line-height: 1.5; }
+    pre code { background: none; border: none; padding: 0; font-size: 14px; color: #1d1d1f; }
+    .comment { color: #6e6e73; }
+    .keyword { color: #ad3da4; }
+    .string { color: #067d26; }
+    .num { color: #1c00cf; }
+    .func { color: #326d74; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+    th { background: var(--bg-card); color: var(--text-muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .cta { background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); border-radius: 8px; padding: 40px; text-align: center; margin: 48px 0 0; }
+    .cta p { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: rgba(255,255,255,0.9); margin-bottom: 16px; font-size: 16px; }
+    .cta-btn { display: inline-block; background: #fff; color: #1d1d1f; padding: 12px 32px; border-radius: 6px; font-weight: 600; font-size: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-decoration: none; transition: transform 0.15s ease; }
+    .cta-btn:hover { transform: translateY(-1px); text-decoration: none; color: #1d1d1f; }
+    .back-link { display: inline-block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+    .back-link:hover { color: var(--accent); }
+    .step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin: 20px 0;
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      flex-shrink: 0;
+    }
+    .step-header h3 { margin: 0; }
+    .lang-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border);
+      margin: 24px 0 0;
+    }
+    .lang-tab {
+      padding: 10px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: color 0.15s, border-color 0.15s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+    .lang-tab:hover { color: var(--text); }
+    .lang-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .lang-panel { display: none; }
+    .lang-panel.active { display: block; }
+    .tip {
+      background: rgba(0, 113, 227, 0.06);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 16px 0 24px;
+      font-size: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .tip strong { color: var(--accent); }
+    .endpoint-table td:first-child { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+    <div class="meta">
+      By <a href="https://parallelromb.dev">Sri Panchavati</a> &middot; April 2026
+      <span class="reading-time">10 min read</span>
+    </div>
+
+    <h1>Smara SDK Quickstart: Add AI Memory in 5 Minutes</h1>
+
+    <p>Most AI tools have no memory. Every session starts from zero&mdash;your agent forgets preferences, context, decisions, and everything it learned five minutes ago. Smara gives any AI tool persistent, searchable, decay-scored memory through a simple REST API.</p>
+
+    <p>This guide gets you from zero to working memory in under five minutes. Pick your language, copy the examples, and ship.</p>
+
+    <h2>API Overview</h2>
+
+    <p>All endpoints live under <code>https://api.smara.io/v1</code>. Authenticate with a Bearer token.</p>
+
+    <table class="endpoint-table">
+      <thead>
+        <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>POST /v1/memories</td><td></td><td>Store a new memory</td></tr>
+        <tr><td>GET /v1/memories</td><td></td><td>List all memories</td></tr>
+        <tr><td>POST /v1/memories/search</td><td></td><td>Semantic search</td></tr>
+        <tr><td>DELETE /v1/memories/:id</td><td></td><td>Delete a memory</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Installation &amp; Setup</h2>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <h3>Get Your API Key</h3>
+      </div>
+      <p style="margin-bottom: 0;">Sign up at <a href="https://smara.io">smara.io</a> and grab your key from the dashboard. Free tier gives you 100 memories, no credit card required.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <h3>Set Your Environment Variable</h3>
+      </div>
+      <pre><code><span class="comment"># Add to your .env or shell profile</span>
+<span class="keyword">export</span> SMARA_API_KEY=<span class="string">"smr_xxxxxxxxxxxx"</span></code></pre>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <h3>(Optional) MCP Server for IDE Integration</h3>
+      </div>
+      <p>If you want automatic memory in Claude Code, Cursor, or Windsurf:</p>
+      <pre style="margin-bottom: 0;"><code>npx @smara/mcp-server --init</code></pre>
+    </div>
+
+    <!-- ============ JAVASCRIPT ============ -->
+    <h2>JavaScript / TypeScript</h2>
+
+    <p>No SDK package needed&mdash;use plain <code>fetch</code>. Works in Node.js 18+, Deno, Bun, and browsers.</p>
+
+    <h3>Store a Memory</h3>
+
+    <pre><code><span class="keyword">const</span> API = <span class="string">"https://api.smara.io/v1"</span>;
+<span class="keyword">const</span> KEY = process.env.SMARA_API_KEY;
+
+<span class="keyword">const</span> res = <span class="keyword">await</span> <span class="func">fetch</span>(<span class="string">`${API}/memories`</span>, {
+  method: <span class="string">"POST"</span>,
+  headers: {
+    <span class="string">"Authorization"</span>: <span class="string">`Bearer ${KEY}`</span>,
+    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,
+  },
+  body: JSON.<span class="func">stringify</span>({
+    user_id: <span class="string">"user-123"</span>,
+    content: <span class="string">"Prefers dark mode and Vim keybindings in all editors"</span>,
+    tags: [<span class="string">"preferences"</span>, <span class="string">"editor"</span>],
+    importance: <span class="num">0.8</span>,
+    namespace: <span class="string">"my-app"</span>,
+  }),
+});
+
+<span class="keyword">const</span> memory = <span class="keyword">await</span> res.<span class="func">json</span>();
+console.<span class="func">log</span>(memory);
+<span class="comment">// { id: "mem_abc123", content: "Prefers dark mode...", score: 0.8, ... }</span></code></pre>
+
+    <h3>Search Memories</h3>
+
+    <pre><code><span class="keyword">const</span> results = <span class="keyword">await</span> <span class="func">fetch</span>(<span class="string">`${API}/memories/search`</span>, {
+  method: <span class="string">"POST"</span>,
+  headers: {
+    <span class="string">"Authorization"</span>: <span class="string">`Bearer ${KEY}`</span>,
+    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,
+  },
+  body: JSON.<span class="func">stringify</span>({
+    user_id: <span class="string">"user-123"</span>,
+    q: <span class="string">"editor preferences"</span>,
+    top_n: <span class="num">5</span>,
+    namespace: <span class="string">"my-app"</span>,
+  }),
+}).<span class="func">then</span>(r =&gt; r.<span class="func">json</span>());
+
+console.<span class="func">log</span>(results.memories);
+<span class="comment">// [{ id: "mem_abc123", content: "Prefers dark mode...", score: 0.92, decay: 0.98 }]</span></code></pre>
+
+    <h3>List All Memories</h3>
+
+    <pre><code><span class="keyword">const</span> all = <span class="keyword">await</span> <span class="func">fetch</span>(
+  <span class="string">`${API}/memories?user_id=user-123&amp;namespace=my-app&amp;limit=20`</span>,
+  { headers: { <span class="string">"Authorization"</span>: <span class="string">`Bearer ${KEY}`</span> } }
+).<span class="func">then</span>(r =&gt; r.<span class="func">json</span>());
+
+console.<span class="func">log</span>(<span class="string">`${all.total} memories found`</span>);</code></pre>
+
+    <h3>Delete a Memory</h3>
+
+    <pre><code><span class="keyword">await</span> <span class="func">fetch</span>(<span class="string">`${API}/memories/mem_abc123`</span>, {
+  method: <span class="string">"DELETE"</span>,
+  headers: { <span class="string">"Authorization"</span>: <span class="string">`Bearer ${KEY}`</span> },
+});
+<span class="comment">// 204 No Content</span></code></pre>
+
+    <!-- ============ PYTHON ============ -->
+    <h2>Python</h2>
+
+    <p>Uses the <code>requests</code> library. Install with <code>pip install requests</code> if you don't have it.</p>
+
+    <h3>Store a Memory</h3>
+
+    <pre><code><span class="keyword">import</span> os, requests
+
+API = <span class="string">"https://api.smara.io/v1"</span>
+KEY = os.environ[<span class="string">"SMARA_API_KEY"</span>]
+HEADERS = {<span class="string">"Authorization"</span>: <span class="keyword">f</span><span class="string">"Bearer {KEY}"</span>, <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>}
+
+res = requests.<span class="func">post</span>(<span class="keyword">f</span><span class="string">"{API}/memories"</span>, headers=HEADERS, json={
+    <span class="string">"user_id"</span>: <span class="string">"user-123"</span>,
+    <span class="string">"content"</span>: <span class="string">"Prefers dark mode and Vim keybindings in all editors"</span>,
+    <span class="string">"tags"</span>: [<span class="string">"preferences"</span>, <span class="string">"editor"</span>],
+    <span class="string">"importance"</span>: <span class="num">0.8</span>,
+    <span class="string">"namespace"</span>: <span class="string">"my-app"</span>,
+})
+
+memory = res.<span class="func">json</span>()
+<span class="func">print</span>(memory)
+<span class="comment"># {"id": "mem_abc123", "content": "Prefers dark mode...", "score": 0.8, ...}</span></code></pre>
+
+    <h3>Search Memories</h3>
+
+    <pre><code>results = requests.<span class="func">post</span>(<span class="keyword">f</span><span class="string">"{API}/memories/search"</span>, headers=HEADERS, json={
+    <span class="string">"user_id"</span>: <span class="string">"user-123"</span>,
+    <span class="string">"q"</span>: <span class="string">"editor preferences"</span>,
+    <span class="string">"top_n"</span>: <span class="num">5</span>,
+    <span class="string">"namespace"</span>: <span class="string">"my-app"</span>,
+}).<span class="func">json</span>()
+
+<span class="keyword">for</span> m <span class="keyword">in</span> results[<span class="string">"memories"</span>]:
+    <span class="func">print</span>(<span class="keyword">f</span><span class="string">"{m['score']:.2f}  {m['content']}"</span>)
+<span class="comment"># 0.92  Prefers dark mode and Vim keybindings in all editors</span></code></pre>
+
+    <h3>List All Memories</h3>
+
+    <pre><code>all_memories = requests.<span class="func">get</span>(
+    <span class="keyword">f</span><span class="string">"{API}/memories"</span>,
+    headers=HEADERS,
+    params={<span class="string">"user_id"</span>: <span class="string">"user-123"</span>, <span class="string">"namespace"</span>: <span class="string">"my-app"</span>, <span class="string">"limit"</span>: <span class="num">20</span>},
+).<span class="func">json</span>()
+
+<span class="func">print</span>(<span class="keyword">f</span><span class="string">"{all_memories['total']} memories found"</span>)</code></pre>
+
+    <h3>Delete a Memory</h3>
+
+    <pre><code>requests.<span class="func">delete</span>(<span class="keyword">f</span><span class="string">"{API}/memories/mem_abc123"</span>, headers=HEADERS)
+<span class="comment"># 204 No Content</span></code></pre>
+
+    <!-- ============ CURL ============ -->
+    <h2>cURL</h2>
+
+    <p>For quick testing or shell scripts. All examples assume <code>SMARA_API_KEY</code> is set.</p>
+
+    <h3>Store a Memory</h3>
+
+    <pre><code>curl -X POST https://api.smara.io/v1/memories \
+  -H <span class="string">"Authorization: Bearer $SMARA_API_KEY"</span> \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{
+    "user_id": "user-123",
+    "content": "Prefers dark mode and Vim keybindings",
+    "tags": ["preferences", "editor"],
+    "importance": 0.8,
+    "namespace": "my-app"
+  }'</span></code></pre>
+
+    <h3>Search Memories</h3>
+
+    <pre><code>curl -X POST https://api.smara.io/v1/memories/search \
+  -H <span class="string">"Authorization: Bearer $SMARA_API_KEY"</span> \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{
+    "user_id": "user-123",
+    "q": "editor preferences",
+    "top_n": 5,
+    "namespace": "my-app"
+  }'</span></code></pre>
+
+    <h3>List All Memories</h3>
+
+    <pre><code>curl <span class="string">"https://api.smara.io/v1/memories?user_id=user-123&amp;namespace=my-app&amp;limit=20"</span> \
+  -H <span class="string">"Authorization: Bearer $SMARA_API_KEY"</span></code></pre>
+
+    <h3>Delete a Memory</h3>
+
+    <pre><code>curl -X DELETE https://api.smara.io/v1/memories/mem_abc123 \
+  -H <span class="string">"Authorization: Bearer $SMARA_API_KEY"</span></code></pre>
+
+    <!-- ============ MCP INTEGRATION ============ -->
+    <h2>MCP Integration</h2>
+
+    <p>If you use Claude Code, Cursor, or Windsurf, you don't need to write any API calls. The Smara MCP server handles everything automatically.</p>
+
+    <h3>One-Command Setup</h3>
+
+    <pre><code>npx @smara/mcp-server --init</code></pre>
+
+    <p>This adds the Smara MCP server to your IDE settings. Or configure manually:</p>
+
+    <pre><code><span class="comment">// Claude Code: ~/.claude/settings.json</span>
+<span class="comment">// Cursor: .cursor/mcp.json</span>
+<span class="comment">// Windsurf: ~/.windsurf/mcp.json</span>
+{
+  <span class="string">"mcpServers"</span>: {
+    <span class="string">"smara"</span>: {
+      <span class="string">"command"</span>: <span class="string">"npx"</span>,
+      <span class="string">"args"</span>: [<span class="string">"-y"</span>, <span class="string">"smara-mcp"</span>],
+      <span class="string">"env"</span>: {
+        <span class="string">"SMARA_API_KEY"</span>: <span class="string">"smr_xxxxxxxxxxxx"</span>,
+        <span class="string">"SMARA_USER_ID"</span>: <span class="string">"your-name"</span>,
+        <span class="string">"SMARA_NAMESPACE"</span>: <span class="string">"my-project"</span>
+      }
+    }
+  }
+}</code></pre>
+
+    <p>Once connected, your AI assistant will automatically:</p>
+    <ul>
+      <li><strong>Store</strong> important facts as you work (preferences, decisions, patterns)</li>
+      <li><strong>Search</strong> past memories before answering, bringing in relevant context</li>
+      <li><strong>Decay</strong> stale memories so only fresh, relevant context surfaces</li>
+    </ul>
+
+    <!-- ============ TEAMS ============ -->
+    <h2>Teams</h2>
+
+    <p>Share memories across your team so every member's AI assistant has shared project context.</p>
+
+    <h3>Create a Team Memory</h3>
+
+    <pre><code><span class="comment"># Team memories use a shared namespace with a team_ prefix</span>
+curl -X POST https://api.smara.io/v1/memories \
+  -H <span class="string">"Authorization: Bearer $SMARA_API_KEY"</span> \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{
+    "user_id": "team",
+    "content": "Our API uses camelCase for JSON fields and kebab-case for URLs",
+    "tags": ["conventions", "api"],
+    "importance": 0.9,
+    "namespace": "team_acme-corp"
+  }'</span></code></pre>
+
+    <h3>Search Team Context</h3>
+
+    <pre><code><span class="comment"># Any team member can query shared memories</span>
+curl -X POST https://api.smara.io/v1/memories/search \
+  -H <span class="string">"Authorization: Bearer $SMARA_API_KEY"</span> \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{
+    "user_id": "team",
+    "q": "API naming conventions",
+    "namespace": "team_acme-corp"
+  }'</span></code></pre>
+
+    <div class="tip">
+      <strong>Tip:</strong> Combine personal and team namespaces in your MCP config. Set <code>SMARA_NAMESPACE</code> to your team namespace, and use a separate personal namespace for individual preferences.
+    </div>
+
+    <!-- ============ BEST PRACTICES ============ -->
+    <h2>Best Practices</h2>
+
+    <h3>Organize with Namespaces &amp; Tags</h3>
+    <ul>
+      <li>Use <strong>one namespace per project</strong> to keep memories isolated</li>
+      <li>Use <code>team_</code> prefix for shared team namespaces</li>
+      <li>Add <strong>2-3 tags</strong> per memory for better filtering: <code>["auth", "security", "oauth"]</code></li>
+    </ul>
+
+    <h3>Set Importance Scores Thoughtfully</h3>
+    <table>
+      <thead>
+        <tr><th>Score</th><th>Use For</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="num">0.9&ndash;1.0</span></td><td>Critical rules</td><td>"Never expose API keys in client code"</td></tr>
+        <tr><td><span class="num">0.7&ndash;0.8</span></td><td>Preferences &amp; patterns</td><td>"Uses TypeScript strict mode"</td></tr>
+        <tr><td><span class="num">0.4&ndash;0.6</span></td><td>Context &amp; notes</td><td>"Last sprint focused on auth refactor"</td></tr>
+        <tr><td><span class="num">0.1&ndash;0.3</span></td><td>Ephemeral facts</td><td>"Currently debugging issue #234"</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Leverage Decay Scoring</h3>
+    <p>Smara uses Ebbinghaus decay curves to rank memories. Frequently accessed memories stay strong; unused ones fade. This means:</p>
+    <ul>
+      <li>You don't need to manually clean up old memories</li>
+      <li>Search results are automatically ranked by relevance <em>and</em> freshness</li>
+      <li>Access a memory (via search) to "reinforce" it and prevent decay</li>
+    </ul>
+
+    <h3>Keep Memories Atomic</h3>
+    <p>Store one fact per memory, not paragraphs. This improves search precision:</p>
+
+    <pre><code><span class="comment">// Bad: one big memory</span>
+<span class="string">"Uses React with TypeScript, deploys to Vercel, prefers Tailwind, tests with Vitest"</span>
+
+<span class="comment">// Good: separate memories</span>
+<span class="string">"Frontend framework: React with TypeScript"</span>
+<span class="string">"Deployment platform: Vercel"</span>
+<span class="string">"CSS framework: Tailwind CSS"</span>
+<span class="string">"Test runner: Vitest"</span></code></pre>
+
+    <!-- ============ NEXT STEPS ============ -->
+    <h2>Next Steps</h2>
+
+    <ul>
+      <li><a href="/docs">Full API Documentation</a> &mdash; complete reference for all endpoints, parameters, and response shapes</li>
+      <li><a href="/playground">Interactive Playground</a> &mdash; test the API live in your browser</li>
+      <li><a href="/pricing">Pricing</a> &mdash; free tier (100 memories), Developer ($19/mo), Team ($79/mo)</li>
+      <li><a href="/blog/claude-code-memory-mcp.html">Claude Code MCP Tutorial</a> &mdash; detailed walkthrough of the MCP integration</li>
+      <li><a href="/blog/ai-agents-persistent-memory.html">Building AI Agents with Memory</a> &mdash; full agent loop with memory patterns</li>
+      <li><a href="https://github.com/smara-io/smara" target="_blank" rel="noopener">GitHub</a> &mdash; open-source MCP server and examples</li>
+    </ul>
+
+    <div class="cta">
+      <p>Free tier, no credit card. Start building AI tools with memory today.</p>
+      <a href="https://smara.io" class="cta-btn">Get Your API Key &rarr;</a>
+    </div>
+
+    <hr>
+
+    <h2 style="border-bottom: none; margin-bottom: 20px;">Related Posts</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+      <a href="/blog/claude-code-memory-mcp.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Quick Start</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Add Memory to Claude Code in 30 Seconds</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">MCP server setup for persistent memory in Claude Code.</p>
+      </a>
+      <a href="/blog/ai-agents-persistent-memory.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Tutorial</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Building AI Agents with Persistent Memory</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">Patterns for giving agents context across sessions.</p>
+      </a>
+      <a href="/blog/ebbinghaus-ai-memory.html" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease;">
+        <p style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Technical</p>
+        <p style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Ebbinghaus Curves for AI Memory</p>
+        <p style="font-size: 14px; color: var(--text-muted); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">How forgetting curves make AI memory smarter.</p>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smara Blog - AI Memory for Agents</title>
+  <meta name="description" content="Articles on AI agent memory, Ebbinghaus decay curves, MCP integrations, and building agents with persistent context. From the team behind Smara.">
+  <meta property="og:title" content="Smara Blog - AI Memory for Agents">
+  <meta property="og:description" content="Technical articles on AI agent memory, decay-scored retrieval, graph memory, and MCP integrations.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://smara.io/blog">
+  <meta property="og:site_name" content="Smara">
+  <meta property="og:image" content="https://smara.io/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@SmaraMemo">
+  <meta name="twitter:title" content="Smara Blog — AI Memory for Agents">
+  <meta name="twitter:description" content="Technical articles on AI agent memory, decay-scored retrieval, graph memory, and MCP integrations.">
+  <meta name="twitter:image" content="https://smara.io/og-image.png">
+  <link rel="canonical" href="https://smara.io/blog">
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --bg-card: rgba(255,255,255,0.72);
+      --bg-card-hover: rgba(255,255,255,0.85);
+      --text: #1d1d1f;
+      --text-muted: #6e6e73;
+      --accent: #0071e3;
+      --accent-hover: #005bb5;
+      --border: rgba(0,0,0,0.06);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .header {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .logo span { color: var(--accent); }
+    .header-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      margin-left: 24px;
+      transition: color 0.15s;
+    }
+    .header-links a:hover { color: var(--accent); }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .page-subtitle {
+      color: var(--text-muted);
+      font-size: 16px;
+      margin-bottom: 48px;
+    }
+    .post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .post-card {
+      display: block;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 28px 24px;
+      text-decoration: none;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    }
+    .post-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .post-tag {
+      display: inline-block;
+      background: rgba(0, 113, 227, 0.12);
+      color: var(--accent);
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .post-tag.tutorial { background: rgba(74, 222, 128, 0.12); color: #4ade80; }
+    .post-tag.comparison { background: rgba(251, 146, 60, 0.12); color: #fb923c; }
+    .post-tag.guide { background: rgba(168, 85, 247, 0.12); color: #a855f7; }
+    .post-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+    .post-excerpt {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .post-footer {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .read-more {
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .newsletter {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 32px;
+      margin-top: 48px;
+      text-align: center;
+    }
+    .newsletter h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+    .newsletter p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .newsletter-input {
+      flex: 1;
+      padding: 10px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+    .newsletter-input:focus { border-color: var(--accent); }
+    .newsletter-btn {
+      padding: 10px 20px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .newsletter-btn:hover { background: var(--accent-hover); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">smara<span>.</span></a>
+      <div class="header-links">
+        <a href="/docs">Docs</a>
+        <a href="/playground">Playground</a>
+        <a href="/compare">Compare</a>
+        <a href="/blog/" style="color: var(--accent);">Blog</a>
+        <a href="/changelog">Changelog</a>
+        <a href="https://github.com/smara-io/smara" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1 class="page-title">Blog</h1>
+    <p class="page-subtitle">Technical articles on AI agent memory, decay-scored retrieval, and building with Smara.</p>
+
+    <div class="post-list">
+
+      <a href="smara-sdk-quickstart.html" class="post-card">
+        <div class="post-meta">
+          <span class="post-tag tutorial">Tutorial</span>
+          <span>April 2026</span>
+          <span>10 min read</span>
+        </div>
+        <div class="post-title">Smara SDK Quickstart: Add AI Memory in 5 Minutes</div>
+        <div class="post-excerpt">Complete quickstart guide with full working examples in JavaScript, Python, and cURL. Store, search, list, and delete memories. Plus MCP integration, team setup, and best practices.</div>
+        <div class="post-footer">
+          <span>Sri Panchavati</span>
+          <span class="read-more">Read article &rarr;</span>
+        </div>
+      </a>
+
+      <a href="smara-vs-mem0.html" class="post-card">
+        <div class="post-meta">
+          <span class="post-tag comparison">Comparison</span>
+          <span>April 2026</span>
+          <span>7 min read</span>
+        </div>
+        <div class="post-title">Smara vs Mem0: Which AI Memory API Should You Use in 2026?</div>
+        <div class="post-excerpt">A detailed comparison of pricing, features, architecture, and developer experience. Includes a migration guide for teams switching from Mem0 to Smara.</div>
+        <div class="post-footer">
+          <span>Sri Panchavati</span>
+          <span class="read-more">Read article &rarr;</span>
+        </div>
+      </a>
+
+      <a href="ebbinghaus-ai-memory.html" class="post-card">
+        <div class="post-meta">
+          <span class="post-tag">Deep Dive</span>
+          <span>April 2026</span>
+          <span>5 min read</span>
+        </div>
+        <div class="post-title">How Ebbinghaus Decay Curves Make AI Memory Actually Useful</div>
+        <div class="post-excerpt">Why flat memory retrieval fails as memories accumulate, how the 1885 forgetting curve solves it, and how Smara implements decay-scored retrieval with before/after API examples.</div>
+        <div class="post-footer">
+          <span>Sri Panchavati</span>
+          <span class="read-more">Read article &rarr;</span>
+        </div>
+      </a>
+
+      <a href="ai-agents-persistent-memory.html" class="post-card">
+        <div class="post-meta">
+          <span class="post-tag tutorial">Tutorial</span>
+          <span>April 2026</span>
+          <span>8 min read</span>
+        </div>
+        <div class="post-title">Building AI Agents with Persistent Memory: A Complete Guide</div>
+        <div class="post-excerpt">Step-by-step tutorial: build an AI agent that remembers across conversations. Covers storing, searching, agent-scoped memory, graph connections, team memory, and a complete agent loop with code.</div>
+        <div class="post-footer">
+          <span>Sri Panchavati</span>
+          <span class="read-more">Read article &rarr;</span>
+        </div>
+      </a>
+
+      <a href="best-mem0-alternatives.html" class="post-card">
+        <div class="post-meta">
+          <span class="post-tag comparison">Comparison</span>
+          <span>April 2026</span>
+          <span>7 min read</span>
+        </div>
+        <div class="post-title">The Best Mem0 Alternatives for AI Memory in 2026</div>
+        <div class="post-excerpt">Comparing Smara, Zep, Letta (MemGPT), agentmemory, and custom Postgres+pgvector. Pricing tables, feature matrices, and honest pros/cons for each option.</div>
+        <div class="post-footer">
+          <span>Sri Panchavati</span>
+          <span class="read-more">Read article &rarr;</span>
+        </div>
+      </a>
+
+      <a href="claude-code-memory-mcp.html" class="post-card">
+        <div class="post-meta">
+          <span class="post-tag guide">Quick Start</span>
+          <span>April 2026</span>
+          <span>3 min read</span>
+        </div>
+        <div class="post-title">Add Memory to Claude Code in 30 Seconds with MCP</div>
+        <div class="post-excerpt">Install the Smara MCP server and give Claude Code persistent memory across sessions. Three steps, no code changes, works immediately.</div>
+        <div class="post-footer">
+          <span>Sri Panchavati</span>
+          <span class="read-more">Read article &rarr;</span>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="newsletter">
+      <h3>Get new articles by email</h3>
+      <p>One email per article. No spam. Unsubscribe anytime.</p>
+      <div class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="you@example.com">
+        <button class="newsletter-btn">Subscribe</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: smara
+      POSTGRES_PASSWORD: smara
+      POSTGRES_DB: smara
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./src/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./src/db/migrations/001_add_bm25.sql:/docker-entrypoint-initdb.d/02-bm25.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smara"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build: .
+    ports:
+      - "3010:3010"
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://smara:smara@postgres:5432/smara
+      REDIS_URL: redis://redis:6379
+      NODE_ENV: production
+      PORT: "3010"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  pgdata:
